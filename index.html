@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0e0c0a">
+
+<!-- Primary SEO -->
+<title>Genie Coin — Make a Wish, Buy $GENIE</title>
+<meta name="description" content="Genie Coin ($GENIE) — the magical lamp of crypto. Make a wish, rub the lamp, and grant your dream. Join the community on X and Telegram.">
+<meta name="keywords" content="Genie Coin, GENIE token, buy genie, crypto, memecoin, magical lamp, wish coin">
+<meta name="author" content="Genie Coin">
+<link rel="canonical" href="https://genie.pages.dev/">
+
+<!-- Favicon (emoji, no file needed) -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧞</text></svg>">
+
+<!-- Open Graph (Facebook, Telegram, Discord previews) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Genie Coin — Make a Wish, Buy $GENIE">
+<meta property="og:description" content="The magical lamp of crypto. Rub the lamp, make a wish, grant your dream.">
+<meta property="og:image" content="img/p1.jpg">
+<meta property="og:url" content="https://genie.pages.dev/">
+<meta property="og:site_name" content="Genie Coin">
+
+<!-- Twitter / X card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@GenieCoino1o">
+<meta name="twitter:title" content="Genie Coin — Make a Wish, Buy $GENIE">
+<meta name="twitter:description" content="The magical lamp of crypto. Rub the lamp, make a wish, grant your dream.">
+<meta name="twitter:image" content="img/p1.jpg">
+
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Spectral:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; }
+body {
+  background: #0e0c0a url('img/paper-bg.jpg') repeat;
+  font-family: 'Spectral', Georgia, serif;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: rgba(201,113,74,0.18);
+}
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: 1.3rem 4rem;
+  background: linear-gradient(to bottom, rgba(14,12,10,0.92) 0%, transparent 100%);
+}
+.nav-links { display: flex; gap: 0.25rem; list-style: none; align-items: center; }
+.nav-links a {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px;
+  color: rgba(180,95,58,0.88);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: #c9714a; }
+.nav-links a svg { width: 22px; height: 22px; display: block; }
+#canvas { width: 100%; display: flex; flex-direction: column; gap: 1.5rem; position: relative; }
+.panel { width: 100%; display: block; position: relative; font-size: 0; }
+.panel img {
+  width: 100%; height: auto;
+  display: block; vertical-align: bottom;
+}
+#p1 .cta-pill {
+  position: absolute; bottom: 9%; left: 7%;
+}
+.pill-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  border: 1.5px solid #c9714a; color: #c9714a;
+  padding: 0.7rem 1.8rem;
+  font-family: 'Spectral', serif; font-size: 0.9rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  text-decoration: none; background: transparent;
+  transition: background 0.25s;
+}
+.pill-btn:hover { background: rgba(201,113,74,0.1); }
+#cta {
+  background: #090909 url('img/paper-bg.jpg') repeat;
+  padding: 3rem 4rem;
+  margin-top: 1rem;
+  text-align: center;
+}
+.cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid rgba(180,95,58,0.28);
+  color: rgba(180,95,58,0.6);
+  padding: 0.9rem 2.8rem;
+  font-family: 'Spectral', serif; font-size: 0.95rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-outline:hover { border-color: #c9714a; color: #c9714a; }
+/* focus states */
+.pill-btn:focus-visible,
+.btn-outline:focus-visible {
+  outline: 1.5px solid #c9714a;
+  outline-offset: 3px;
+}
+.nav-links a:focus-visible {
+  outline: 1px dotted rgba(201,113,74,0.6);
+  outline-offset: 4px;
+}
+@media (max-width: 700px) {
+  nav { padding: 1rem 1.4rem; }
+  #canvas { gap: 1rem; }
+  #p1 .cta-pill { bottom: 4%; left: 4%; }
+  #cta { padding: 2.5rem 2rem; }
+  .cta-btns { flex-direction: column; align-items: center; }
+}
+@media (max-width: 480px) {
+  nav { padding: 0.9rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<nav aria-label="Primary">
+  <ul class="nav-links">
+    <li><a href="https://x.com/GenieCoino1" target="_blank" rel="noopener noreferrer" aria-label="Genie Coin on X">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a></li>
+    <li><a href="https://t.me/GenieCoinChat" target="_blank" rel="noopener noreferrer" aria-label="Genie Coin on Telegram">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+    </a></li>
+  </ul>
+</nav>
+
+<div id="canvas">
+  <div class="panel" id="p1">
+    <img alt="Genie Coin" src="img/p1.jpg">
+    <div class="cta-pill">
+      <a href="#" class="pill-btn">Buy Genie</a>
+    </div>
+  </div>
+  <div class="panel" id="p2">
+    <img alt="What is your Dream?" loading="lazy" decoding="async" src="img/p2.jpg">
+  </div>
+  <div class="panel" id="p3">
+    <img alt="Make a Wish — the Magical Lamp" loading="lazy" decoding="async" src="img/p3.jpg">
+  </div>
+</div>
+
+<section id="cta">
+  <div class="cta-btns">
+    <a href="#p2" class="btn-outline">See other Dreams</a>
+  </div>
+</section>
+
+</body>
+</html>
