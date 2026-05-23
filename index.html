@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0e0c0a">
 
+<!-- Performance: warm up connections + preload the LCP cover -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" as="image" href="img/p1.webp?v=3" type="image/webp" fetchpriority="high">
+
 <!-- Primary SEO -->
 <title>Genie Coin — Make a Wish, Buy $GENIE</title>
 <meta name="description" content="Genie Coin ($GENIE) — the magical lamp of crypto. Make a wish, rub the lamp, and grant your dream. Join the community on X and Telegram.">
@@ -137,6 +143,10 @@ nav {
   width: 100%; height: 100%;
   position: relative;
   overflow: hidden;
+}
+.page picture {
+  display: block;
+  width: 100%; height: 100%;
 }
 .page img {
   width: 100%; height: 100%;
@@ -339,7 +349,10 @@ nav {
     <div class="page" id="p1">
       <div class="page-inner">
         <div class="page-image-frame">
-          <img src="img/p1.jpg?v=2" alt="Genie Coin">
+          <picture>
+            <source type="image/webp" srcset="img/p1.webp?v=3">
+            <img src="img/p1.jpg?v=3" alt="Genie Coin" fetchpriority="high" decoding="async">
+          </picture>
           <div class="page-cta">
             <a href="#" class="pill-btn">Buy Genie</a>
           </div>
@@ -349,14 +362,20 @@ nav {
     <div class="page" id="p2">
       <div class="page-inner">
         <div class="page-image-frame">
-          <img src="img/p2.jpg?v=2" alt="What is your Dream?">
+          <picture>
+            <source type="image/webp" srcset="img/p2.webp?v=3">
+            <img src="img/p2.jpg?v=3" alt="What is your Dream?" decoding="async">
+          </picture>
         </div>
       </div>
     </div>
     <div class="page" id="p3">
       <div class="page-inner">
         <div class="page-image-frame">
-          <img src="img/p3.jpg?v=2" alt="Make a Wish — the Magical Lamp">
+          <picture>
+            <source type="image/webp" srcset="img/p3.webp?v=3">
+            <img src="img/p3.jpg?v=3" alt="Make a Wish — the Magical Lamp" decoding="async">
+          </picture>
         </div>
       </div>
     </div>
