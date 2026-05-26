@@ -307,6 +307,35 @@ nav {
   outline-offset: 3px;
 }
 
+/* Discreet IPFS mirror in the bottom-left — proof-of-permanence for skeptics */
+.ipfs-mirror {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.4rem;
+  z-index: 50;
+  font-family: 'Spectral', serif;
+  font-style: italic;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+}
+.ipfs-mirror a {
+  color: rgba(180,95,58,0.45);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(180,95,58,0.3);
+  padding-bottom: 1px;
+  transition: color 0.25s, border-color 0.25s;
+  pointer-events: auto;
+}
+.ipfs-mirror a:hover {
+  color: #c9714a;
+  border-color: #c9714a;
+}
+.ipfs-mirror a:focus-visible {
+  outline: 1.5px solid #c9714a;
+  outline-offset: 3px;
+}
+
 @media (max-width: 700px) {
   nav { padding: 0.7rem 1rem; }
   #book-wrapper { bottom: 120px; }     /* tighter reserve on mobile */
@@ -325,6 +354,7 @@ nav {
   .hint { bottom: 7.2rem; font-size: 0.76rem; }
   .see-other { bottom: 0.8rem; right: 50%; transform: translateX(50%); }
   .see-other a { font-size: 0.7rem; padding: 0.45rem 1rem; letter-spacing: 0.1em; }
+  .ipfs-mirror { bottom: 0.7rem; left: 0.8rem; font-size: 0.6rem; letter-spacing: 0.04em; }
 }
 </style>
 </head>
@@ -337,6 +367,9 @@ nav {
     </a></li>
     <li><a href="https://t.me/GenieCoinChat" target="_blank" rel="noopener noreferrer" aria-label="Genie Coin on Telegram">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+    </a></li>
+    <li><a href="whitepaper.pdf" target="_blank" rel="noopener noreferrer" aria-label="Read the Genie whitepaper" title="Whitepaper">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>
     </a></li>
   </ul>
 </nav>
@@ -390,6 +423,10 @@ nav {
 
 <div class="see-other">
   <a href="#p1" id="back-to-start">See other Dreams</a>
+</div>
+
+<div class="ipfs-mirror">
+  <a href="https://ipfs.io/ipfs/bafkreifkjiixmfl3m2pqztnfsfebqpbkldrxtuht5cohwxu4peoxmneh7u?filename=Genie_Whitepaper.pdf" target="_blank" rel="noopener noreferrer" title="Permanent immutable copy on IPFS">permanent copy on IPFS</a>
 </div>
 
 <div class="hint" id="hint">drag a corner or use the arrows</div>
