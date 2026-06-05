@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0e0c0a">
+
+<!-- Performance: warm up connections + preload the LCP cover -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" as="image" href="img/p1.webp?v=3" type="image/webp" fetchpriority="high">
+
+<!-- Primary SEO -->
+<title>Genie Coin — Make a Wish, Buy $GENIE</title>
+<meta name="description" content="Genie Coin ($GENIE) — the magical lamp of crypto. Make a wish, rub the lamp, and grant your dream. Join the community on X and Telegram.">
+<meta name="keywords" content="Genie Coin, GENIE token, buy genie, crypto, memecoin, magical lamp, wish coin">
+<meta name="author" content="Genie Coin">
+<link rel="canonical" href="https://genie-coin.com/">
+
+<!-- Favicon (emoji, no file needed) -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧞</text></svg>">
+
+<!-- Open Graph (Facebook, Telegram, Discord previews) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Genie Coin — Make a Wish, Buy $GENIE">
+<meta property="og:description" content="The magical lamp of crypto. Rub the lamp, make a wish, grant your dream.">
+<meta property="og:image" content="img/p1.jpg">
+<meta property="og:url" content="https://genie-coin.com/">
+<meta property="og:site_name" content="Genie Coin">
+
+<!-- Twitter / X card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@GenieCoino1o">
+<meta name="twitter:title" content="Genie Coin — Make a Wish, Buy $GENIE">
+<meta name="twitter:description" content="The magical lamp of crypto. Rub the lamp, make a wish, grant your dream.">
+<meta name="twitter:image" content="img/p1.jpg">
+
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Spectral:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;            /* No scroll anywhere */
+  overscroll-behavior: none;
+}
+body {
+  background: #0e0c0a url('img/paper-bg.jpg') repeat;
+  font-family: 'Spectral', Georgia, serif;
+  color: rgba(201,113,74,0.85);
+}
+
+/* Nav: floating overlay at top, doesn't take layout space */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: 0.85rem 1.6rem;
+  background: linear-gradient(to bottom, rgba(14,12,10,0.55) 0%, transparent 100%);
+  pointer-events: none;        /* allow flipping through the gradient */
+}
+.nav-links {
+  display: flex; gap: 0.25rem; list-style: none; align-items: center;
+  pointer-events: auto;        /* but links themselves are clickable */
+}
+.nav-links a {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px;
+  color: rgba(201,113,74,0.8);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: #c9714a; }
+.nav-links a svg { width: 20px; height: 20px; display: block; }
+.nav-links a:focus-visible {
+  outline: 1px dotted rgba(201,113,74,0.6);
+  outline-offset: 4px;
+}
+
+/* Book wrapper takes the viewport minus a reserve at the bottom for the
+   floating controls + "See other Dreams" pill. The book stretches to fit
+   this box while preserving the 4:5 page aspect. */
+#book-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 130px;        /* matches RESERVED_BOTTOM in JS */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+#book-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%; max-width: 1200px;
+  height: 80%;
+  background: radial-gradient(ellipse at center, rgba(201,113,74,0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#book {
+  position: relative;
+  z-index: 1;
+}
+
+.page {
+  background: #1a1612 url('img/paper-bg.jpg') center/cover;
+  overflow: hidden;
+  position: relative;
+}
+/* Invisible "endpaper" — a sibling page that pairs with the Genie cover
+   so the library keeps soft (paper-like) flipping, but visually disappears
+   into the body background. No fill, no shadow, no edge — the reader sees
+   only the Genie page sitting alone on the right of the spread. */
+.page-endpaper {
+  background: transparent !important;
+}
+.page-endpaper::before,
+.page-endpaper::after {
+  display: none !important;
+  content: none !important;
+}
+/* Strip the library's wrapper styling for this specific page so no
+   page-edge shadow leaks into view. */
+.stf__item:has(.page-endpaper) {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.page .page-inner {
+  width: 100%; height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.page-image-frame {
+  width: 100%; height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.page picture {
+  display: block;
+  width: 100%; height: 100%;
+}
+.page img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+.page::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 35px rgba(0,0,0,0.45);
+  z-index: 2;
+}
+
+/* CTA pill overlay — sits in the bottom-left corner of the cover image,
+   keeping its original spot. Size is kept large per the design. */
+.page-cta {
+  position: absolute;
+  bottom: 6%;
+  left: 6%;
+  z-index: 3;
+}
+.page-cta .pill-btn {
+  padding: 0.95rem 2.8rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.2em;
+  border-width: 2px;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+
+/* Floating controls overlay — bottom center pill, doesn't take layout space */
+.controls {
+  position: fixed;
+  bottom: 1.1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  background: rgba(14,12,10,0.6);
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(180,95,58,0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.nav-btn {
+  background: transparent;
+  border: none;
+  color: rgba(201,113,74,0.9);
+  width: 38px; height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: 'Spectral', serif;
+  font-size: 1.5rem;
+  line-height: 1;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+.nav-btn:hover:not(:disabled) {
+  background: rgba(201,113,74,0.2);
+  color: #c9714a;
+}
+.nav-btn:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+.nav-btn:focus-visible {
+  outline: 1.5px solid #c9714a;
+  outline-offset: 2px;
+}
+.page-indicator {
+  color: rgba(201,113,74,0.9);
+  font-family: 'Caveat', cursive;
+  font-size: 1.2rem;
+  min-width: 60px;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+/* Hint text floats just above the controls pill */
+.hint {
+  position: fixed;
+  bottom: 4.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 49;
+  color: rgba(180,95,58,0.55);
+  font-family: 'Spectral', serif;
+  font-style: italic;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  text-align: center;
+  animation: fadeHint 5s ease-in 1.5s forwards;
+  pointer-events: none;
+}
+@keyframes fadeHint {
+  to { opacity: 0; visibility: hidden; }
+}
+
+.pill-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  border: 1.5px solid #c9714a; color: #c9714a;
+  padding: 0.6rem 1.4rem;
+  font-family: 'Spectral', serif; font-size: 0.85rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  text-decoration: none; background: rgba(14,12,10,0.55);
+  transition: background 0.25s;
+  backdrop-filter: blur(2px);
+}
+.pill-btn:hover { background: rgba(201,113,74,0.22); }
+.pill-btn:focus-visible {
+  outline: 1.5px solid #c9714a;
+  outline-offset: 3px;
+}
+
+/* Floating "See other Dreams" overlay — bottom-right corner */
+.see-other {
+  position: fixed;
+  bottom: 1.3rem;
+  right: 1.4rem;
+  z-index: 50;
+}
+.see-other a {
+  display: inline-flex; align-items: center;
+  background: rgba(14,12,10,0.6);
+  border: 1.5px solid rgba(180,95,58,0.4);
+  color: rgba(180,95,58,0.85);
+  padding: 0.55rem 1.25rem;
+  font-family: 'Spectral', serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: border-color 0.25s, color 0.25s, background 0.25s;
+  cursor: pointer;
+}
+.see-other a:hover {
+  border-color: #c9714a;
+  color: #c9714a;
+  background: rgba(201,113,74,0.18);
+}
+.see-other a:focus-visible {
+  outline: 1.5px solid #c9714a;
+  outline-offset: 3px;
+}
+
+/* Discreet IPFS mirror in the bottom-left — proof-of-permanence for skeptics */
+.ipfs-mirror {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.4rem;
+  z-index: 50;
+  font-family: 'Spectral', serif;
+  font-style: italic;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+}
+.ipfs-mirror a {
+  color: rgba(180,95,58,0.45);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(180,95,58,0.3);
+  padding-bottom: 1px;
+  transition: color 0.25s, border-color 0.25s;
+  pointer-events: auto;
+}
+.ipfs-mirror a:hover {
+  color: #c9714a;
+  border-color: #c9714a;
+}
+.ipfs-mirror a:focus-visible {
+  outline: 1.5px solid #c9714a;
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  nav { padding: 0.7rem 1rem; }
+  #book-wrapper { bottom: 120px; }     /* tighter reserve on mobile */
+  /* Slightly smaller pill on phones so it stays balanced against the
+     smaller page — still noticeably bigger than the original. */
+  .page-cta { bottom: 5%; left: 5%; }
+  .page-cta .pill-btn {
+    padding: 0.72rem 2rem;
+    font-size: 0.88rem;
+    letter-spacing: 0.16em;
+    border-width: 1.5px;
+  }
+  .controls { bottom: 4rem; gap: 0.4rem; padding: 0.35rem 0.7rem; }
+  .nav-btn { width: 36px; height: 36px; font-size: 1.35rem; }
+  .page-indicator { font-size: 1.1rem; min-width: 55px; }
+  .hint { bottom: 7.2rem; font-size: 0.76rem; }
+  .see-other { bottom: 0.8rem; right: 50%; transform: translateX(50%); }
+  .see-other a { font-size: 0.7rem; padding: 0.45rem 1rem; letter-spacing: 0.1em; }
+  .ipfs-mirror { bottom: 0.7rem; left: 0.8rem; font-size: 0.6rem; letter-spacing: 0.04em; }
+}
+</style>
+</head>
+<body>
+
+<nav aria-label="Primary">
+  <ul class="nav-links">
+    <li><a href="https://x.com/GenieCoino1" target="_blank" rel="noopener noreferrer" aria-label="Genie Coin on X">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a></li>
+    <li><a href="https://t.me/GenieCoinChat" target="_blank" rel="noopener noreferrer" aria-label="Genie Coin on Telegram">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+    </a></li>
+    <li><a href="whitepaper.pdf" target="_blank" rel="noopener noreferrer" aria-label="Read the Genie whitepaper" title="Whitepaper">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>
+    </a></li>
+  </ul>
+</nav>
+
+<div id="book-wrapper">
+  <div id="book">
+    <div class="page page-endpaper" id="p0" aria-hidden="true">
+      <div class="page-inner"></div>
+    </div>
+    <div class="page" id="p1">
+      <div class="page-inner">
+        <div class="page-image-frame">
+          <picture>
+            <source type="image/webp" srcset="img/p1.webp?v=3">
+            <img src="img/p1.jpg?v=3" alt="Genie Coin" fetchpriority="high" decoding="async">
+          </picture>
+          <div class="page-cta">
+            <a href="#" class="pill-btn">Buy Genie</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page" id="p2">
+      <div class="page-inner">
+        <div class="page-image-frame">
+          <picture>
+            <source type="image/webp" srcset="img/p2.webp?v=3">
+            <img src="img/p2.jpg?v=3" alt="What is your Dream?" decoding="async">
+          </picture>
+        </div>
+      </div>
+    </div>
+    <div class="page" id="p3">
+      <div class="page-inner">
+        <div class="page-image-frame">
+          <picture>
+            <source type="image/webp" srcset="img/p3.webp?v=3">
+            <img src="img/p3.jpg?v=3" alt="Make a Wish — the Magical Lamp" decoding="async">
+          </picture>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="nav-btn" id="prev-btn" aria-label="Previous page">‹</button>
+  <span class="page-indicator" id="page-indicator">1 / 2</span>
+  <button class="nav-btn" id="next-btn" aria-label="Next page">›</button>
+</div>
+
+<div class="see-other">
+  <a href="#p1" id="back-to-start">See other Dreams</a>
+</div>
+
+<div class="ipfs-mirror">
+  <a href="https://ipfs.io/ipfs/bafkreifkjiixmfl3m2pqztnfsfebqpbkldrxtuht5cohwxu4peoxmneh7u?filename=Genie_Whitepaper.pdf" target="_blank" rel="noopener noreferrer" title="Permanent immutable copy on IPFS">permanent copy on IPFS</a>
+</div>
+
+<div class="hint" id="hint">drag a corner or use the arrows</div>
+
+<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+<script>
+(function() {
+  const bookEl = document.getElementById('book');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const indicator = document.getElementById('page-indicator');
+  const hint = document.getElementById('hint');
+  const backBtn = document.getElementById('back-to-start');
+
+  // Pages keep their natural 4:5 portrait aspect so the source images are
+  // never cropped. The book is sized to fit inside the viewport with a small
+  // reserve at the bottom so the floating controls don't sit on top of the
+  // pages.
+  const pageAspect = 4 / 5;
+  const RESERVED_BOTTOM = 130;   // overlay controls + breathing room
+
+  function computeSize() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const isLandscape = vw >= 760;
+    const maxH = Math.max(280, vh - RESERVED_BOTTOM);
+    const maxW = Math.max(220, vw - 16);
+
+    let pageW, pageH;
+    if (isLandscape) {
+      // Two 4:5 pages side-by-side → book aspect = 8:5
+      pageH = maxH;
+      pageW = pageH * pageAspect;
+      if (pageW * 2 > maxW) {
+        const scale = maxW / (pageW * 2);
+        pageW *= scale;
+        pageH *= scale;
+      }
+    } else {
+      // Single page (portrait)
+      pageW = maxW;
+      pageH = pageW / pageAspect;
+      if (pageH > maxH) {
+        const scale = maxH / pageH;
+        pageH *= scale;
+        pageW *= scale;
+      }
+    }
+    return { width: Math.round(pageW), height: Math.round(pageH) };
+  }
+
+  const size = computeSize();
+
+  // Give the book element an explicit width that's at least 2× page width
+  // so StPageFlip picks landscape (two-page spread) on desktop, while still
+  // shrinking to a single page when the viewport is narrow.
+  function applyBookContainerSize(sz) {
+    const isLandscape = window.innerWidth >= 760;
+    const bookW = isLandscape ? sz.width * 2 : sz.width;
+    bookEl.style.width = bookW + 'px';
+    bookEl.style.height = sz.height + 'px';
+  }
+  applyBookContainerSize(size);
+
+  const pageFlip = new St.PageFlip(bookEl, {
+    width: size.width,
+    height: size.height,
+    size: 'fixed',                /* render each page at exact configured size */
+    minWidth: 100,
+    maxWidth: 4000,
+    minHeight: 100,
+    maxHeight: 4000,
+    maxShadowOpacity: 0.55,
+    showCover: false,             /* always show two pages — soft paper flips */
+    mobileScrollSupport: false,
+    usePortrait: true,
+    drawShadow: true,
+    flippingTime: 900,
+    startZIndex: 5,
+    autoSize: false,
+    showPageCorners: false,       /* don't auto-lift on hover — book stays still */
+    disableFlipByClick: false
+  });
+
+  // Always load all 4 pages (endpaper + Genie + Dream + Wish). On desktop
+  // (landscape) the endpaper sits invisibly on the left of the first spread
+  // so the Genie cover appears alone. On mobile (portrait) we auto-skip the
+  // endpaper so the reader never lands on the blank invisible page.
+  pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+
+  // True when our automatic "skip endpaper" flip is in flight, so we don't
+  // recurse during the resulting flip event.
+  let autoSkipping = false;
+  function maybeSkipEndpaper() {
+    const wrap = document.querySelector('.stf__wrapper');
+    const isLandscape = wrap && wrap.classList.contains('--landscape');
+    const total = pageFlip.getPageCount();
+    const idx = pageFlip.getCurrentPageIndex();
+    // Portrait mode + first page (the invisible endpaper) → jump past it
+    if (!isLandscape && total > 3 && idx === 0 && !autoSkipping) {
+      autoSkipping = true;
+      setTimeout(() => {
+        try { pageFlip.flip(1); } catch (_) {}
+        autoSkipping = false;
+      }, 0);
+    }
+  }
+
+  function updateUI() {
+    const idx = pageFlip.getCurrentPageIndex();
+    const total = pageFlip.getPageCount();
+    const isLandscape = document.querySelector('.stf__wrapper')?.classList.contains('--landscape');
+    const hasEndpaper = total > 3;
+
+    if (isLandscape) {
+      // Desktop: 4 pages → 2 spreads.
+      //   idx=0 → "1 / 2"  (endpaper + Genie)
+      //   idx=2 → "2 / 2"  (Dream + Wish)
+      const spreadIndex = Math.floor(idx / 2) + 1;
+      const totalSpreads = Math.ceil(total / 2);
+      indicator.textContent = spreadIndex + ' / ' + totalSpreads;
+      prevBtn.disabled = idx === 0;
+      nextBtn.disabled = idx >= total - 2;
+    } else {
+      // Mobile portrait: hide the invisible endpaper from the count and
+      // never let the user navigate onto it.
+      const startIdx = hasEndpaper ? 1 : 0;
+      const visibleTotal = total - startIdx;
+      const visibleIdx = Math.max(idx, startIdx) - startIdx;
+      indicator.textContent = (visibleIdx + 1) + ' / ' + visibleTotal;
+      prevBtn.disabled = idx <= startIdx;
+      nextBtn.disabled = idx >= total - 1;
+    }
+  }
+
+  prevBtn.addEventListener('click', function() { pageFlip.flipPrev(); });
+  nextBtn.addEventListener('click', function() { pageFlip.flipNext(); });
+
+  backBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    const wrap = document.querySelector('.stf__wrapper');
+    const isLandscape = wrap && wrap.classList.contains('--landscape');
+    const hasEndpaper = pageFlip.getPageCount() > 3;
+    // In portrait we never want to land on the invisible endpaper.
+    pageFlip.flip(!isLandscape && hasEndpaper ? 1 : 0);
+  });
+
+  pageFlip.on('flip', function() {
+    updateUI();
+    if (hint && hint.style.display !== 'none') {
+      hint.style.display = 'none';
+    }
+    maybeSkipEndpaper();
+  });
+  pageFlip.on('init', function() {
+    updateUI();
+    maybeSkipEndpaper();
+  });
+  pageFlip.on('changeOrientation', function() {
+    updateUI();
+    maybeSkipEndpaper();
+  });
+
+  // Resize handling — recompute, resize the container, then update the library
+  let resizeTimer;
+  function applyResize() {
+    const newSize = computeSize();
+    // Clear pinned min-* so the container can shrink, then re-apply our size
+    bookEl.style.minWidth = '';
+    bookEl.style.minHeight = '';
+    applyBookContainerSize(newSize);
+    try {
+      pageFlip.update({ width: newSize.width, height: newSize.height });
+    } catch (_) { /* ignore transient resize errors */ }
+    // After the library re-evaluates orientation, make sure we're not
+    // stranded on the invisible endpaper in portrait.
+    setTimeout(maybeSkipEndpaper, 200);
+  }
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(applyResize, 120);
+  });
+  window.addEventListener('orientationchange', applyResize);
+
+  // Keyboard support
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft') pageFlip.flipPrev();
+    else if (e.key === 'ArrowRight') pageFlip.flipNext();
+  });
+
+  updateUI();
+})();
+</script>
+
+</body>
+</html>
