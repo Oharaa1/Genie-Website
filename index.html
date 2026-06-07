@@ -114,6 +114,8 @@ body{
 .btn:hover{transform:translateY(-2px);box-shadow:5px 7px 0 var(--ink);}
 .btn:active{transform:translate(4px,5px);box-shadow:0 0 0 var(--ink);}
 .btn-buy{background:var(--gold);color:var(--ink);}
+.btn-soon{background:var(--gold);color:var(--ink);cursor:not-allowed;}   /* same gold as Buy — just not clickable until the token is live */
+.btn-soon:hover,.btn-soon:active{transform:none;box-shadow:4px 5px 0 var(--ink);}
 .btn-tg{background:var(--blue);color:#fff;animation:pulse 1.8s ease-in-out infinite;}
 .btn-tg svg{width:22px;height:22px;}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.055)}}
@@ -253,7 +255,7 @@ html{scroll-behavior:smooth;}
   </div>
 
   <div class="cta">
-    <a class="btn btn-buy" href="#" aria-label="Buy your wish">Buy Your Wish</a>
+    <span class="btn btn-soon" role="button" aria-disabled="true" title="Not live yet — join the Telegram so you don't miss the launch">🔒 Coming Soon</span>
     <a class="btn btn-tg" href="https://t.me/GenieCoinChat" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
       Join the Tribe
@@ -321,7 +323,7 @@ html{scroll-behavior:smooth;}
 
   <p class="wish-cta-line">The Lamp pays out tonight. <b>Be holding when the Genie picks.</b></p>
   <div class="wish-cta">
-    <a class="btn btn-buy" href="#" aria-label="Buy your wish">Buy Your Wish</a>
+    <span class="btn btn-soon" role="button" aria-disabled="true" title="Not live yet — join the Telegram so you don't miss the launch">🔒 Coming Soon</span>
     <a class="btn btn-tg" href="https://t.me/GenieCoinChat" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
       Join the Tribe
