@@ -3,31 +3,54 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#FBB417">
 
 <title>Genie Coin ($GENIE) — The AI Coin That Makes Millionaires</title>
 <meta name="description" content="$GENIE — the AI memecoin built to make the most millionaires in the world. An autonomous Genie Agent fills the Magic Lamp to $1,000,000, then sends it to one random holder. Crypto × AI.">
+<link rel="canonical" href="https://genie-coin.com/">
+
+<!-- link-preview card (Telegram / X / Discord) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://genie-coin.com/">
+<meta property="og:title" content="Genie Coin ($GENIE) — The AI Coin That Makes Millionaires">
+<meta property="og:description" content="An autonomous AI fills the Magic Lamp to $1,000,000, then sends it to one random holder. Then it does it again. Forever.">
+<meta property="og:image" content="https://genie-coin.com/img/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Genie Coin ($GENIE) — The AI Coin That Makes Millionaires">
+<meta name="twitter:description" content="An autonomous AI fills the Magic Lamp to $1,000,000, then sends it to one random holder. Then it does it again. Forever.">
+<meta name="twitter:image" content="https://genie-coin.com/img/og-card.png">
 
 <!-- Genie face logo as the browser tab icon -->
 <link rel="icon" type="image/jpeg" href="img/logo.jpg">
 <link rel="apple-touch-icon" href="img/logo.jpg">
 
+<link rel="preload" as="image" href="img/genie.webp" fetchpriority="high">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
   --blue:#2BA9E0;   /* genie blue   */
   --gold:#FBB417;   /* lamp / coins */
+  --gold-deep:#E09A00;
   --ink:#141414;    /* outlines     */
   --red:#E5392E;
   --ai:#7b5cff;     /* AI accent (crypto x AI) */
+  --paper:#FFFdf6;  /* warm comic paper */
+  --cream:#FFF6E3;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
 html,body{height:100%;}
 body{
-  background:#fff;
+  /* warm paper + faint halftone dots = printed-comic feel */
+  background:
+    radial-gradient(rgba(20,20,20,.045) 1px, transparent 1.4px) 0 0/26px 26px,
+    linear-gradient(#ffffff 0%, var(--paper) 55%, var(--cream) 100%);
   font-family:'Baloo 2',system-ui,sans-serif;
   color:var(--ink);
   min-height:100svh;
@@ -35,11 +58,14 @@ body{
   overflow-x:hidden;
   -webkit-tap-highlight-color:transparent;
 }
+/* body is a flex column — never let a section get squeezed shorter than its content */
+body>*{flex-shrink:0;}
+::selection{background:var(--gold);color:var(--ink);}
 
 /* ---------- top bar ---------- */
 .top{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:1rem 1.4rem;z-index:5;
+  display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  padding:1rem 1.4rem;z-index:5;position:relative;
 }
 .brand{display:flex;align-items:center;gap:.55rem;text-decoration:none;}
 .brand-logo{
@@ -49,6 +75,12 @@ body{
 }
 .brand:hover .brand-logo{transform:rotate(-6deg) scale(1.06);}
 .brand-mini{font-family:'Lilita One';font-size:1.15rem;color:var(--blue);letter-spacing:.02em;}
+.top-nav{display:flex;gap:1.35rem;margin-left:auto;margin-right:1.1rem;}
+.top-nav a{
+  font-family:'Lilita One';font-size:.95rem;letter-spacing:.04em;text-decoration:none;
+  color:var(--ink);opacity:.82;transition:opacity .15s ease,transform .15s ease;
+}
+.top-nav a:hover{opacity:1;transform:translateY(-2px);color:var(--blue);}
 .socials{display:flex;gap:.55rem;}
 .socials a{
   width:38px;height:38px;display:grid;place-items:center;border-radius:50%;
@@ -56,11 +88,12 @@ body{
 }
 .socials a:hover{transform:translateY(-3px) scale(1.06);}
 .socials a svg{width:18px;height:18px;}
+@media (max-width:720px){.top-nav{display:none;}}
 
 /* ---------- hero ---------- */
 .hero{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:0 1rem 2rem;position:relative;gap:.35rem;
+  text-align:center;padding:0 1rem 2.6rem;position:relative;gap:.35rem;
 }
 
 /* comic sunburst sitting BEHIND the wordmark only (never behind the genie,
@@ -69,7 +102,7 @@ body{
   position:absolute;top:8%;left:50%;width:min(78vw,640px);aspect-ratio:1;
   transform:translateX(-50%);
   background:repeating-conic-gradient(from 0deg,
-    rgba(251,180,23,.16) 0deg 7deg, transparent 7deg 14deg);
+    rgba(251,180,23,.18) 0deg 7deg, transparent 7deg 14deg);
   border-radius:50%;
   -webkit-mask:radial-gradient(circle,#000 0 38%,transparent 62%);
           mask:radial-gradient(circle,#000 0 38%,transparent 62%);
@@ -84,7 +117,9 @@ body{
   color:#fff;background:linear-gradient(90deg,var(--blue),var(--ai));
   padding:.42rem .95rem;border-radius:999px;border:2.5px solid var(--ink);
   box-shadow:2px 2px 0 var(--ink);margin-bottom:.35rem;
+  animation:dropIn .55s cubic-bezier(.2,1.5,.4,1) both;
 }
+@keyframes dropIn{from{opacity:0;transform:translateY(-18px) scale(.8);}to{opacity:1;transform:none;}}
 
 .wordmark{
   position:relative;z-index:2;
@@ -92,30 +127,37 @@ body{
   font-size:clamp(2.7rem,9vw,5.8rem);
   line-height:.95;transform:rotate(-2.5deg);
   -webkit-text-stroke:3px var(--ink);
-  text-shadow:5px 6px 0 rgba(0,0,0,.16);
+  text-shadow:5px 6px 0 rgba(0,0,0,.14);
 }
 .wordmark .g{color:var(--blue);}
 .wordmark .c{color:var(--gold);}
+/* each letter pops in like a comic title card */
+.wordmark .l{display:inline-block;animation:letterPop .6s cubic-bezier(.2,1.7,.4,1) both;animation-delay:calc(.12s + var(--i)*.05s);}
+@keyframes letterPop{0%{opacity:0;transform:translateY(.5em) scale(.3) rotate(8deg);}100%{opacity:1;transform:none;}}
 
 /* the headline claim */
 .hero-claim{
   position:relative;z-index:2;max-width:660px;margin:.55rem auto 0;
   font-family:'Lilita One';font-size:clamp(1.15rem,4vw,2.05rem);line-height:1.08;
   color:var(--ink);
+  animation:dropIn .55s cubic-bezier(.2,1.5,.4,1) .55s both;
 }
 .hero-claim b{color:var(--gold);-webkit-text-stroke:1.2px var(--ink);}
 
 .genie-wrap{position:relative;z-index:1;margin:.1rem 0 .5rem;}
+@keyframes genieRise{0%{opacity:0;transform:translateY(56px) scale(.88);}100%{opacity:1;transform:none;}}
 .genie{
   height:clamp(250px,50vh,540px);width:auto;display:block;
-  mix-blend-mode:multiply;        /* melts the white JPG background into the page */
-  animation:bob 4.5s ease-in-out infinite;
+  filter:drop-shadow(0 20px 22px rgba(20,20,20,.16));
+  /* entrance first, then the endless float takes over the instant it lands */
+  animation:genieRise .9s cubic-bezier(.2,1.2,.4,1) .35s both,
+            bob 4.5s ease-in-out 1.25s infinite;
   -webkit-user-drag:none;user-select:none;
 }
 @keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-14px) rotate(1.4deg)}}
 
 /* ---------- buttons ---------- */
-.cta{display:flex;gap:.9rem;flex-wrap:wrap;justify-content:center;margin-top:.2rem;z-index:2;}
+.cta{display:flex;gap:.9rem;flex-wrap:wrap;justify-content:center;margin-top:.2rem;z-index:2;animation:dropIn .5s ease .75s both;}
 .btn{
   font-family:'Lilita One';font-size:clamp(1rem,2.7vw,1.35rem);letter-spacing:.03em;
   text-decoration:none;cursor:pointer;
@@ -125,18 +167,23 @@ body{
 }
 .btn:hover{transform:translateY(-2px);box-shadow:5px 7px 0 var(--ink);}
 .btn:active{transform:translate(4px,5px);box-shadow:0 0 0 var(--ink);}
-.btn-buy{background:var(--gold);color:var(--ink);}
-.btn-soon{background:var(--gold);color:var(--ink);cursor:not-allowed;}   /* same gold as Buy — just not clickable until the token is live */
-.btn-soon:hover,.btn-soon:active{transform:none;box-shadow:4px 5px 0 var(--ink);}
-.btn-tg{background:var(--blue);color:#fff;animation:pulse 1.8s ease-in-out infinite;}
-.btn-tg svg{width:22px;height:22px;}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.055)}}
-.btn-tg:hover{animation:none;}
+.btn svg{width:22px;height:22px;}
+.btn-gold{background:var(--gold);color:var(--ink);animation:pulse 1.8s ease-in-out infinite;}
+.btn-gold:hover{animation:none;}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 .btn-wp{background:#fff;color:var(--ink);}
 .btn-wp svg{width:20px;height:20px;}
+.btn-ink{background:var(--ink);color:#fff;}
 
-/* ---------- floating sparkles, drawn in pure CSS (no emoji-font dependency,
-     so they render identically on every device) ---------- */
+/* honest pre-launch note — protects the tribe from fake tokens */
+.shield-note{
+  z-index:2;margin-top:1rem;font-weight:700;font-size:.85rem;color:#8a6d1f;
+  background:#FFF3D6;border:2px dashed var(--gold-deep);border-radius:12px;
+  padding:.45rem .9rem;max-width:480px;animation:dropIn .5s ease .9s both;
+}
+.shield-note b{color:var(--red);}
+
+/* ---------- floating sparkles, drawn in pure CSS ---------- */
 .spark{position:fixed;width:20px;height:20px;background:var(--gold);opacity:.6;
   pointer-events:none;z-index:0;
   clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);
@@ -147,66 +194,141 @@ body{
 .spark.s4{bottom:24%;right:10%;width:18px;height:18px;animation-delay:.6s}
 @keyframes floaty{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-16px) rotate(8deg)}}
 
-@media (max-width:600px){
-  .top{padding:.8rem 1rem;}
-  .btn{width:100%;justify-content:center;}
-  .cta{width:100%;max-width:340px;}
+/* ---------- cursor magic dust (desktop only) ---------- */
+.dust{
+  position:fixed;left:0;top:0;width:14px;height:14px;background:var(--gold);
+  clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);
+  pointer-events:none;z-index:80;opacity:0;
 }
-html{scroll-behavior:smooth;}
+.dust.go{animation:dustFade .7s ease-out forwards;}
+@keyframes dustFade{
+  0%{opacity:.9;transform:translate(-50%,-50%) scale(1) rotate(0);}
+  100%{opacity:0;transform:translate(-50%,-160%) scale(.15) rotate(60deg);}
+}
 
-/* ================= HOW IT WORKS ================= */
-.wish{position:relative;z-index:1;background:#fff;border-top:4px solid var(--ink);padding:3.4rem 1.2rem 4.4rem;}
-.wish-head{text-align:center;max-width:700px;margin:0 auto;}
+/* ---------- comic zigzag tear between sections ---------- */
+.tear{position:relative;z-index:1;height:22px;margin-bottom:-1px;
+  background:var(--ink);
+  clip-path:polygon(0 100%,2.5% 0,5% 100%,7.5% 0,10% 100%,12.5% 0,15% 100%,17.5% 0,20% 100%,22.5% 0,25% 100%,27.5% 0,30% 100%,32.5% 0,35% 100%,37.5% 0,40% 100%,42.5% 0,45% 100%,47.5% 0,50% 100%,52.5% 0,55% 100%,57.5% 0,60% 100%,62.5% 0,65% 100%,67.5% 0,70% 100%,72.5% 0,75% 100%,77.5% 0,80% 100%,82.5% 0,85% 100%,87.5% 0,90% 100%,92.5% 0,95% 100%,97.5% 0,100% 100%);
+}
+
+/* ---------- shared section bones ---------- */
+.sect{position:relative;z-index:1;padding:3.6rem 1.2rem 4.2rem;}
+.sect-head{text-align:center;max-width:700px;margin:0 auto;}
 .kicker{
   display:inline-block;font-family:'Lilita One';font-size:.8rem;letter-spacing:.14em;
   color:#fff;background:var(--ai);padding:.32rem .85rem;border-radius:999px;
   border:2.5px solid var(--ink);transform:rotate(-1.6deg);text-transform:uppercase;box-shadow:2px 2px 0 var(--ink);
 }
-.wish-title{
+.kicker.gold{background:var(--gold);color:var(--ink);}
+.kicker.blue{background:var(--blue);}
+.sect-title{
   font-family:'Lilita One';font-size:clamp(2rem,7.5vw,3.6rem);line-height:1;margin:.8rem 0 0;
   -webkit-text-stroke:2px var(--ink);text-shadow:3px 4px 0 rgba(0,0,0,.12);
 }
-.wish-title .b{color:var(--blue);}
-.wish-title .o{color:var(--gold);}
+.sect-title .b{color:var(--blue);}
+.sect-title .o{color:var(--gold);}
 .hook{max-width:720px;margin:1.1rem auto 0;font-weight:800;font-size:clamp(1.05rem,3.4vw,1.6rem);line-height:1.32;color:var(--ink);}
 .hook b{color:var(--red);}
 
-/* magic lamp + the $1,000,000 wish */
-.lamp-stage{position:relative;max-width:520px;margin:2.4rem auto 0;text-align:center;}
+/* scroll reveal */
+.reveal{opacity:0;transform:translateY(26px) rotate(var(--tilt,0deg));transition:opacity .6s ease,transform .6s cubic-bezier(.2,1.2,.4,1);transition-delay:var(--d,0s);}
+.reveal.in{opacity:1;transform:none;}
+
+/* ================= THE LAMP ================= */
+.wish{background:#fff;}
+.lamp-stage{position:relative;max-width:560px;margin:2.4rem auto 0;text-align:center;}
 .lamp-glow{
-  position:absolute;top:2%;left:50%;transform:translateX(-50%);width:min(82%,360px);aspect-ratio:1;border-radius:50%;
-  background:radial-gradient(circle,rgba(251,180,23,.32),rgba(251,180,23,0) 60%);
+  position:absolute;top:-4%;left:50%;transform:translateX(-50%);width:min(82%,380px);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(251,180,23,.34),rgba(251,180,23,0) 60%);
   pointer-events:none;z-index:0;animation:glowPulse 3s ease-in-out infinite;
+  opacity:calc(.65 + var(--rub,0)*.35);
 }
 @keyframes glowPulse{0%,100%{opacity:.65}50%{opacity:1}}
 .lamp-img{
-  position:relative;z-index:1;width:clamp(190px,48vw,280px);height:auto;display:block;margin:0 auto;
-  mix-blend-mode:multiply;        /* melts the white JPG background, same as the genie */
+  position:relative;z-index:1;width:clamp(200px,50vw,300px);height:auto;display:block;margin:0 auto;
+  filter:drop-shadow(0 14px 16px rgba(224,154,0,.28));
   animation:bob 4.5s ease-in-out infinite;-webkit-user-drag:none;user-select:none;
+  cursor:grab;touch-action:none;
 }
-.lamp-amount{position:relative;z-index:1;margin-top:.3rem;font-family:'Lilita One';font-size:clamp(2.4rem,10vw,4.2rem);line-height:1;color:var(--gold);-webkit-text-stroke:2.5px var(--ink);text-shadow:3px 4px 0 rgba(0,0,0,.13);font-variant-numeric:tabular-nums;}
-.lamp-goal{margin-top:.35rem;font-family:'Lilita One';font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:#b78a12;}
-.live-pill{display:inline-flex;align-items:center;gap:.45rem;margin-top:.55rem;font-weight:800;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;color:#1a8f3c;}
-.live-dot{width:9px;height:9px;border-radius:50%;background:#27c247;animation:livedot 1.5s ease-out infinite;}
-@keyframes livedot{0%{box-shadow:0 0 0 0 rgba(39,194,71,.6)}70%{box-shadow:0 0 0 10px rgba(39,194,71,0)}100%{box-shadow:0 0 0 0 rgba(39,194,71,0)}}
-.lamp-cap{margin-top:.25rem;font-weight:700;color:#777;font-size:.92rem;}
-.lamp-cap b{color:var(--ink);}
+.lamp-img:active{cursor:grabbing;}
+.lamp-stage.hot .lamp-img{animation:wobble .18s ease-in-out infinite;}
+@keyframes wobble{0%,100%{transform:rotate(-2.4deg) scale(1.03);}50%{transform:rotate(2.4deg) scale(1.03);}}
+.lamp-stage.popping .lamp-img{animation:lampPop .55s cubic-bezier(.2,1.8,.4,1);}
+@keyframes lampPop{0%{transform:scale(1);}30%{transform:scale(.82,.78) rotate(-3deg);}62%{transform:scale(1.22,1.28) rotate(2deg);}100%{transform:scale(1);}}
+.rub-hint{
+  margin-top:.2rem;font-weight:700;font-size:.8rem;color:#b9962f;letter-spacing:.06em;
+  opacity:0;transition:opacity .6s ease;user-select:none;
+}
+.rub-hint.show{opacity:.85;animation:hintNudge 2.4s ease-in-out infinite;}
+@keyframes hintNudge{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+/* the $1,000,000 odometer */
+.amount-wrap{position:relative;display:inline-block;margin-top:.45rem;}
+.odo{
+  display:inline-flex;align-items:baseline;font-family:'Lilita One';
+  font-size:clamp(2.4rem,10vw,4.2rem);line-height:1;color:var(--gold);
+  -webkit-text-stroke:2.5px var(--ink);text-shadow:3px 4px 0 rgba(0,0,0,.13);
+  font-variant-numeric:tabular-nums;
+}
+.odo-reel{display:inline-block;height:1em;overflow:hidden;}
+.odo-track{display:flex;flex-direction:column;transform:translateY(calc(var(--n,0) * -1em));
+  transition:transform var(--t,1.6s) cubic-bezier(.14,.9,.24,1);transition-delay:var(--td,0s);}
+.odo-track span{height:1em;display:block;}
 
 /* the shocked genie reacting to the $1,000,000 wish */
-.amount-wrap{position:relative;display:inline-block;}
 .million-genie{
-  /* DESKTOP: pops up beside the number, eyes locked on the million */
   position:absolute;left:100%;bottom:-44px;height:132px;width:auto;margin-left:-18px;z-index:3;
   filter:drop-shadow(2px 4px 3px rgba(0,0,0,.22));
   pointer-events:none;-webkit-user-drag:none;user-select:none;
   animation:bob 4.5s ease-in-out infinite;
 }
-/* PHONE: smaller, sits just to the right of the number — eyes on it, digits stay readable */
+.lamp-stage.popping .million-genie{animation:genieFreak .7s cubic-bezier(.2,1.8,.4,1);}
+@keyframes genieFreak{0%{transform:scale(1);}35%{transform:scale(1.5) rotate(-8deg);}70%{transform:scale(.92) rotate(4deg);}100%{transform:scale(1);}}
 @media (max-width:600px){ .million-genie{height:92px;left:100%;right:auto;bottom:-40px;margin-left:-8px;} }
+
+.lamp-goal{margin-top:.35rem;font-family:'Lilita One';font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:#b78a12;}
+
+/* the Lamp Tracker meter */
+.meter-wrap{max-width:440px;margin:1.35rem auto 0;}
+.meter{
+  position:relative;height:38px;background:#fff;border:3px solid var(--ink);border-radius:999px;
+  box-shadow:3px 4px 0 var(--ink);overflow:hidden;
+}
+.meter-fill{
+  position:absolute;inset:0;width:var(--fill,1.2%);min-width:22px;border-right:3px solid var(--ink);
+  background:linear-gradient(180deg,#FFD45E 0%,var(--gold) 55%,var(--gold-deep) 100%);
+  border-radius:999px 0 0 999px;transition:width 1.2s cubic-bezier(.2,1,.3,1);
+}
+/* liquid-gold sheen sweeping across the fill */
+.meter-fill::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.75) 48%,transparent 60%);
+  transform:translateX(-100%);animation:sheen 2.6s ease-in-out infinite;
+}
+@keyframes sheen{0%{transform:translateX(-100%)}60%,100%{transform:translateX(220%)}}
+.meter-chip{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  font-family:'Lilita One';font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#9a7a17;
+  background:rgba(255,255,255,.82);padding:.18rem .6rem;border-radius:999px;border:2px solid rgba(20,20,20,.14);
+  white-space:nowrap;
+}
+.meter-labels{display:flex;justify-content:space-between;margin-top:.4rem;
+  font-family:'Lilita One';font-size:.78rem;letter-spacing:.1em;color:#a08430;}
+.meter-labels b{color:var(--ink);}
+
+/* honest agent status — amber until the Agent is really live */
+.live-pill{display:inline-flex;align-items:center;gap:.45rem;margin-top:.8rem;font-weight:800;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;color:#a06a00;}
+.live-dot{width:9px;height:9px;border-radius:50%;background:#F5A300;animation:livedot 1.5s ease-out infinite;}
+@keyframes livedot{0%{box-shadow:0 0 0 0 rgba(245,163,0,.55)}70%{box-shadow:0 0 0 10px rgba(245,163,0,0)}100%{box-shadow:0 0 0 0 rgba(245,163,0,0)}}
+.lamp-cap{margin-top:.3rem;font-weight:700;color:#777;font-size:.92rem;}
+.lamp-cap b{color:var(--ink);}
 
 /* steps */
 .steps{max-width:720px;margin:2.6rem auto 0;display:grid;gap:.85rem;}
-.step{display:flex;align-items:center;gap:1rem;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:3px 4px 0 var(--ink);padding:.85rem 1.05rem;}
+.step{display:flex;align-items:center;gap:1rem;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:3px 4px 0 var(--ink);padding:.85rem 1.05rem;
+  transition:transform .18s ease,box-shadow .18s ease;}
+.step:hover{transform:translateY(-3px) rotate(-.5deg);box-shadow:5px 7px 0 var(--ink);}
 .step .ico{flex:none;width:52px;height:52px;border-radius:13px;display:grid;place-items:center;border:2.5px solid var(--ink);background:#FFF3D6;}
 .step .ico svg{width:31px;height:31px;}
 .step .txt{font-weight:700;font-size:clamp(.98rem,2.7vw,1.18rem);text-align:left;line-height:1.25;}
@@ -216,13 +338,129 @@ html{scroll-behavior:smooth;}
 /* section cta */
 .wish-cta-line{text-align:center;font-weight:800;font-size:clamp(1rem,3vw,1.3rem);margin:2.4rem auto 1rem;max-width:560px;}
 .wish-cta-line b{color:var(--red);}
-.wish-cta{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;max-width:420px;margin:0 auto;}
+.wish-cta{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;max-width:460px;margin:0 auto;}
+
+/* ================= TOKENOMICS ================= */
+.tok{background:var(--cream);border-top:4px solid var(--ink);}
+.stamps{display:flex;gap:1rem 1.3rem;justify-content:center;flex-wrap:wrap;margin:2.1rem auto 0;max-width:760px;}
+.stamp{
+  font-family:'Lilita One';font-size:clamp(.95rem,2.6vw,1.25rem);letter-spacing:.1em;text-transform:uppercase;
+  padding:.5rem 1.05rem;border:3px solid currentColor;border-radius:10px;
+  transform:rotate(var(--rot,-4deg));opacity:0;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);
+  -webkit-mask-image:radial-gradient(rgba(0,0,0,.94) 60%,rgba(0,0,0,.72));
+          mask-image:radial-gradient(rgba(0,0,0,.94) 60%,rgba(0,0,0,.72));
+  background:rgba(255,255,255,.4);
+}
+.stamp.red{color:var(--red);}
+.stamp.blue{color:var(--blue);}
+.stamp.inked{animation:stampIn .5s cubic-bezier(.25,1.6,.4,1) both;animation-delay:var(--d,0s);}
+@keyframes stampIn{
+  0%{opacity:0;transform:rotate(calc(var(--rot,-4deg) + 14deg)) scale(2.4);}
+  55%{opacity:1;transform:rotate(var(--rot,-4deg)) scale(.94);}
+  100%{opacity:1;transform:rotate(var(--rot,-4deg)) scale(1);}
+}
+.tok-grid{
+  max-width:860px;margin:2.4rem auto 0;display:grid;gap:1rem;
+  grid-template-columns:repeat(3,1fr);
+}
+@media (max-width:760px){.tok-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:460px){.tok-grid{grid-template-columns:1fr 1fr;gap:.7rem;}}
+.tok-card{
+  background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:3px 4px 0 var(--ink);
+  padding:1.05rem 1rem .95rem;text-align:center;
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.tok-card:hover{transform:translateY(-4px) rotate(.5deg);box-shadow:5px 7px 0 var(--ink);}
+.tok-card .lab{font-weight:800;font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;color:#9a8a5a;}
+.tok-card .val{font-family:'Lilita One';font-size:clamp(1.35rem,4.6vw,1.9rem);margin-top:.25rem;line-height:1.05;color:var(--ink);}
+.tok-card .val.gold{color:var(--gold);-webkit-text-stroke:1.4px var(--ink);}
+.tok-card .val.blue{color:var(--blue);}
+.tok-card .sub{font-weight:700;font-size:.78rem;color:#8b8b8b;margin-top:.2rem;}
+.tok-note{max-width:640px;margin:1.9rem auto 0;text-align:center;font-weight:700;color:#6d6d6d;font-size:.95rem;}
+.tok-note a{color:var(--blue);}
+
+/* ================= FAQ ================= */
+.faqs{max-width:720px;margin:2.3rem auto 0;display:grid;gap:.8rem;}
+.faq{
+  background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:3px 4px 0 var(--ink);
+  overflow:hidden;
+}
+.faq summary{
+  list-style:none;cursor:pointer;display:flex;align-items:center;gap:.8rem;
+  padding:.95rem 1.1rem;font-weight:800;font-size:clamp(.98rem,2.7vw,1.15rem);line-height:1.25;text-align:left;
+}
+.faq summary::-webkit-details-marker{display:none;}
+.faq .plus{
+  flex:none;margin-left:auto;width:30px;height:30px;border:2.5px solid var(--ink);border-radius:9px;
+  display:grid;place-items:center;font-family:'Lilita One';font-size:1.15rem;background:var(--gold);
+  transition:transform .25s cubic-bezier(.2,1.4,.4,1);
+}
+.faq[open] .plus{transform:rotate(45deg);background:var(--blue);color:#fff;}
+.faq-a{padding:0 1.1rem 1.05rem;font-weight:600;color:#454545;text-align:left;line-height:1.5;font-size:.98rem;}
+.faq[open] .faq-a{animation:faqIn .3s ease both;}
+@keyframes faqIn{from{opacity:0;transform:translateY(-7px);}to{opacity:1;transform:none;}}
+.faq-a b{color:var(--ink);}
+.faq-a .warn{color:var(--red);font-weight:800;}
+
+/* ================= FINAL CTA ================= */
+.pop{background:var(--gold);border-top:4px solid var(--ink);text-align:center;position:relative;overflow:hidden;}
+.pop::before{ /* giant halftone dots on gold, comic print style */
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(rgba(20,20,20,.07) 2px,transparent 2.6px) 0 0/30px 30px;
+  pointer-events:none;
+}
+.pop-title{
+  position:relative;font-family:'Lilita One';font-size:clamp(1.7rem,6.5vw,3rem);line-height:1.05;
+  color:#fff;-webkit-text-stroke:2.5px var(--ink);text-shadow:4px 5px 0 rgba(0,0,0,.18);
+  max-width:700px;margin:0 auto;transform:rotate(-1.2deg);
+}
+.pop-sub{position:relative;font-weight:800;margin:1rem auto 1.6rem;max-width:560px;font-size:clamp(1rem,3vw,1.2rem);}
+.pop .btn-ink:hover{background:#000;}
+.pop-chip{
+  position:relative;display:inline-block;margin-top:1.1rem;font-weight:800;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;
+  background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:.4rem .9rem;box-shadow:2px 2px 0 var(--ink);
+}
+
+/* ================= FOOTER ================= */
+footer{background:var(--ink);color:#fff;padding:2.4rem 1.4rem 2rem;position:relative;z-index:1;}
+.foot-inner{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:1.4rem;align-items:center;text-align:center;}
+.foot-brand{display:flex;align-items:center;gap:.6rem;}
+.foot-brand img{width:40px;height:40px;border-radius:50%;border:2.5px solid #fff;}
+.foot-brand span{font-family:'Lilita One';font-size:1.2rem;color:var(--gold);}
+.foot-nav{display:flex;gap:1.4rem;flex-wrap:wrap;justify-content:center;}
+.foot-nav a{color:#fff;opacity:.8;text-decoration:none;font-weight:700;font-size:.92rem;transition:opacity .15s;}
+.foot-nav a:hover{opacity:1;color:var(--gold);}
+.foot-disc{max-width:640px;font-size:.78rem;line-height:1.55;color:#9a9a9a;font-weight:600;}
+.foot-copy{font-size:.8rem;color:#8a8a8a;font-weight:700;}
+.foot-copy b{color:var(--gold);}
+
+/* ================= wish-granted toast ================= */
+.wish-toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,140%);z-index:90;
+  background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:4px 5px 0 var(--ink);
+  padding:.8rem 1.2rem;font-weight:800;font-size:.98rem;max-width:min(92vw,420px);text-align:center;
+  transition:transform .45s cubic-bezier(.2,1.4,.4,1);
+}
+.wish-toast.show{transform:translate(-50%,0);}
+.wish-toast b{color:var(--gold-deep);}
+
+/* confetti canvas overlays everything, never blocks clicks */
+#confetti{position:fixed;inset:0;z-index:70;pointer-events:none;}
 
 @media (max-width:600px){
-  .wish{padding:2.6rem 1rem 3.4rem;}
+  .top{padding:.8rem 1rem;}
+  .btn{width:100%;justify-content:center;}
+  .cta{width:100%;max-width:340px;}
+  .sect{padding:2.6rem 1rem 3.4rem;}
   .step .num{font-size:1.3rem;}
 }
-@media (prefers-reduced-motion:reduce){*{animation:none!important;}}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;}
+  .reveal{opacity:1;transform:none;}
+  .stamp{opacity:1;}
+  .odo-track{transform:translateY(calc(var(--nf,0) * -1em));}
+}
 </style>
 </head>
 <body>
@@ -232,6 +470,12 @@ html{scroll-behavior:smooth;}
     <img class="brand-logo" src="img/logo.jpg" alt="Genie Coin logo" width="44" height="44" decoding="async">
     <span class="brand-mini">$GENIE</span>
   </a>
+  <nav class="top-nav" aria-label="Sections">
+    <a href="#lamp">The Lamp</a>
+    <a href="#tokenomics">Tokenomics</a>
+    <a href="#faq">FAQ</a>
+    <a href="whitepaper.pdf" target="_blank" rel="noopener noreferrer">White Paper</a>
+  </nav>
   <nav class="socials" aria-label="Social links">
     <a href="https://t.me/GenieCoinChat" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
@@ -243,62 +487,85 @@ html{scroll-behavior:smooth;}
   <div class="burst" aria-hidden="true"></div>
 
   <span class="ai-badge">⚡ Crypto&nbsp;×&nbsp;AI&nbsp;&nbsp;•&nbsp;&nbsp;Autonomous Agent</span>
-  <h1 class="wordmark"><span class="g">GENIE</span> <span class="c">COIN</span></h1>
+  <h1 class="wordmark" aria-label="Genie Coin">
+    <span aria-hidden="true"><span class="g"><span class="l" style="--i:0">G</span><span class="l" style="--i:1">E</span><span class="l" style="--i:2">N</span><span class="l" style="--i:3">I</span><span class="l" style="--i:4">E</span></span>
+    <span class="c"><span class="l" style="--i:5">C</span><span class="l" style="--i:6">O</span><span class="l" style="--i:7">I</span><span class="l" style="--i:8">N</span></span></span>
+  </h1>
   <p class="hero-claim">The coin that makes the <b>most millionaires</b> in the world.</p>
 
   <div class="genie-wrap">
-    <img class="genie" src="img/Genie.jpg" alt="Genie Coin — the meme genie" decoding="async">
+    <img class="genie" src="img/genie.webp" alt="Genie Coin — the meme genie" decoding="async" fetchpriority="high">
   </div>
 
   <div class="cta">
-    <span class="btn btn-soon" role="button" aria-disabled="true" title="Not live yet — join the Telegram so you don't miss the launch">🔒 Coming Soon</span>
-    <a class="btn btn-tg" href="https://t.me/GenieCoinChat" target="_blank" rel="noopener noreferrer">
+    <a class="btn btn-gold" href="https://t.me/GenieCoinChat" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
       Join the Tribe
     </a>
+    <a class="btn btn-wp" href="whitepaper.pdf" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a1 1 0 0 0-1 1v18a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z"/><path d="M14 2v5h5"/><path d="M9 13h6M9 17h6"/></svg>
+      White Paper
+    </a>
   </div>
+
+  <p class="shield-note">🛡️ Token <b>not live yet</b>. Anyone selling “$GENIE” today is a scammer — the real launch is announced in our Telegram first.</p>
 </main>
 
-<!-- ============ HOW IT WORKS ============ -->
-<section id="how" class="wish">
+<div class="tear" aria-hidden="true"></div>
 
-  <div class="wish-head">
+<!-- ============ THE LAMP / HOW IT WORKS ============ -->
+<section id="lamp" class="sect wish">
+
+  <div class="sect-head">
     <span class="kicker">🤖 Crypto × AI</span>
-    <h2 class="wish-title"><span class="b">MEET THE</span> <span class="o">GENIE AGENT.</span></h2>
+    <h2 class="sect-title"><span class="b">MEET THE</span> <span class="o">GENIE AGENT.</span></h2>
     <p class="hook">An autonomous <b>AI agent</b> runs the Magic Lamp. The moment it fills to <b>$1,000,000</b>, the Genie sends it to one random holder — no humans, just AI.</p>
   </div>
 
   <!-- the $1,000,000 wish -->
-  <div class="lamp-stage">
+  <div class="lamp-stage" id="lampStage">
     <span class="lamp-glow" aria-hidden="true"></span>
-    <img class="lamp-img" src="img/lamp.jpg" alt="The Magic Lamp" decoding="async">
+    <img class="lamp-img" id="lampImg" src="img/lamp.webp" alt="The Magic Lamp — rub it and see" decoding="async" loading="lazy">
+    <p class="rub-hint" id="rubHint">✨ psst… rub the lamp ✨</p>
 
     <div class="amount-wrap">
-      <div class="lamp-amount">$1,000,000</div>
-      <img class="million-genie" src="img/shocked.png" alt="Genie shocked by the million-dollar wish" decoding="async">
+      <div class="odo" id="odo" role="img" aria-label="One million dollars">
+        <span aria-hidden="true">$</span><!-- digit reels are built by JS -->
+      </div>
+      <img class="million-genie" src="img/shocked.webp" alt="Genie shocked by the million-dollar wish" decoding="async" loading="lazy">
     </div>
     <div class="lamp-goal">One wish · One millionaire</div>
-    <div class="live-pill"><span class="live-dot" aria-hidden="true"></span> Genie Agent · online</div>
+
+    <!-- the Lamp Tracker -->
+    <div class="meter-wrap">
+      <div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="1000000" aria-valuenow="0" aria-label="Magic Lamp progress">
+        <div class="meter-fill" id="meterFill"></div>
+        <span class="meter-chip">Fills at launch</span>
+      </div>
+      <div class="meter-labels"><b>$0</b><span>THE LAMP</span><b>$1,000,000</b></div>
+    </div>
+
+    <div class="live-pill"><span class="live-dot" aria-hidden="true"></span> Genie Agent · awakens at launch</div>
     <p class="lamp-cap">When the Lamp fills to <b>$1,000,000</b>, the AI sends it to one holder.</p>
   </div>
 
   <div class="steps">
-    <div class="step">
+    <div class="step reveal" style="--d:.0s;--tilt:-1deg">
       <span class="ico"><svg viewBox="0 0 24 24" stroke="#141414" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="15.5" cy="9" r="5.5" fill="#FFD45E"/><circle cx="9" cy="14.5" r="6.5" fill="#FBB417"/><path d="M9 11.3v6.4M10.8 12.5c-.45-.5-1.1-.8-1.8-.8-1.05 0-1.9.5-1.9 1.3 0 .75.7 1.15 1.9 1.3 1.2.15 1.9.55 1.9 1.4 0 .8-.85 1.3-1.9 1.3-.75 0-1.45-.3-1.9-.8" fill="none" stroke-width="1.25"/></svg></span>
       <span class="txt">Every buy &amp; sell pays a small <b>fee</b>.</span>
       <span class="num">1</span>
     </div>
-    <div class="step">
+    <div class="step reveal" style="--d:.08s;--tilt:1deg">
       <span class="ico"><svg viewBox="0 0 24 24" stroke="#141414" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M2.5 15c2.2-3.3 6-4.3 9.5-4.3 4 0 6.4 1.1 8.6 2.6.6.4.5 1.1-.2 1.4-2.2.9-4.6 1.5-8.4 1.5-4.2 0-7.2-.3-9.5-.6Z" fill="#FBB417"/><path d="M2.6 13.6c-1.1-.2-1.9.2-2.3.9" fill="none"/><path d="M10.7 10.5c.1-.9 2-.9 2.1 0" fill="none"/><circle cx="11.8" cy="8.3" r="1.5" fill="#FFD45E"/><path d="M11.8 6.8c.9-.7.9-1.6.2-2.5" fill="none" stroke="#2BA9E0" stroke-width="1.3"/><path d="M14.3 6.2c.7-.5.7-1.2.2-1.9" fill="none" stroke="#2BA9E0" stroke-width="1.1"/></svg></span>
       <span class="txt">Every fee fills the <b>Magic Lamp</b> wallet.</span>
       <span class="num">2</span>
     </div>
-    <div class="step">
+    <div class="step reveal" style="--d:.16s;--tilt:-1deg">
       <span class="ico"><svg viewBox="0 0 24 24" stroke="#141414" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M12 3.4V5.6" fill="none"/><circle cx="12" cy="2.7" r="1.1" fill="#FBB417"/><path d="M4.5 9.6H3.1v3.8h1.4M19.5 9.6h1.4v3.8h-1.4" fill="#FFD45E"/><rect x="4.5" y="5.6" width="15" height="11.8" rx="3.2" fill="#FBB417"/><circle cx="9.2" cy="11.2" r="1.7" fill="#fff"/><circle cx="14.8" cy="11.2" r="1.7" fill="#fff"/><circle cx="9.2" cy="11.2" r=".65" fill="#141414" stroke="none"/><circle cx="14.8" cy="11.2" r=".65" fill="#141414" stroke="none"/><path d="M9.5 14.7h5" fill="none"/></svg></span>
       <span class="txt">The <b>Genie Agent</b> — an autonomous AI — watches the Lamp.</span>
       <span class="num">3</span>
     </div>
-    <div class="step">
+    <div class="step reveal" style="--d:.24s;--tilt:1deg">
       <span class="ico"><svg viewBox="0 0 24 24" stroke="#141414" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M8.8 6.4c-.55-.5-.9-1.2-.9-1.9 0-.4.3-.7.7-.7h6.8c.4 0 .7.3.7.7 0 .7-.35 1.4-.9 1.9" fill="#FFD45E"/><path d="M8.8 6.4c-2.3 1.6-3.9 4.3-3.9 7.2 0 3.5 2.8 5.7 7.1 5.7s7.1-2.2 7.1-5.7c0-2.9-1.6-5.6-3.9-7.2Z" fill="#FBB417"/><path d="M12 10.2v6.1M13.8 11.3c-.5-.55-1.2-.85-1.9-.85-1.05 0-1.9.5-1.9 1.3 0 .78.72 1.18 1.9 1.33 1.18.15 1.9.55 1.9 1.4 0 .8-.85 1.32-1.9 1.32-.78 0-1.5-.3-1.95-.85" fill="none" stroke-width="1.25"/></svg></span>
       <span class="txt">At <b>$1,000,000</b>, the Agent sends it to one random holder. Then it refills. Forever.</span>
       <span class="num">4</span>
@@ -307,18 +574,333 @@ html{scroll-behavior:smooth;}
 
   <p class="wish-cta-line">Hold $GENIE and let the AI make you a millionaire. <b>Be in the wallet when the Lamp pops.</b></p>
   <div class="wish-cta">
-    <a class="btn btn-wp" href="whitepaper.pdf" target="_blank" rel="noopener noreferrer">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a1 1 0 0 0-1 1v18a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z"/><path d="M14 2v5h5"/><path d="M9 13h6M9 17h6"/></svg>
-      White Paper
+    <a class="btn btn-gold" href="https://t.me/GenieCoinChat" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+      Join the Tribe
     </a>
   </div>
 
 </section>
+
+<!-- ============ TOKENOMICS ============ -->
+<section id="tokenomics" class="sect tok">
+  <div class="sect-head">
+    <span class="kicker gold">💰 The Numbers</span>
+    <h2 class="sect-title"><span class="o">TOKENOMICS</span> <span class="b">YOU CAN CHECK.</span></h2>
+    <p class="hook">Everything below is written into the contract itself — <b>nobody can quietly change it later.</b> Not even us.</p>
+  </div>
+
+  <div class="stamps" id="stamps" aria-label="Contract guarantees">
+    <span class="stamp red"  style="--rot:-5deg;--d:.0s">No Mint</span>
+    <span class="stamp blue" style="--rot:3deg;--d:.12s">0% Team</span>
+    <span class="stamp red"  style="--rot:-3deg;--d:.24s">5% Forever</span>
+    <span class="stamp blue" style="--rot:4deg;--d:.36s">No Presale</span>
+  </div>
+
+  <div class="tok-grid">
+    <div class="tok-card reveal" style="--d:.0s">
+      <div class="lab">Total supply</div>
+      <div class="val gold">500T</div>
+      <div class="sub">minted once, never again</div>
+    </div>
+    <div class="tok-card reveal" style="--d:.06s">
+      <div class="lab">Buy / sell tax</div>
+      <div class="val">5% / 5%</div>
+      <div class="sub">hardcoded — can never change</div>
+    </div>
+    <div class="tok-card reveal" style="--d:.12s">
+      <div class="lab">Fees go to</div>
+      <div class="val gold">100% → Lamp</div>
+      <div class="sub">no team treasury</div>
+    </div>
+    <div class="tok-card reveal" style="--d:.18s">
+      <div class="lab">Team allocation</div>
+      <div class="val">0</div>
+      <div class="sub">no presale, no vesting</div>
+    </div>
+    <div class="tok-card reveal" style="--d:.24s">
+      <div class="lab">Wallet transfers</div>
+      <div class="val blue">0% fee</div>
+      <div class="sub">moving ≠ trading</div>
+    </div>
+    <div class="tok-card reveal" style="--d:.3s">
+      <div class="lab">Network</div>
+      <div class="val blue">Ethereum</div>
+      <div class="sub">trades on Uniswap</div>
+    </div>
+  </div>
+
+  <p class="tok-note">Contract address, Magic Lamp wallet and LP-lock proof will be published here at launch — until then, trust nothing that isn’t in the <a href="whitepaper.pdf" target="_blank" rel="noopener noreferrer">White Paper</a>.</p>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" class="sect" style="background:#fff;border-top:4px solid var(--ink);">
+  <div class="sect-head">
+    <span class="kicker blue">🧞 Real Answers</span>
+    <h2 class="sect-title"><span class="b">ASK THE</span> <span class="o">GENIE.</span></h2>
+  </div>
+
+  <div class="faqs">
+    <details class="faq reveal" style="--d:.0s">
+      <summary>When is launch? <span class="plus">+</span></summary>
+      <div class="faq-a">Soon — and it will be announced in our <b>Telegram first</b>. <span class="warn">Anyone selling “$GENIE” before that announcement is a scammer.</span> The official contract address will be posted here and in the Telegram at the same moment.</div>
+    </details>
+    <details class="faq reveal" style="--d:.05s">
+      <summary>How do I win the $1,000,000? <span class="plus">+</span></summary>
+      <div class="faq-a">Just <b>hold $GENIE in your own wallet</b>. When the Lamp reaches $1,000,000, the Genie Agent picks one holder at random and sends the whole amount. No tickets, no forms, no “claim” sites — <span class="warn">anyone asking you to “claim” a prize is a scammer.</span></div>
+    </details>
+    <details class="faq reveal" style="--d:.1s">
+      <summary>What exactly is the Genie Agent? <span class="plus">+</span></summary>
+      <div class="faq-a">An <b>autonomous AI</b> that watches the Magic Lamp wallet and executes the payout itself — no human presses the button. How it sources randomness, how its key is secured and how you can verify each payout will be published <b>at launch</b>. We’d rather say “at launch” than overclaim today.</div>
+    </details>
+    <details class="faq reveal" style="--d:.15s">
+      <summary>Can the team rug or raise the fee? <span class="plus">+</span></summary>
+      <div class="faq-a">No. The 5% fee is a <b>Solidity constant</b> — there is no function to change it. There’s <b>no mint</b>, <b>no blacklist</b>, and the contract refuses to let the owner withdraw GENIE fees from their path to the Lamp. The LP-lock link will be published at launch so you can verify it yourself.</div>
+    </details>
+    <details class="faq reveal" style="--d:.2s">
+      <summary>Where do the fees actually go? <span class="plus">+</span></summary>
+      <div class="faq-a"><b>100% into the Magic Lamp wallet.</b> There is no team treasury and no marketing wallet skimming a cut. The Lamp fills, it pays a millionaire, it refills. That’s the whole machine.</div>
+    </details>
+    <details class="faq reveal" style="--d:.25s">
+      <summary>Is this financial advice? <span class="plus">+</span></summary>
+      <div class="faq-a">No. $GENIE is a <b>meme token for entertainment</b>. Memecoins are extremely volatile — never spend money you can’t afford to lose, and always do your own research.</div>
+    </details>
+  </div>
+</section>
+
+<div class="tear" aria-hidden="true"></div>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="sect pop">
+  <h2 class="pop-title">BE IN THE WALLET WHEN THE LAMP POPS.</h2>
+  <p class="pop-sub">The Lamp fills. The Genie picks. Someone becomes a millionaire. Make sure you’re holding when it happens.</p>
+  <a class="btn btn-ink" href="https://t.me/GenieCoinChat" target="_blank" rel="noopener noreferrer" style="position:relative;">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+    Join the Tribe
+  </a>
+  <div><span class="pop-chip">🔒 Buy — coming soon</span></div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-brand">
+      <img src="img/logo.jpg" alt="Genie Coin logo" width="40" height="40" decoding="async" loading="lazy">
+      <span>$GENIE</span>
+    </div>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="#lamp">The Lamp</a>
+      <a href="#tokenomics">Tokenomics</a>
+      <a href="#faq">FAQ</a>
+      <a href="whitepaper.pdf" target="_blank" rel="noopener noreferrer">White Paper</a>
+      <a href="https://t.me/GenieCoinChat" target="_blank" rel="noopener noreferrer">Telegram</a>
+    </nav>
+    <p class="foot-disc">$GENIE is a meme token created for entertainment. Nothing on this site is financial advice, an offer, or a guarantee of any outcome. Cryptocurrency is extremely volatile and you can lose everything you put in — never spend money you can’t afford to lose, and always do your own research. The token is not live yet; the only official announcement channel is our Telegram.</p>
+    <p class="foot-copy">© 2026 <b>Genie Coin</b> · made with ✨ by the Tribe</p>
+  </div>
+</footer>
 
 <span class="spark s1" aria-hidden="true"></span>
 <span class="spark s2" aria-hidden="true"></span>
 <span class="spark s3" aria-hidden="true"></span>
 <span class="spark s4" aria-hidden="true"></span>
 
+<div class="wish-toast" id="wishToast" role="status">🧞 <b>The Genie heard you.</b> Your wish is queued for launch — hold $GENIE to be in the draw. ✨</div>
+
+<script>
+(function(){
+"use strict";
+var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- scroll reveals ---------- */
+var io = new IntersectionObserver(function(es){
+  es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+},{threshold:.18});
+document.querySelectorAll(".reveal").forEach(function(el){ io.observe(el); });
+
+/* ---------- rubber stamps ---------- */
+var stamps = document.getElementById("stamps");
+if(stamps){
+  new IntersectionObserver(function(es,obs){
+    if(es[0].isIntersecting){
+      stamps.querySelectorAll(".stamp").forEach(function(s){ s.classList.add("inked"); });
+      obs.disconnect();
+    }
+  },{threshold:.4}).observe(stamps);
+}
+
+/* ---------- $1,000,000 odometer (slot-machine digits) ---------- */
+var odo = document.getElementById("odo");
+var TARGET = "1,000,000";
+var reels = [];
+if(odo){
+  TARGET.split("").forEach(function(ch,i){
+    if(ch === ","){
+      var c = document.createElement("span"); c.textContent = ",";
+      c.setAttribute("aria-hidden","true"); odo.appendChild(c); return;
+    }
+    var reel = document.createElement("span"); reel.className = "odo-reel";
+    reel.setAttribute("aria-hidden","true");
+    var track = document.createElement("span"); track.className = "odo-track";
+    /* two full 0-9 spins, then the target digit */
+    for(var k=0;k<20;k++){ var d=document.createElement("span"); d.textContent = k%10; track.appendChild(d); }
+    var fin = document.createElement("span"); fin.textContent = ch; track.appendChild(fin);
+    track.style.setProperty("--nf", 20); /* reduced-motion lands straight on the final row */
+    reel.appendChild(track); odo.appendChild(reel);
+    reels.push({track:track, digit:ch, idx:i});
+  });
+  var spun = false;
+  function spin(){
+    if(spun) return; spun = true;
+    reels.forEach(function(r,j){
+      r.track.style.setProperty("--t", (1.1 + j*.22) + "s");
+      r.track.style.setProperty("--td", (j*.06) + "s");
+      /* force a frame at 0 before rolling so the transition always plays */
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){
+        r.track.style.setProperty("--n", 20);
+      });});
+    });
+  }
+  if(reduced){ reels.forEach(function(r){ r.track.style.setProperty("--n",20); }); }
+  else new IntersectionObserver(function(es,obs){
+    if(es[0].isIntersecting){ spin(); obs.disconnect(); }
+  },{threshold:.6}).observe(odo);
+}
+
+/* ---------- cursor magic dust (fine pointers only) ---------- */
+if(!reduced && matchMedia("(pointer: fine)").matches){
+  var POOL = 26, dust = [], di = 0, last = 0;
+  for(var p=0;p<POOL;p++){
+    var s = document.createElement("span"); s.className = "dust";
+    document.body.appendChild(s); dust.push(s);
+  }
+  addEventListener("pointermove", function(e){
+    var now = performance.now();
+    if(now - last < 44) return; last = now;
+    var el = dust[di = (di+1)%POOL];
+    el.classList.remove("go");
+    el.style.left = (e.clientX + (Math.random()*18-9)) + "px";
+    el.style.top  = (e.clientY + (Math.random()*18-9)) + "px";
+    var sz = 8 + Math.random()*10;
+    el.style.width = sz+"px"; el.style.height = sz+"px";
+    el.style.background = Math.random() < .78 ? "var(--gold)" : "var(--blue)";
+    void el.offsetWidth; /* restart the animation */
+    el.classList.add("go");
+  }, {passive:true});
+}
+
+/* ---------- coin confetti (hand-rolled, zero deps) ---------- */
+var confettiRAF = null;
+function coinBurst(x, y){
+  if(reduced) return;
+  var cv = document.getElementById("confetti");
+  if(!cv){ cv = document.createElement("canvas"); cv.id = "confetti"; document.body.appendChild(cv); }
+  cv.width = innerWidth; cv.height = innerHeight;
+  var ctx = cv.getContext("2d");
+  var golds = ["#FBB417","#FFD45E","#E09A00","#FFC83A"];
+  var parts = [];
+  for(var i=0;i<150;i++){
+    var a = -Math.PI/2 + (Math.random()-.5)*1.9;      /* mostly upward fountain */
+    var v = 7 + Math.random()*9;
+    parts.push({
+      x:x, y:y,
+      vx:Math.cos(a)*v, vy:Math.sin(a)*v - 2,
+      g:.22 + Math.random()*.08,
+      r:(Math.random()<.7) ? 5+Math.random()*6 : 3+Math.random()*4,   /* coins & stars */
+      coin:Math.random()<.7,
+      ph:Math.random()*Math.PI*2, vph:.15+Math.random()*.2,           /* coin flip phase */
+      rot:Math.random()*Math.PI*2, vrot:(Math.random()-.5)*.3,
+      c:golds[(Math.random()*golds.length)|0],
+      life:1, decay:.008+Math.random()*.006
+    });
+  }
+  cancelAnimationFrame(confettiRAF);
+  (function tick(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    var alive = false;
+    parts.forEach(function(q){
+      if(q.life<=0) return;
+      alive = true;
+      q.x+=q.vx; q.y+=q.vy; q.vy+=q.g; q.vx*=.99;
+      q.ph+=q.vph; q.rot+=q.vrot; q.life-=q.decay;
+      ctx.save();
+      ctx.globalAlpha = Math.max(q.life,0);
+      ctx.translate(q.x,q.y); ctx.rotate(q.rot);
+      ctx.fillStyle = q.c;
+      ctx.strokeStyle = "#141414"; ctx.lineWidth = 1.4;
+      if(q.coin){                       /* spinning coin = ellipse squashing on X */
+        var w = Math.abs(Math.cos(q.ph))*q.r + 1.2;
+        ctx.beginPath(); ctx.ellipse(0,0,w,q.r,0,0,Math.PI*2);
+        ctx.fill(); ctx.stroke();
+      }else{                            /* 4-point star */
+        var r=q.r*1.6, m=r*.36;
+        ctx.beginPath();
+        ctx.moveTo(0,-r); ctx.lineTo(m,-m); ctx.lineTo(r,0); ctx.lineTo(m,m);
+        ctx.lineTo(0,r); ctx.lineTo(-m,m); ctx.lineTo(-r,0); ctx.lineTo(-m,-m);
+        ctx.closePath(); ctx.fill();
+      }
+      ctx.restore();
+    });
+    if(alive) confettiRAF = requestAnimationFrame(tick);
+    else ctx.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+
+/* ---------- rub-the-lamp easter egg ---------- */
+var stage = document.getElementById("lampStage"),
+    lamp  = document.getElementById("lampImg"),
+    hint  = document.getElementById("rubHint"),
+    toast = document.getElementById("wishToast");
+if(lamp){
+  var energy = 0, cooling = false, lastPt = null, toastT = null;
+
+  new IntersectionObserver(function(es,obs){
+    if(es[0].isIntersecting){
+      setTimeout(function(){ hint.classList.add("show"); }, 1200);
+      obs.disconnect();
+    }
+  },{threshold:.5}).observe(lamp);
+
+  function addEnergy(amt){
+    if(cooling) return;
+    energy = Math.min(100, energy + amt);
+    stage.style.setProperty("--rub", energy/100);
+    stage.classList.toggle("hot", energy > 45);
+    if(energy >= 100) grantWish();
+  }
+  function grantWish(){
+    cooling = true; energy = 0;
+    stage.classList.remove("hot");
+    stage.classList.add("popping");
+    hint.classList.remove("show");
+    var r = lamp.getBoundingClientRect();
+    coinBurst(r.left + r.width/2, r.top + r.height*.45);
+    toast.classList.add("show");
+    clearTimeout(toastT);
+    toastT = setTimeout(function(){ toast.classList.remove("show"); }, 4200);
+    setTimeout(function(){ stage.classList.remove("popping"); }, 700);
+    setTimeout(function(){ cooling = false; stage.style.setProperty("--rub",0); }, 5000);
+  }
+  lamp.addEventListener("pointermove", function(e){
+    if(e.pressure === 0 && e.pointerType !== "mouse") return;
+    if(lastPt){
+      var d = Math.hypot(e.clientX-lastPt.x, e.clientY-lastPt.y);
+      addEnergy(Math.min(d, 14) * .45);
+    }
+    lastPt = {x:e.clientX, y:e.clientY};
+  });
+  lamp.addEventListener("pointerleave", function(){ lastPt = null; });
+  lamp.addEventListener("pointerdown", function(e){ lastPt = {x:e.clientX,y:e.clientY}; addEnergy(9); });
+  /* slow leak so it needs a real rub, not one flick */
+  setInterval(function(){ if(!cooling && energy>0){ energy=Math.max(0,energy-2.5); stage.style.setProperty("--rub",energy/100); if(energy<46) stage.classList.remove("hot"); } }, 200);
+}
+
+/* keep the confetti canvas sized to the window */
+addEventListener("resize", function(){
+  var cv = document.getElementById("confetti");
+  if(cv){ cv.width = innerWidth; cv.height = innerHeight; }
+}, {passive:true});
+})();
+</script>
 </body>
 </html>
