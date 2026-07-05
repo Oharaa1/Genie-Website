@@ -194,6 +194,21 @@ body>*{flex-shrink:0;}
 .spark.s4{bottom:24%;right:10%;width:18px;height:18px;animation-delay:.6s}
 @keyframes floaty{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-16px) rotate(8deg)}}
 
+/* ambient twinkles that live INSIDE each section, so the magic follows you
+   all the way down the page (the fixed .spark stars hide behind sections) */
+.twinkle{
+  position:absolute;width:16px;height:16px;background:var(--gold);
+  clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);
+  pointer-events:none;opacity:0;
+  animation:twinkle var(--tdur,3.2s) ease-in-out var(--tdel,0s) infinite;
+}
+.twinkle.w{background:#fff;}
+.twinkle.b{background:var(--blue);}
+@keyframes twinkle{
+  0%,100%{opacity:0;transform:scale(.35) rotate(-10deg);}
+  50%{opacity:var(--twop,.55);transform:scale(1) rotate(10deg);}
+}
+
 /* ---------- cursor magic dust (desktop only) ---------- */
 .dust{
   position:fixed;left:0;top:0;width:14px;height:14px;background:var(--gold);
@@ -560,6 +575,11 @@ footer{background:var(--ink);color:#fff;padding:2.4rem 1.4rem 2rem;position:rela
 
 <!-- ============ THE LAMP / HOW IT WORKS ============ -->
 <section id="lamp" class="sect wish">
+  <span class="twinkle" style="left:5%;top:13%" aria-hidden="true"></span>
+  <span class="twinkle b" style="right:6%;top:21%;--tdel:1.1s;--tdur:4s;width:12px;height:12px" aria-hidden="true"></span>
+  <span class="twinkle" style="left:8%;top:56%;--tdel:2s;width:13px;height:13px" aria-hidden="true"></span>
+  <span class="twinkle" style="right:5%;top:69%;--tdel:.6s;--tdur:3.8s" aria-hidden="true"></span>
+  <span class="twinkle b" style="left:4%;top:87%;--tdel:1.6s;width:11px;height:11px" aria-hidden="true"></span>
 
   <div class="sect-head">
     <span class="kicker">🤖 Crypto × AI</span>
@@ -675,6 +695,10 @@ footer{background:var(--ink);color:#fff;padding:2.4rem 1.4rem 2rem;position:rela
 
 <!-- ============ TOKENOMICS ============ -->
 <section id="tokenomics" class="sect tok">
+  <span class="twinkle" style="left:5%;top:15%;--tdel:.3s" aria-hidden="true"></span>
+  <span class="twinkle b" style="right:5%;top:24%;--tdel:1.4s;width:12px;height:12px" aria-hidden="true"></span>
+  <span class="twinkle" style="right:8%;top:62%;--tdel:.9s;--tdur:3.9s" aria-hidden="true"></span>
+  <span class="twinkle" style="left:6%;top:80%;--tdel:2.2s;width:13px;height:13px" aria-hidden="true"></span>
   <div class="sect-head">
     <span class="kicker gold">💰 The Numbers</span>
     <h2 class="sect-title"><span class="o">TOKENOMICS</span> <span class="b">YOU CAN CHECK.</span></h2>
@@ -726,6 +750,9 @@ footer{background:var(--ink);color:#fff;padding:2.4rem 1.4rem 2rem;position:rela
 
 <!-- ============ FAQ ============ -->
 <section id="faq" class="sect" style="background:#fff;border-top:4px solid var(--ink);">
+  <span class="twinkle" style="left:6%;top:14%;--tdel:.5s" aria-hidden="true"></span>
+  <span class="twinkle b" style="right:6%;top:30%;--tdel:1.8s;width:11px;height:11px" aria-hidden="true"></span>
+  <span class="twinkle" style="right:4%;top:74%;--tdel:1s;--tdur:4.1s;width:14px;height:14px" aria-hidden="true"></span>
   <div class="sect-head">
     <span class="kicker blue">🧞 Real Answers</span>
     <h2 class="sect-title"><span class="b">ASK THE</span> <span class="o">GENIE.</span></h2>
@@ -763,6 +790,10 @@ footer{background:var(--ink);color:#fff;padding:2.4rem 1.4rem 2rem;position:rela
 
 <!-- ============ FINAL CTA ============ -->
 <section class="sect pop">
+  <span class="twinkle w" style="left:7%;top:20%;--tdel:.2s;--twop:.7" aria-hidden="true"></span>
+  <span class="twinkle w" style="right:8%;top:28%;--tdel:1.2s;width:12px;height:12px;--twop:.6" aria-hidden="true"></span>
+  <span class="twinkle w" style="left:12%;top:72%;--tdel:2s;width:13px;height:13px;--twop:.6" aria-hidden="true"></span>
+  <span class="twinkle w" style="right:12%;top:64%;--tdel:.7s;--twop:.7" aria-hidden="true"></span>
   <h2 class="pop-title">BE IN THE WALLET WHEN THE LAMP POPS.</h2>
   <p class="pop-sub">The Lamp fills. The Genie picks. Someone becomes a millionaire. Make sure you’re holding when it happens.</p>
   <a class="btn btn-ink" href="https://t.me/GenieCoinChat" target="_blank" rel="noopener noreferrer" style="position:relative;">
@@ -861,25 +892,33 @@ if(odo){
   },{threshold:.6}).observe(odo);
 }
 
-/* ---------- cursor magic dust (fine pointers only) ---------- */
-if(!reduced && matchMedia("(pointer: fine)").matches){
+/* ---------- magic dust — follows the mouse AND the finger on touch ---------- */
+if(!reduced){
   var POOL = 26, dust = [], di = 0, last = 0;
   for(var p=0;p<POOL;p++){
     var s = document.createElement("span"); s.className = "dust";
     document.body.appendChild(s); dust.push(s);
   }
-  addEventListener("pointermove", function(e){
-    var now = performance.now();
-    if(now - last < 44) return; last = now;
+  var spawnDust = function(x,y){
     var el = dust[di = (di+1)%POOL];
     el.classList.remove("go");
-    el.style.left = (e.clientX + (Math.random()*18-9)) + "px";
-    el.style.top  = (e.clientY + (Math.random()*18-9)) + "px";
+    el.style.left = (x + (Math.random()*18-9)) + "px";
+    el.style.top  = (y + (Math.random()*18-9)) + "px";
     var sz = 8 + Math.random()*10;
     el.style.width = sz+"px"; el.style.height = sz+"px";
     el.style.background = Math.random() < .78 ? "var(--gold)" : "var(--blue)";
     void el.offsetWidth; /* restart the animation */
     el.classList.add("go");
+  };
+  addEventListener("pointermove", function(e){
+    var now = performance.now();
+    if(now - last < 44) return; last = now;
+    spawnDust(e.clientX, e.clientY);
+  }, {passive:true});
+  /* every tap sprinkles a little burst of magic */
+  addEventListener("pointerdown", function(e){
+    for(var k=0;k<3;k++)
+      setTimeout(spawnDust.bind(null, e.clientX+(Math.random()*26-13), e.clientY+(Math.random()*26-13)), k*60);
   }, {passive:true});
 }
 
