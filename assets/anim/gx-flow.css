@@ -1,0 +1,105 @@
+/* ============================================================
+   GX-FLOW — reading rhythm & scroll storytelling.
+   Three beats: the golden thread through the 4 steps,
+   a musical reveal cascade, and a lamp riding the reading bar.
+   Everything here is decorative: nothing eats a click.
+   ============================================================ */
+
+/* ---- shared tokens (fall back to literals if the page vars move) ---- */
+:root{
+  --gx-flow-gold:#FBB417;
+  --gx-flow-deep:#E09A00;
+  --gx-flow-ink:#141414;   /* kept: used by the step-number shadow */
+  /* the colour the thread is "punched" against — must match the section bg */
+  --gx-flow-bg:#fff;
+}
+
+/* ============================================================
+   1. STEP LIGHTING  (steps 1 -> 2 -> 3 -> 4)
+   The drawn connecting thread was cut for being visual noise.
+   What survives is the reward: each card lights as you reach it.
+   ============================================================ */
+.gx-flow-steps{position:relative;}
+.gx-flow-steps>.step{position:relative;z-index:1;}
+
+/* ---- the moment the reader reaches a card ---- */
+.gx-flow-steps>.step::after{
+  content:"";position:absolute;top:-3px;right:-3px;bottom:-3px;left:-3px;
+  border-radius:19px;pointer-events:none;opacity:0;
+  box-shadow:0 0 0 3px rgba(251,180,23,.55);
+}
+.step.gx-flow-lit::after{animation:gx-flow-glow .8s ease-out both;}
+@keyframes gx-flow-glow{
+  0%{opacity:0;transform:scale(.985);}
+  28%{opacity:1;}
+  100%{opacity:0;transform:scale(1.035);}
+}
+/* the step number stops being grey once you've read it */
+.gx-flow-steps .step .num{transition:color .35s ease, text-shadow .35s ease;}
+.step.gx-flow-lit .num{color:var(--gx-flow-gold);text-shadow:1.5px 1.5px 0 rgba(20,20,20,.16);}
+/* one short squash on the icon TILE (never the svg — hover's icoPop owns that) */
+.step.gx-flow-ding .ico{animation:gx-flow-ding .6s cubic-bezier(.2,1.5,.4,1);}
+@keyframes gx-flow-ding{
+  0%{transform:scale(1);}
+  32%{transform:scale(1.13) rotate(-5deg);}
+  66%{transform:scale(.97) rotate(2deg);}
+  100%{transform:scale(1);}
+}
+
+/* ============================================================
+   2. REVEAL RHYTHM
+   Composes with the page's own .reveal / .in observer — it only
+   retimes the delay and adds a whisper of scale. The .in end
+   state stays "visible", so nothing can get stuck blank.
+   ============================================================ */
+.reveal.gx-flow-rv{
+  transition:opacity .5s ease, transform .62s cubic-bezier(.2,1.32,.4,1);
+  transition-delay:var(--gx-flow-d,0s);
+  transform:translateY(24px) rotate(var(--tilt,0deg)) scale(.972);
+}
+.reveal.gx-flow-rv.in{opacity:1;transform:none;}
+
+/* safety net: if the OS asks for less motion, everything is simply there */
+@media (prefers-reduced-motion:reduce){
+  html:not(.force-motion) .reveal.gx-flow-rv{opacity:1!important;transform:none!important;}
+}
+
+/* ============================================================
+   3. THE READING LAMP  (page progress)
+   3px of gold pinned to the top edge with a lamp on its tip.
+   ============================================================ */
+.gx-flow-bar{
+  position:fixed;top:0;left:0;right:0;height:3px;z-index:60;
+  pointer-events:none;background:rgba(20,20,20,.07);
+  opacity:0;transition:opacity .3s ease;
+}
+.gx-flow-bar.on{opacity:1;}
+.gx-flow-fill{
+  position:absolute;inset:0;background:var(--gx-flow-gold);
+  border-bottom:1px solid var(--gx-flow-deep);
+  transform:scaleX(0);transform-origin:0 50%;will-change:transform;
+}
+/* a zero-size anchor that rides the leading edge */
+.gx-flow-rider{position:absolute;top:50%;left:0;width:0;height:0;will-change:transform;}
+.gx-flow-rider svg{
+  position:absolute;left:-15px;top:-11px;width:30px;height:22px;display:block;
+  filter:drop-shadow(1px 1.5px 0 rgba(20,20,20,.3));
+}
+.gx-flow-flame{
+  opacity:0;transform:translateY(3px) scale(.4);
+  transform-box:fill-box;transform-origin:center bottom;
+  transition:opacity .25s ease, transform .4s cubic-bezier(.2,1.6,.4,1);
+}
+/* the reader hit the bottom — one small, satisfied beat */
+.gx-flow-bar.done .gx-flow-flame{opacity:1;transform:none;}
+.gx-flow-bar.done .gx-flow-rider svg{animation:gx-flow-beat .62s cubic-bezier(.2,1.5,.4,1);}
+@keyframes gx-flow-beat{
+  0%{transform:scale(1) rotate(0deg);}
+  30%{transform:scale(1.26) rotate(-8deg);}
+  62%{transform:scale(.96) rotate(3deg);}
+  100%{transform:scale(1) rotate(0deg);}
+}
+
+@media (max-width:600px){
+  .gx-flow-rider svg{left:-12px;top:-9px;width:24px;height:18px;}
+}

@@ -321,16 +321,8 @@ body>*{flex-shrink:0;}
   transition:transform var(--t,1.6s) cubic-bezier(.14,.9,.24,1);transition-delay:var(--td,0s);}
 .odo-track span{height:1em;display:block;}
 
-/* the shocked genie reacting to the $1,000,000 wish */
-.million-genie{
-  position:absolute;left:100%;bottom:-44px;height:132px;width:auto;margin-left:-18px;z-index:3;
-  filter:drop-shadow(2px 4px 3px rgba(0,0,0,.22));
-  pointer-events:none;-webkit-user-drag:none;user-select:none;
-  animation:bob 4.5s ease-in-out infinite;
-}
-.lamp-stage.popping .million-genie{animation:genieFreak .7s cubic-bezier(.2,1.8,.4,1);}
-@keyframes genieFreak{0%{transform:scale(1);}35%{transform:scale(1.5) rotate(-8deg);}70%{transform:scale(.92) rotate(4deg);}100%{transform:scale(1);}}
-@media (max-width:600px){ .million-genie{height:92px;left:100%;right:auto;bottom:-40px;margin-left:-8px;} }
+/* the shocked genie is no longer parked beside the amount — he now only
+   shows up when you actually rub the lamp (see .poof-genie). */
 
 .lamp-goal{margin-top:.35rem;font-family:'Lilita One';font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:#b78a12;}
 
@@ -451,6 +443,17 @@ footer{background:var(--ink);color:#fff;padding:2.4rem 1.4rem 2rem;position:rela
   html:not(.force-motion) .odo-track{transform:translateY(calc(var(--nf,0) * -1em));}
 }
 </style>
+
+<!-- ===== GX animation layer — additive, module per concern ===== -->
+<link rel="stylesheet" href="assets/anim/gx-hero.css?v=2">
+<link rel="stylesheet" href="assets/anim/gx-sky.css?v=2">
+<link rel="stylesheet" href="assets/anim/gx-lamp.css?v=2">
+<link rel="stylesheet" href="assets/anim/gx-flow.css?v=2">
+<link rel="stylesheet" href="assets/anim/gx-micro.css?v=2">
+<!-- these two must run before the first paint: gx-hero decides, synchronously,
+     whether the cinematic entrance replaces the hero's own CSS animation. -->
+<script src="assets/anim/_core.js?v=2"></script>
+<script src="assets/anim/gx-hero.js?v=2"></script>
 </head>
 <body>
 
@@ -525,7 +528,6 @@ footer{background:var(--ink);color:#fff;padding:2.4rem 1.4rem 2rem;position:rela
       <div class="odo" id="odo" role="img" aria-label="One million dollars">
         <span aria-hidden="true">$</span><!-- digit reels are built by JS -->
       </div>
-      <img class="million-genie" src="img/shocked.webp" alt="Genie shocked by the million-dollar wish" decoding="async" loading="lazy">
     </div>
     <div class="lamp-goal">One wish · One millionaire</div>
 
@@ -947,5 +949,11 @@ addEventListener("resize", function(){
 }, {passive:true});
 })();
 </script>
+
+<!-- the rest of the GX layer — deferred, nothing here blocks the first paint -->
+<script src="assets/anim/gx-sky.js?v=2" defer></script>
+<script src="assets/anim/gx-lamp.js?v=2" defer></script>
+<script src="assets/anim/gx-flow.js?v=2" defer></script>
+<script src="assets/anim/gx-micro.js?v=2" defer></script>
 </body>
 </html>

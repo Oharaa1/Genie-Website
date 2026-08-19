@@ -1,0 +1,231 @@
+/* ============================================================
+   GX-MICRO — the small touches you feel with your hands.
+   1. buttons fill with gold on hover / keyboard focus
+   2. the FAQ "+" morphs into a lamp and the answer unrolls
+   3. "Make a wish" — type a wish, watch it become golden smoke
+   Namespace: .gx-micro-* / @keyframes gx-micro-* / --gx-micro-*
+   Nothing here fires unless gx-micro.js tagged the element first,
+   so the page still behaves exactly as before if the JS is absent.
+   ============================================================ */
+
+:root{
+  --gx-micro-gold-lite:#FFD45E;
+  --gx-micro-ease:cubic-bezier(.2,1.4,.4,1);   /* the comic overshoot */
+}
+
+/* ===================================================================
+   1. BUTTONS — a two-tone gold wave sweeps in, left to right
+   =================================================================== */
+
+/* The wave lives in two pseudo-elements sitting BEHIND the label
+   (isolation + z-index:-1), clipped by the button's own radius.
+   Nothing here touches width/height/padding => zero layout shift. */
+.btn.gx-micro-btn{
+  position:relative;
+  isolation:isolate;      /* keeps the z-index:-1 waves inside the button */
+  overflow:hidden;        /* clips the wave to the 16px comic radius */
+  /* This single line retires the old constant `pulse` heartbeat.
+     .btn-gold is (0,1,0); .btn.gx-micro-btn is (0,2,0) — we win, and
+     because the class is added by JS the original CSS stays untouched. */
+  animation:none;
+}
+.btn.gx-micro-btn::before,
+.btn.gx-micro-btn::after{
+  content:"";position:absolute;inset:0;z-index:-1;
+  border-radius:13px;                 /* 16px outer − 3px ink border */
+  pointer-events:none;
+  transform:scaleX(0);
+  transform-origin:right center;      /* leaving: collapses out to the right */
+  transition:transform .38s var(--gx-micro-ease);
+}
+/* light gold leads … */
+.btn.gx-micro-btn::before{background:var(--gx-micro-gold-lite);}
+/* … deep gold follows a beat later, with an inky leading edge that
+   melts into the button's own 3px border when the wave lands */
+.btn.gx-micro-btn::after{
+  background:var(--gold);
+  border-right:3px solid rgba(20,20,20,.32);
+  transition-delay:.06s;
+}
+/* the gold button is already gold — it goes a shade deeper */
+.btn.btn-gold.gx-micro-btn::after{background:var(--gold-deep);}
+
+/* filled state: hover (fine pointers), keyboard focus, or a touch press
+   (.gx-micro-on is added by JS on pointerdown for coarse pointers) */
+@media (hover:hover) and (pointer:fine){
+  .btn.gx-micro-btn:hover::before,
+  .btn.gx-micro-btn:hover::after{transform:scaleX(1);transform-origin:left center;}
+}
+.btn.gx-micro-btn:focus-visible::before,
+.btn.gx-micro-btn:focus-visible::after,
+.btn.gx-micro-btn.gx-micro-on::before,
+.btn.gx-micro-btn.gx-micro-on::after{transform:scaleX(1);transform-origin:left center;}
+
+/* a real, comic-looking focus ring — the page had none before */
+.btn.gx-micro-btn:focus-visible{
+  outline:3px solid var(--blue);outline-offset:3px;
+}
+
+/* Idle life for the main CTA: instead of a permanent heartbeat it gives
+   one small hop every ~6.5s. Transform only, and it stands down the
+   moment the visitor touches it so :hover / :active own the transform. */
+.btn.btn-gold.gx-micro-btn{
+  animation:gx-micro-nudge 6.5s var(--gx-micro-ease) 3.2s infinite;
+}
+.btn.btn-gold.gx-micro-btn:hover,
+.btn.btn-gold.gx-micro-btn:focus-visible,
+.btn.btn-gold.gx-micro-btn:active,
+.btn.btn-gold.gx-micro-btn.gx-micro-on{animation:none;}
+@keyframes gx-micro-nudge{
+  0%,86%,100%{transform:none;}
+  90%{transform:translateY(-4px) rotate(-1.3deg);}
+  95%{transform:translateY(0) rotate(.7deg);}
+}
+
+/* One shared, viewport-sized, click-through layer holds every particle.
+   overflow:hidden here is what guarantees a spark can never widen the
+   page on a phone — the particles are absolute *inside* it. */
+.gx-micro-layer{
+  position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:86;
+}
+
+/* sparks flicked off the button's edge as the gold lands */
+.gx-micro-spark{
+  position:absolute;left:0;top:0;width:9px;height:9px;background:var(--gold);
+  clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);
+  pointer-events:none;opacity:0;
+}
+.gx-micro-spark.go{animation:gx-micro-sparkfly .52s cubic-bezier(.2,.7,.4,1) forwards;}
+
+@keyframes gx-micro-sparkfly{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0);}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx,20px)),calc(-50% + var(--dy,-30px))) scale(.12) rotate(120deg);}
+}
+
+/* ===================================================================
+   2. FAQ — the "+" becomes a lamp, the answer unrolls like a scroll
+   =================================================================== */
+
+/* the box keeps its gold->blue flip but stops spinning 45deg, because a
+   tilted lamp reads better than a tilted one at 45 (JS override target) */
+.faq .plus.gx-micro-plus{
+  transition:transform .38s var(--gx-micro-ease),background-color .25s ease;
+  overflow:visible;
+}
+.faq[open] .plus.gx-micro-plus{transform:rotate(-7deg);}
+
+.gx-micro-glyph{width:20px;height:20px;display:block;overflow:visible;}
+.gx-micro-glyph .gx-micro-g{
+  transform-box:fill-box;transform-origin:50% 50%;
+  transition:opacity .2s ease,transform .4s var(--gx-micro-ease);
+}
+.gx-micro-glyph .gx-micro-g-lamp{opacity:0;transform:scale(.3) rotate(-45deg);}
+.faq[open] .gx-micro-glyph .gx-micro-g-plus{opacity:0;transform:scale(.25) rotate(95deg);}
+.faq[open] .gx-micro-glyph .gx-micro-g-lamp{opacity:1;transform:none;}
+
+/* the roll: a plain wrapper JS puts around .faq-a so its height can be
+   animated without touching the <details>/<summary> semantics */
+.gx-micro-roll{display:block;}
+
+/* ===================================================================
+   3. "MAKE A WISH" — the little card injected into the lamp section
+   =================================================================== */
+.gx-micro-wish{
+  max-width:520px;margin:2.6rem auto 0;
+  background:var(--cream);border:3px solid var(--ink);border-radius:18px;
+  box-shadow:4px 5px 0 var(--ink);
+  padding:.95rem 1rem .8rem;text-align:left;position:relative;
+  /* own reveal — the site's .reveal observer already ran before we exist */
+  opacity:0;transform:translateY(22px) rotate(-.6deg);
+  transition:opacity .55s ease,transform .55s var(--gx-micro-ease);
+}
+.gx-micro-wish.gx-micro-in{opacity:1;transform:none;}
+
+.gx-micro-wish-lab{
+  display:block;font-family:'Lilita One',system-ui,sans-serif;
+  font-size:clamp(1rem,3vw,1.18rem);letter-spacing:.02em;margin:0 0 .5rem;
+}
+.gx-micro-wish-lab em{font-style:normal;color:var(--blue);}
+
+.gx-micro-wish-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:stretch;}
+.gx-micro-wish-in{
+  flex:1 1 190px;min-width:0;
+  font-family:'Baloo 2',system-ui,sans-serif;font-weight:700;font-size:1rem;
+  color:var(--ink);background:#fff;
+  border:2.5px solid var(--ink);border-radius:12px;
+  box-shadow:2px 3px 0 rgba(20,20,20,.15);
+  padding:.58rem .8rem;
+}
+.gx-micro-wish-in::placeholder{color:#a89c84;font-weight:600;}
+.gx-micro-wish-in:focus-visible,
+.gx-micro-wish-in:focus{outline:3px solid var(--blue);outline-offset:2px;}
+.gx-micro-wish-in.gx-micro-empty{animation:gx-micro-shake .4s ease;}
+@keyframes gx-micro-shake{
+  0%,100%{transform:translateX(0);}
+  20%{transform:translateX(-6px);}
+  45%{transform:translateX(5px);}
+  70%{transform:translateX(-3px);}
+}
+
+.gx-micro-wish-go{
+  flex:0 0 auto;cursor:pointer;
+  font-family:'Lilita One',system-ui,sans-serif;font-size:1rem;letter-spacing:.03em;
+  background:var(--gold);color:var(--ink);
+  border:2.5px solid var(--ink);border-radius:12px;box-shadow:3px 4px 0 var(--ink);
+  padding:.5rem 1.05rem;
+  transition:transform .12s ease,box-shadow .12s ease,background-color .15s ease;
+}
+.gx-micro-wish-go:hover{transform:translateY(-2px);box-shadow:4px 6px 0 var(--ink);background:var(--gx-micro-gold-lite);}
+.gx-micro-wish-go:active{transform:translate(3px,4px);box-shadow:0 0 0 var(--ink);}
+.gx-micro-wish-go:focus-visible{outline:3px solid var(--blue);outline-offset:3px;}
+.gx-micro-wish-go[disabled]{opacity:.55;cursor:default;transform:none;}
+
+.gx-micro-wish-note{
+  margin:.55rem 0 0;font-size:.76rem;font-weight:700;line-height:1.45;color:#8a7d63;
+}
+
+/* the typed wish, dissolving into golden smoke on its way to the lamp */
+.gx-micro-fly{
+  position:absolute;left:0;top:0;pointer-events:none;
+  display:flex;align-items:center;white-space:pre;
+  box-sizing:border-box;border:2.5px solid transparent;
+  color:var(--gold-deep);
+}
+.gx-micro-fly i{
+  display:inline-block;font-style:normal;
+  animation:gx-micro-dissolve .95s cubic-bezier(.35,.05,.5,1) both;
+  animation-delay:calc(var(--i,0) * 26ms);
+}
+@keyframes gx-micro-dissolve{
+  0%{opacity:1;transform:translate(0,0) scale(1) rotate(0);}
+  30%{opacity:1;transform:translate(calc(var(--dx,0px) * .08),calc(var(--dy,-40px) * .06)) scale(1.22) rotate(-7deg);}
+  100%{opacity:0;transform:translate(var(--dx,0px),var(--dy,-40px)) scale(.15) rotate(28deg);}
+}
+
+/* golden puffs, same physics language as the lamp's own spout smoke */
+.gx-micro-smoke{
+  position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;
+  background:radial-gradient(circle at 42% 40%,rgba(255,226,150,.95),rgba(251,180,23,.32) 60%,transparent 74%);
+  filter:blur(2px);pointer-events:none;opacity:0;
+}
+.gx-micro-smoke.go{animation:gx-micro-puff 1.15s ease-out forwards;}
+@keyframes gx-micro-puff{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.35);}
+  18%{opacity:.85;}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx,0px)),calc(-50% + var(--dy,-60px))) scale(2.4);}
+}
+
+/* ---------- reduced motion ----------
+   index.html already kills every animation/transition site-wide for
+   prefers-reduced-motion, and gx-micro.js skips all particles when
+   GX.reduced is true. These two lines only make sure the static
+   end-states stay sensible (card visible, wish card never hidden). */
+@media (prefers-reduced-motion:reduce){
+  html:not(.force-motion) .gx-micro-wish{opacity:1;transform:none;}
+  html:not(.force-motion) .gx-micro-glyph .gx-micro-g{transition:none;}
+}
+
+@media (max-width:600px){
+  .gx-micro-wish{margin-top:2.1rem;}
+  .gx-micro-wish-go{flex:1 1 auto;}
+}

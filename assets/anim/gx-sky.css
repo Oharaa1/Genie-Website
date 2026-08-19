@@ -1,0 +1,124 @@
+/* ============================================================
+   GX-SKY — the living background.
+   Three quiet layers, all decorative, all behind the content:
+     1. a slow lamplit wash (warm gold + genie blue) that breathes
+     2. a deep starfield <canvas> (built in gx-sky.js)
+     3. drifting golden sand along the two torn-paper seams
+   Rule of the room: felt, not noticed. If it reads as "gradient",
+   it is too strong — turn the alphas down, never up.
+   ============================================================ */
+
+/* ---------- the layer itself ---------- */
+/* z-index:-1 puts us above the paper+halftone canvas background but
+   underneath every positioned thing on the page (.top z5, .sect z1,
+   footer z1, .spark z0), so text contrast never moves. */
+.gx-sky{
+  position:fixed;inset:0;z-index:-1;
+  pointer-events:none;
+  overflow:hidden;
+  background:transparent;
+  contain:layout paint style;
+
+  /* tuning knobs — one place to dial the whole layer down */
+  --gx-sky-wash:1;      /* master opacity of the breathing wash */
+  --gx-sky-gold:.085;   /* peak alpha of the warm pool           */
+  --gx-sky-blue:.062;   /* peak alpha of the cool pool           */
+}
+
+/* ---------- 1. the breathing wash ----------
+   Two very soft pools orbiting on long, out-of-sync cycles. Only
+   transform is animated, so this stays on the compositor. The
+   halftone dots read straight through them — that's the point. */
+.gx-sky::before,
+.gx-sky::after{
+  content:"";
+  position:absolute;z-index:0;
+  left:50%;top:50%;
+  width:82vmax;height:82vmax;
+  margin:-41vmax 0 0 -41vmax;
+  border-radius:50%;
+  opacity:var(--gx-sky-wash);
+  will-change:transform;
+}
+.gx-sky::before{
+  background:radial-gradient(circle at 50% 50%,
+    rgba(251,180,23,var(--gx-sky-gold)) 0%,
+    rgba(251,180,23,calc(var(--gx-sky-gold) * .38)) 40%,
+    rgba(251,180,23,0) 70%);
+  animation:gx-sky-wash-a 74s ease-in-out infinite alternate;
+}
+.gx-sky::after{
+  background:radial-gradient(circle at 50% 50%,
+    rgba(43,169,224,var(--gx-sky-blue)) 0%,
+    rgba(43,169,224,calc(var(--gx-sky-blue) * .34)) 42%,
+    rgba(43,169,224,0) 72%);
+  animation:gx-sky-wash-b 97s ease-in-out infinite alternate;
+}
+
+/* deliberately mismatched durations so the two pools never sync up */
+@keyframes gx-sky-wash-a{
+  0%  {transform:translate3d(-19%,-15%,0) scale(1);}
+  50% {transform:translate3d(5%,2%,0)    scale(1.13);}
+  100%{transform:translate3d(-6%,13%,0)  scale(1.04);}
+}
+@keyframes gx-sky-wash-b{
+  0%  {transform:translate3d(17%,13%,0)  scale(1.07);}
+  50% {transform:translate3d(-7%,-3%,0)  scale(.95);}
+  100%{transform:translate3d(6%,-14%,0)  scale(1.11);}
+}
+
+/* reduced motion / no-JS-motion: one static lamplit state, no drift */
+.gx-sky-still::before{animation:none;transform:translate3d(-16%,-12%,0);}
+.gx-sky-still::after {animation:none;transform:translate3d(13%,9%,0);}
+
+/* ---------- 2. the starfield ---------- */
+/* sized in device pixels by JS; CSS keeps it viewport-sized */
+.gx-sky-stars{
+  position:absolute;inset:0;z-index:1;
+  display:block;width:100%;height:100%;
+}
+
+/* ---------- 3. the seams ----------
+   These live INSIDE div.tear, which already carries the zigzag
+   clip-path — so the torn silhouette clips our sand for free and
+   the black teeth stay exactly as drawn. We only add drift. */
+
+/* clip-path paints inside the teeth but does NOT stop a wide child from
+   growing the document's scroll width — the drifting bands are 1265px and
+   were pushing the page to 2151px. overflow:hidden clips the box for real;
+   the tear is only 22px tall and its polygon already lives inside that box,
+   so the torn edge itself is completely unaffected. */
+.tear{overflow:hidden;}
+
+.gx-sky-seam{
+  position:absolute;inset:0;
+  pointer-events:none;
+  opacity:0;
+  will-change:transform,opacity;
+  background:linear-gradient(96deg,
+    rgba(251,180,23,0)   30%,
+    rgba(251,180,23,.55) 42%,
+    rgba(255,246,227,.9) 50%,
+    rgba(251,180,23,.5)  58%,
+    rgba(251,180,23,0)   70%);
+}
+/* the second pass: broader, cooler, sweeping the other way — two
+   drifts crossing read as blown sand instead of one sliding bar */
+.gx-sky-seam-b{
+  background:linear-gradient(84deg,
+    rgba(43,169,224,0)   22%,
+    rgba(43,169,224,.42) 40%,
+    rgba(251,180,23,.34) 56%,
+    rgba(43,169,224,0)   74%);
+}
+
+/* ---------- small screens / coarse pointers ----------
+   A phone must not burn battery on decoration: smaller pools,
+   softer alphas, longer cycles. (JS also cuts the star count.) */
+@media (max-width:700px),(pointer:coarse){
+  .gx-sky{--gx-sky-wash:.6;--gx-sky-gold:.07;--gx-sky-blue:.05;}
+  .gx-sky::before,.gx-sky::after{
+    width:110vmin;height:110vmin;margin:-55vmin 0 0 -55vmin;
+    animation-duration:120s;
+  }
+}

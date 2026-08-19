@@ -1,0 +1,114 @@
+/* ============================================================
+   GX-LAMP — the lamp is alive.
+   Ambient spout wisps, a fill meter that follows your scroll,
+   gold coins dropping into the spout, and a breathing odometer.
+   Layered ON TOP of the existing rub physics — it never touches
+   #lampHold's transform, and every layer is pointer-events:none.
+   ============================================================ */
+
+/* ---- the decorative layer we drop inside #lampStage ---- */
+.gx-lamp-layer{
+  position:absolute;inset:0;
+  pointer-events:none;
+  z-index:2;                 /* above .lamp-hold (1), under the amount block */
+}
+
+/* ------------------------------------------------------------
+   1. AMBIENT WISPS — removed. The lamp stays still until it is
+   actually rubbed; the page's own .smoke system owns that moment.
+   ------------------------------------------------------------ */
+
+/* ------------------------------------------------------------
+   3. COINS — a small drawn coin falls in every few seconds and
+   gets swallowed by the spout. Thick ink outline, flat gold,
+   an inner rim and one highlight arc. No casino, just a trickle.
+   ------------------------------------------------------------ */
+.gx-lamp-coin{
+  position:absolute;left:0;top:0;width:22px;height:22px;
+  box-sizing:border-box;border-radius:50%;
+  background:var(--gold,#FBB417);
+  border:2.5px solid var(--ink,#141414);
+  box-shadow:1.5px 2px 0 rgba(20,20,20,.22);
+  pointer-events:none;opacity:0;
+  will-change:transform,opacity;
+}
+/* inner rim — the "milled edge" of the coin */
+.gx-lamp-coin::before{
+  content:"";position:absolute;inset:2px;border-radius:50%;
+  border:1.6px solid var(--gold-deep,#E09A00);
+}
+/* the highlight arc, top-left, like a hand-inked shine */
+.gx-lamp-coin::after{
+  content:"";position:absolute;left:20%;top:14%;width:42%;height:38%;
+  border-radius:50%;
+  border-top:2px solid rgba(255,255,255,.92);
+  border-left:2px solid rgba(255,255,255,.92);
+  border-right:2px solid transparent;border-bottom:2px solid transparent;
+  transform:rotate(-16deg);
+}
+.gx-lamp-coin.go{ animation:gx-lamp-coin 1.55s linear forwards; }
+@keyframes gx-lamp-coin{
+  /* the keyframes carry the gravity so the timing stays linear */
+  0%   {opacity:0;
+        transform:translate(-50%,calc(-50% - var(--gx-lamp-drop,130px))) scaleX(1) scaleY(1);}
+  12%  {opacity:1;}
+  30%  {transform:translate(-50%,calc(-50% - var(--gx-lamp-drop,130px) * .8))  scaleX(.28) scaleY(1.02);}
+  48%  {transform:translate(-50%,calc(-50% - var(--gx-lamp-drop,130px) * .55)) scaleX(1)   scaleY(1);}
+  66%  {transform:translate(-50%,calc(-50% - var(--gx-lamp-drop,130px) * .28)) scaleX(.3)  scaleY(1.02);}
+  82%  {opacity:1;transform:translate(-50%,-50%) scaleX(1) scaleY(.86);}   /* lands on the spout */
+  100% {opacity:0;transform:translate(-50%,calc(-50% + 10px)) scaleX(.5) scaleY(.1);} /* swallowed */
+}
+
+/* the little "gulp" the spout makes as it eats the coin */
+.gx-lamp-gulp{
+  position:absolute;left:0;top:0;width:34px;height:34px;border-radius:50%;
+  border:3px solid var(--gold-deep,#E09A00);
+  pointer-events:none;opacity:0;
+  transform:translate(-50%,-50%) scale(.28);
+  will-change:transform,opacity;
+}
+.gx-lamp-gulp.go{ animation:gx-lamp-gulp .52s cubic-bezier(.2,1.4,.4,1) forwards; }
+@keyframes gx-lamp-gulp{
+  0%  {opacity:.8;transform:translate(-50%,-50%) scale(.28);}
+  100%{opacity:0; transform:translate(-50%,-50%) scale(1.85);}
+}
+
+/* ------------------------------------------------------------
+   2. THE METER — JS retargets --fill every scroll frame, so the
+   1.2s ease the markup ships with would lag behind the finger.
+   Higher specificity than .meter-fill, so link order can't bite.
+   ------------------------------------------------------------ */
+.meter-fill.gx-lamp-meter{ transition:width .28s linear; }
+/* used for the very first write so a mid-page reload can't slide */
+.meter-fill.gx-lamp-meter.gx-lamp-snap{ transition:none; }
+
+/* ------------------------------------------------------------
+   4. THE ODOMETER — a live machine, not a printed number.
+   A barely-there breath on the whole figure plus a slow glint
+   travelling across the last digit. Nothing here claims money.
+   ------------------------------------------------------------ */
+.odo.gx-lamp-odo{ animation:gx-lamp-breathe 4.2s ease-in-out infinite; }
+@keyframes gx-lamp-breathe{
+  0%,100%{transform:scale(1);}
+  50%    {transform:scale(1.014);}
+}
+.odo-reel.gx-lamp-digit{ position:relative; }
+.odo-reel.gx-lamp-digit::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(104deg,transparent 34%,rgba(255,255,255,.7) 50%,transparent 66%);
+  transform:translateX(-150%);
+  animation:gx-lamp-digitsheen 5.4s ease-in-out infinite;
+}
+@keyframes gx-lamp-digitsheen{
+  0%,64%  {transform:translateX(-150%);}
+  88%,100%{transform:translateX(160%);}
+}
+
+/* ------------------------------------------------------------
+   Reduced motion — the JS already bails, this is the belt.
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce){
+  html:not(.force-motion) .gx-lamp-layer{ display:none; }
+  html:not(.force-motion) .odo.gx-lamp-odo{ animation:none; }
+  html:not(.force-motion) .odo-reel.gx-lamp-digit::after{ animation:none;opacity:0; }
+}
