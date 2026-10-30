@@ -4,25 +4,22 @@ window.WishI18n = {
     doc_title: 'Genie — Make one wish',
     lang_aria: 'Language: switch to Arabic',
 
-    // the opening scene
+    // 1 · the hook: the headline and the Lamp
     hook_1: 'Genies grant three wishes.',
     hook_2: 'This one grants one — and pays for it.',
-    story_ask: 'If a genie paid for one wish… what would yours be?',
-    story_by: '— {name} · wish #{n}',
     lamp_filling: 'The Lamp is filling for {name}’s wish.',
     lamp_waiting: 'The Genie is reading the wishes.',
     lamp_came_true: '{name}’s wish came true ✓',
     // when the Genie picks a wish its owner kept private: the number, never the words or the name
-    story_private: 'This wish is private — only the Genie has read it.',
-    story_by_anon: '— wish #{n}',
     lamp_filling_anon: 'The Lamp is filling for wish #{n}.',
     lamp_came_true_anon: 'Wish #{n} came true ✓',
     lamp_of: '{raised} of {cost}',
     lamp_tx: 'See the transfer',
     lamp_aria: 'Lamp progress',
 
-    ask: 'And you? What’s your one wish?',
-    ask_first: 'Write it to the Genie.',
+    // 2 · the wish
+    ask: 'What’s your one wish?',
+    ask_sub: 'Free. No purchase needed.',
     ph_wish: 'What would change your life?',
     chars: '{n}/280',
     f_cost: 'What does it cost? (USD)',
@@ -37,7 +34,7 @@ window.WishI18n = {
     made_granted: ' · {g} came true',
     f_private: 'Keep my wish private',
     f_private_hint: 'Otherwise your first name, wish and @ go on the public Wish Wall.',
-    wall_link: 'Read everyone’s wishes on the Wish Wall →',
+    wall_all: 'See all the wishes →',
 
     err_name_required: 'Tell the Genie your name.',
     err_name_long: 'Keep your name under 40 letters.',
@@ -107,21 +104,17 @@ window.WishI18n = {
 
     hook_1: 'كل جنّي يمنح ثلاث أمنيات.',
     hook_2: 'هذا الجنّي يمنح واحدة… ويدفع ثمنها.',
-    story_ask: 'لو دفع الجنّي ثمن أمنية واحدة… فماذا ستتمنى؟',
-    story_by: '— {name} · الأمنية رقم {n}',
     lamp_filling: 'المصباح يمتلئ لأمنية {name}.',
     lamp_waiting: 'الجنّي يقرأ الأمنيات.',
     lamp_came_true: 'تحققت أمنية {name} ✓',
-    story_private: 'هذه الأمنية خاصة — لم يقرأها إلا الجنّي.',
-    story_by_anon: '— الأمنية رقم {n}',
     lamp_filling_anon: 'المصباح يمتلئ للأمنية رقم {n}.',
     lamp_came_true_anon: 'تحققت الأمنية رقم {n} ✓',
     lamp_of: '{raised} من {cost}',
     lamp_tx: 'شاهد التحويل',
     lamp_aria: 'امتلاء المصباح',
 
-    ask: 'وأنت؟ ما أمنيتك الواحدة؟',
-    ask_first: 'اكتبها للجنّي.',
+    ask: 'ما أمنيتك الواحدة؟',
+    ask_sub: 'مجاناً. لا يحتاج أي شراء.',
     ph_wish: 'ما الشيء الذي سيغيّر حياتك؟',
     chars: '{n}/280',
     f_cost: 'كم تكلّف؟ (بالدولار)',
@@ -136,7 +129,7 @@ window.WishI18n = {
     made_granted: ' · تحقق منها {g}',
     f_private: 'اجعل أمنيتي خاصة',
     f_private_hint: 'وإلا تظهر أمنيتك واسمك الأول وحسابك على حائط الأمنيات للجميع.',
-    wall_link: 'اقرأ أمنيات الجميع على حائط الأمنيات ←',
+    wall_all: 'شاهد كل الأمنيات ←',
 
     err_name_required: 'اكتب اسمك للجني.',
     err_name_long: 'الاسم أقل من 40 حرفاً.',

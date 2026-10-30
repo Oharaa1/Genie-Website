@@ -65,25 +65,20 @@ html[lang="ar"] label,html[lang="ar"] legend,html[lang="ar"] .kicker{font-weight
 .socials a:hover{transform:translateY(-3px) scale(1.06);}
 .socials svg{width:18px;height:18px;}
 
-/* ---------- layout ---------- */
-.wrap{
-  max-width:1140px;margin:0 auto;padding:4px 16px 56px;
-  display:grid;gap:26px;
-  grid-template-columns:minmax(0,1fr);
-  grid-template-areas:"scene" "panel" "how";
-}
-@media (min-width:900px){
-  .wrap{
-    grid-template-columns:minmax(0,1fr) minmax(380px,440px);
-    grid-template-areas:"scene panel" "how how";
-    column-gap:52px;row-gap:40px;align-items:start;padding-top:16px;
-  }
-}
+/* ---------- layout: one column, three parts, room to breathe between them ---------- */
+.wrap{max-width:1140px;margin:0 auto;padding:8px 16px 72px;}
+/* the question sits close under the Lamp (they belong together); the Wall and the steps get more air */
+#wish{margin-top:clamp(40px,6vw,64px);scroll-margin-top:24px;}
+.part-wall,.how{margin-top:clamp(88px,12vw,136px);}
+.part-head{text-align:center;margin:0 auto 24px;max-width:640px;}
+.part-head h2{font-family:var(--head);font-weight:400;font-size:clamp(1.95rem,6.2vw,2.7rem);line-height:1.12;}
+.part-head h2 label{display:inline;font:inherit;margin:0;cursor:pointer;}
+.part-sub{margin-top:8px;font-size:1.05rem;font-weight:600;color:var(--muted);}
 
-/* ---------- the opening scene ---------- */
+/* ---------- 1 · the hook ---------- */
 /* registered so the Lamp's fill level can animate smoothly */
 @property --fill{syntax:'<percentage>';inherits:true;initial-value:0%;}
-.scene{grid-area:scene;text-align:center;display:flex;flex-direction:column;align-items:center;}
+.scene{text-align:center;display:flex;flex-direction:column;align-items:center;padding-top:clamp(4px,2vw,24px);}
 .kicker{
   display:inline-block;font-family:var(--head);font-size:.95rem;letter-spacing:.05em;
   background:var(--ink);color:var(--gold);padding:.25rem .85rem;border-radius:999px;transform:rotate(-2deg);
@@ -98,23 +93,12 @@ h1{font-family:var(--head);font-weight:400;line-height:1.05;margin:.3rem 0 1rem;
 html[lang="ar"] h1{line-height:1.3;}
 html[lang="ar"] .h1-b{color:var(--ink);-webkit-text-stroke:0;text-shadow:3px 3px 0 var(--gold);}
 
-/* the wish: .ghost lays out the whole text (invisible) so typing never pushes the page around */
-.story{max-width:30ch;min-height:6.2rem;display:flex;flex-direction:column;justify-content:flex-end;}
-.story-text{display:grid;font-size:clamp(1.2rem,3.4vw,1.45rem);font-weight:700;line-height:1.4;overflow-wrap:anywhere;}
-.story-text > span{grid-area:1 / 1;}
-.ghost{color:transparent;}
-.typed{pointer-events:none;}
-.typed.typing::after{
-  content:"";display:inline-block;width:2px;height:1.05em;margin-inline-start:2px;vertical-align:-.15em;
-  background:var(--blue);animation:blink .9s steps(1) infinite;
-}
-.story-by{margin-top:.3rem;font-weight:800;color:var(--blue-deep);min-height:1.45em;}
-.story-by,.lamp-caption{opacity:0;transition:opacity .7s ease;}
-.scene.told .story-by,.scene.told .lamp-caption{opacity:1;}
+.lamp-caption{opacity:0;transition:opacity .7s ease;}
+.scene.told .lamp-caption{opacity:1;}
 
 /* the Lamp is the meter: a pale ghost of the lamp, with gold rising from the base as it fills */
 .lamp{
-  --fill:0%;position:relative;width:min(290px,70vw);margin-top:.5rem;
+  --fill:0%;position:relative;width:min(290px,70vw);margin-top:clamp(14px,3vw,28px);
   transition:--fill 2.2s cubic-bezier(.25,.8,.3,1);
   animation:rise .8s .7s cubic-bezier(.2,.8,.3,1) both;
 }
@@ -135,16 +119,16 @@ html[lang="ar"] .h1-b{color:var(--ink);-webkit-text-stroke:0;text-shadow:3px 3px
 }
 .smoke i:nth-child(2){animation-delay:1.4s;--sx:-20px;}
 .smoke i:nth-child(3){animation-delay:2.8s;--sx:14px;}
-.lamp-caption{margin-top:.4rem;font-weight:700;color:var(--muted);}
+.lamp-caption{margin-top:.6rem;font-weight:700;color:var(--muted);}
 .lamp-caption.came-true{color:var(--green);font-weight:800;}
 @media (min-width:900px){.lamp{width:330px;}}
 
-/* ---------- the form panel ---------- */
+/* ---------- 2 · the wish ---------- */
 .panel{
-  grid-area:panel;position:relative;background:#fff;border:3px solid var(--ink);border-radius:24px;
+  position:relative;max-width:540px;margin:0 auto;background:#fff;border:3px solid var(--ink);border-radius:24px;
   box-shadow:6px 8px 0 var(--ink);padding:22px 18px 20px;
 }
-@media (min-width:900px){.panel{padding:28px 26px 24px;position:sticky;top:18px;}}
+@media (min-width:640px){.panel{padding:28px 28px 24px;}}
 .field{border:0;margin:0 0 14px;min-width:0;}
 label,legend{display:block;font-family:var(--head);font-weight:400;font-size:1.08rem;margin-bottom:6px;}
 .count{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums;}
@@ -179,7 +163,6 @@ input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:var(--red)
 .seg-opt input:focus-visible + span{outline:3px solid var(--blue);outline-offset:2px;}
 .field-err{color:var(--red);font-size:.92rem;font-weight:700;margin-top:5px;}
 .field-err:empty,.form-err:empty{display:none;}
-.ask{font-size:clamp(1.3rem,3.6vw,1.6rem);line-height:1.2;margin-bottom:10px;}
 .under-row{display:flex;align-items:flex-start;gap:10px;margin-top:5px;}
 .under-row .field-err{margin-top:0;}
 .under-row .count{margin-inline-start:auto;}
@@ -206,8 +189,7 @@ input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:var(--red)
 .btn-ink{background:var(--ink);color:#fff;}
 .btn-blue{background:var(--blue);color:#fff;}
 .btn-white{background:#fff;}
-.submit{width:100%;font-size:1.4rem;padding:.85rem 1.2rem;margin-top:4px;animation:pulse 2s ease-in-out infinite;}
-.submit:hover,.submit[disabled]{animation:none;}
+.submit{width:100%;font-size:1.4rem;padding:.85rem 1.2rem;margin-top:4px;}
 .submit[disabled]{opacity:.75;cursor:progress;transform:none;}
 .form-err{color:var(--red);font-weight:800;text-align:center;margin-top:12px;}
 
@@ -237,7 +219,7 @@ html[lang="ar"] .done h2{color:var(--ink);-webkit-text-stroke:0;text-shadow:3px 
 .tx-link{display:inline-block;margin-top:6px;font-weight:800;color:var(--blue-deep);}
 
 /* ---------- how it works: one quiet row, no boxes ---------- */
-.how{grid-area:how;border-top:2px dashed rgba(20,20,20,.14);padding-top:22px;}
+.how{border-top:2px dashed rgba(20,20,20,.14);padding-top:28px;}
 .how h2{font-family:var(--head);font-weight:400;font-size:1.15rem;letter-spacing:.03em;text-align:center;color:var(--muted);margin-bottom:14px;}
 .steps{list-style:none;display:grid;gap:12px;grid-template-columns:minmax(0,1fr);max-width:980px;margin:0 auto;}
 @media (min-width:700px){.steps{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;}}
@@ -276,70 +258,88 @@ html[lang="ar"] .done h2{color:var(--ink);-webkit-text-stroke:0;text-shadow:3px 
 .check small{display:block;font-size:.88rem;font-weight:600;color:var(--muted);line-height:1.35;}
 .wall-link{display:block;text-align:center;margin-top:12px;font-weight:800;color:var(--blue-deep);}
 
-/* ---------- the Wish Wall (wishes.html) ---------- */
-.wall-wrap{max-width:1140px;margin:0 auto;padding:4px 16px 56px;}
-.wall-head{text-align:center;margin:4px 0 20px;}
+/* ---------- 3 · the Wish Wall (home: the latest wishes · wishes.html: all of them) ---------- */
+.wall-wrap{max-width:1140px;margin:0 auto;padding:8px 16px 72px;}
+.wall-head{text-align:center;margin:clamp(8px,3vw,28px) 0 28px;}
 .wall-head h1{
-  font-size:clamp(2.3rem,8vw,3.4rem);margin:.1em 0 .15em;
+  font-size:clamp(2.3rem,8vw,3.4rem);margin:.1em 0 .2em;
   color:var(--gold);-webkit-text-stroke:2.5px var(--ink);text-shadow:4px 5px 0 rgba(20,20,20,.16);
 }
 html[lang="ar"] .wall-head h1{color:var(--ink);-webkit-text-stroke:0;text-shadow:3px 3px 0 var(--gold);}
-.wall-sub{font-weight:700;color:var(--muted);margin-bottom:14px;}
-.warn-box{
-  max-width:760px;margin:0 auto 26px;display:flex;gap:12px;align-items:flex-start;
-  background:var(--ink);color:#fff;border-radius:18px;padding:14px 16px;box-shadow:5px 6px 0 var(--gold);
+.wall-sub{font-weight:700;color:var(--muted);margin-bottom:16px;}
+
+/* the scam warning: calm, but before any @ */
+.warn-box,.wwarn{background:#FFF3CC;border:2px solid var(--ink);border-radius:18px;color:var(--ink);}
+.warn-box{max-width:720px;margin:0 auto 36px;display:flex;gap:12px;align-items:flex-start;padding:14px 18px;}
+.warn-box .shield{font-size:1.5rem;line-height:1.25;}
+.warn-box strong{display:block;font-family:var(--head);font-weight:400;font-size:1.12rem;}
+.warn-box p{font-weight:600;line-height:1.45;color:#3a342a;margin-top:2px;}
+.warn-box a{display:inline-block;margin-top:6px;color:var(--blue-deep);font-weight:800;font-size:.92rem;}
+.wwarn{
+  grid-column:1 / -1;display:flex;flex-wrap:wrap;align-items:baseline;justify-content:center;gap:4px 8px;
+  padding:12px 16px;text-align:center;font-weight:600;font-size:.95rem;
 }
-.warn-box .shield{font-size:1.6rem;line-height:1.2;}
-.warn-box strong{display:block;font-family:var(--head);font-weight:400;font-size:1.18rem;color:var(--gold);}
-.warn-box p{font-weight:600;line-height:1.4;margin:2px 0 6px;}
-.warn-box a{color:var(--gold-soft);font-weight:800;font-size:.92rem;}
-.featured{max-width:620px;margin:0 auto 28px;}
-.featured-label{text-align:center;font-family:var(--head);font-size:1.1rem;color:var(--blue-deep);margin-bottom:8px;}
-.tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:8px;}
+.wwarn b{font-family:var(--head);font-weight:400;}
+
+/* the wish the Lamp is filling for, or the one a shared link points at */
+.featured{max-width:620px;margin:0 auto 40px;}
+.featured-label{text-align:center;font-family:var(--head);font-size:1.08rem;color:var(--blue-deep);margin-bottom:10px;}
+
+/* sort: one quiet row of pills */
+.tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:10px;}
 .tab{
   font-family:var(--head);font-weight:400;font-size:1rem;color:var(--ink);cursor:pointer;
-  padding:.45rem 1.05rem;border:2.5px solid var(--ink);border-radius:999px;background:#fff;
+  padding:.45rem 1.1rem;border:2px solid var(--ink);border-radius:999px;background:#fff;transition:background .15s ease,color .15s ease;
 }
+.tab:hover{background:var(--cream);}
 .tab[aria-pressed="true"]{background:var(--ink);color:#fff;}
-.tab:focus-visible,.wheart:focus-visible,.wlink:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
-.wall-hint{text-align:center;font-size:.92rem;font-weight:600;color:var(--muted);margin-bottom:18px;}
-.wgrid{display:grid;gap:20px;grid-template-columns:minmax(0,1fr);align-items:start;}
-@media (min-width:640px){.wgrid{grid-template-columns:repeat(2,minmax(0,1fr));}}
-@media (min-width:980px){.wgrid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+.tab:focus-visible,.wheart:focus-visible,.wlink:focus-visible,.wall-all:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
+.wall-hint{text-align:center;font-size:.95rem;font-weight:600;color:var(--muted);margin-bottom:24px;}
 
-/* a wish card: a note pinned to the wall (tilt comes from the wish number) */
+/* cards in even rows: same height across a row, the name always at the bottom */
+.wgrid{display:grid;gap:18px;grid-template-columns:minmax(0,1fr);}
+@media (min-width:640px){.wgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;}}
+@media (min-width:980px){.wgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;}}
+
+/* a wish card: the wish first and biggest, who wished it underneath */
 .wcard{
-  display:flex;flex-direction:column;gap:10px;padding:14px 14px 10px;
-  background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:4px 5px 0 var(--ink);
-  transform:rotate(var(--tilt,0deg));transition:transform .2s ease;
+  display:flex;flex-direction:column;gap:12px;padding:18px 18px 14px;
+  background:#fff;border:2.5px solid var(--ink);border-radius:20px;box-shadow:4px 5px 0 var(--ink);
+  transition:transform .2s ease,box-shadow .2s ease;
 }
-.wcard:hover{transform:none;}
-.wcard.big{padding:18px 18px 12px;}
-.wcard.big .wtext{font-size:1.25rem;}
-.wcard.picked{box-shadow:4px 5px 0 var(--blue);}
+.wcard:hover{transform:translateY(-3px);box-shadow:5px 8px 0 var(--ink);}
+.wcard.big{padding:22px 22px 16px;border-width:3px;box-shadow:6px 8px 0 var(--ink);}
+.wcard.big .wtext{font-size:clamp(1.2rem,3.4vw,1.4rem);}
+.wcard.picked{box-shadow:5px 6px 0 var(--blue);}
 .wcard.granted{background:#FFF8DB;box-shadow:4px 5px 0 var(--gold-deep);}
 .wcard.flash{animation:flash 1.1s ease 3;}
-.wcard-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.85rem;}
-.wnum{font-family:var(--head);font-size:.9rem;background:var(--ink);color:var(--gold);border-radius:999px;padding:.1rem .65rem;}
-.wcard time{font-weight:600;color:var(--muted);}
-.wtext{font-size:1.08rem;font-weight:700;line-height:1.42;overflow-wrap:anywhere;}
+.wcard-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.84rem;font-weight:700;color:var(--muted);}
+.wnum{font-variant-numeric:tabular-nums;}
+.wtext{flex:1;font-size:1.1rem;font-weight:700;line-height:1.45;overflow-wrap:anywhere;}
 .wbar{height:12px;border:2px solid var(--ink);border-radius:999px;background:var(--cream);overflow:hidden;}
 .wbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-soft),var(--gold));}
 .wof{margin-top:-4px;font-size:.9rem;font-weight:700;color:var(--muted);}
 .wtrue{font-weight:800;color:var(--green);}
 .wtrue a{color:var(--blue-deep);}
-.wcard-foot{display:flex;align-items:center;gap:6px;padding-top:9px;border-top:2px dashed rgba(20,20,20,.14);}
-.wby{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:0 8px;}
-.wby b{font-weight:800;}
-.whandle{display:inline-flex;align-items:center;gap:4px;min-width:0;font-size:.92rem;font-weight:700;color:var(--blue-deep);}
-.whandle svg{flex:none;width:13px;height:13px;}
+.wcard-foot{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1.5px solid rgba(20,20,20,.1);}
+.wface{
+  flex:none;width:36px;height:36px;display:grid;place-items:center;border-radius:50%;
+  border:2px solid var(--ink);font-family:var(--head);font-size:1.05rem;line-height:1;background:var(--gold-soft);
+}
+.wface[data-tone="1"]{background:#BFE7F8;}
+.wface[data-tone="2"]{background:#CBEFD8;}
+.wface[data-tone="3"]{background:#FFD9D2;}
+.wby{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25;}
+.wby b{font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.whandle{display:inline-flex;align-items:center;gap:4px;min-width:0;font-size:.88rem;font-weight:700;color:var(--blue-deep);}
+.whandle svg{flex:none;width:12px;height:12px;}
 .whandle bdi{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .wheart{
-  display:inline-flex;align-items:center;gap:5px;min-height:36px;padding:.25rem .7rem;
+  flex:none;display:inline-flex;align-items:center;gap:5px;min-height:36px;padding:.25rem .75rem;
   font:inherit;font-weight:800;color:var(--ink);cursor:pointer;
-  border:2.5px solid var(--ink);border-radius:999px;background:#fff;transition:background .15s ease,transform .12s ease;
+  border:2px solid var(--ink);border-radius:999px;background:#fff;transition:background .15s ease,transform .12s ease;
 }
-.wheart:hover{transform:translateY(-1px);}
+.wheart:hover{transform:translateY(-1px);background:#FFF1EF;}
 .wheart svg{width:18px;height:18px;fill:none;stroke:var(--red);stroke-width:2.3;stroke-linejoin:round;}
 .wheart[aria-pressed="true"]{background:#FFE6E3;}
 .wheart[aria-pressed="true"] svg{fill:var(--red);animation:pop .45s ease;}
@@ -347,30 +347,27 @@ html[lang="ar"] .wall-head h1{color:var(--ink);-webkit-text-stroke:0;text-shadow
 .wheart.done svg{fill:var(--red);}
 .wlink{
   flex:none;width:36px;height:36px;display:grid;place-items:center;padding:0;cursor:pointer;
-  border:0;border-radius:50%;background:none;color:var(--muted);
+  border:0;border-radius:50%;background:none;color:var(--muted);transition:background .15s ease,color .15s ease;
 }
 .wlink:hover{background:var(--cream);color:var(--ink);}
 .wlink svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;}
-/* the scam warning, back inside the list across the whole row */
-.wwarn{
-  grid-column:1 / -1;display:flex;flex-wrap:wrap;align-items:baseline;justify-content:center;gap:4px 8px;
-  padding:10px 14px;border-radius:14px;background:var(--ink);color:#fff;text-align:center;font-weight:600;font-size:.95rem;
-}
-.wwarn b{font-family:var(--head);font-weight:400;color:var(--gold);}
-.wall-msg{text-align:center;font-weight:700;color:var(--muted);margin-top:18px;}
+
+.wall-msg{text-align:center;font-weight:700;color:var(--muted);margin-top:8px;padding:28px 16px;border:2px dashed rgba(20,20,20,.2);border-radius:20px;}
 .wall-msg:empty{display:none;}
-.more-btn{display:flex;margin:24px auto 0;}
+.wall-all,.more-btn{display:flex;width:max-content;max-width:100%;margin:32px auto 0;}
 .more-btn[disabled]{opacity:.6;cursor:progress;}
 .toast{
   position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:10;
   background:var(--ink);color:#fff;padding:.55rem 1.1rem;border-radius:999px;font-weight:700;box-shadow:3px 4px 0 var(--gold);
 }
+/* cards drift up softly as they scroll into view (browsers without scroll-timelines just show them) */
+@supports (animation-timeline:view()){
+  .wgrid .wcard{animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 55%;}
+}
 
 /* ---------- motion ---------- */
 @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(0);}50%{transform:translateY(-10px) rotate(1.5deg);}}
-@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.03);}}
-@keyframes blink{50%{opacity:0;}}
 @keyframes smoke{
   0%{transform:translate(0,0) scale(.35);opacity:0;}
   15%{opacity:.9;}

@@ -1,7 +1,9 @@
-// Wires the one-wish page: language, the opening scene (one wish + the Lamp filling), the form and sharing.
+// Wires the one-wish page, top to bottom: 1 the Lamp filling · 2 the wish form and sharing · 3 the latest wishes.
 (function () {
   'use strict';
   const L = window.WishLogic, I18N = window.WishI18n, API = window.WishAPI, Card = window.WishCard;
+  const Cards = window.WishWallCards;
+  const WALL_PREVIEW = 6; // two rows of three on a wide screen; the rest are on wishes.html
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => [...document.querySelectorAll(s)];
   const isLocal = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:';
@@ -21,25 +23,26 @@
   let lang = L.pickLang(navigator.languages || [navigator.language], store.get('genie.lang'),
     new URLSearchParams(location.search).get('lang'));
   let stats = null;                    // { made, granted, current } from wish_stats()
-  let statsLoaded = false;             // the scene waits for the server, so it never flashes the wrong story
+  let statsLoaded = false;             // the scene waits for the server, so it never flashes the wrong caption
+  let wall = null;                     // { current, items } from wish_wall(): the latest public wishes
   // { num, name, wish, src } once this browser made a wish. src = the database it went to,
   // so demo tries and wiped test data never lock a visitor out of the real form.
   let myWish = store.get('genie.wish');
   if (!myWish || !(Number(myWish.num) > 0) || !API.source() || myWish.src !== API.source()) myWish = null;
   let drawSeq = 0;
-  let typeSeq = 0;
+  let sceneSeq = 0;
 
   function t(key, vars) {
     let s = (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key;
     if (vars) for (const k in vars) s = s.split('{' + k + '}').join(vars[k]);
     return s;
   }
+  Cards.setup({ t });
 
   // Arabic wishers share an Arabic link, so their friends land on the Arabic page.
   const siteUrl = () => (isLocal ? 'https://genie-coin.com/' : location.origin + '/') + (lang === 'ar' ? '?lang=ar' : '');
   const siteHost = () => (isLocal ? 'genie-coin.com' : location.host);
   const fmtInt = (n) => new Intl.NumberFormat('en-US').format(n);
-  const askKey = () => (stats && stats.current ? 'ask' : 'ask_first');
 
   // ── language ──────────────────────────────────────────────────────────
   function applyLang() {
@@ -51,11 +54,11 @@
     $$('[data-i18n-aria]').forEach((el) => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
     $$('[data-code]').forEach((el) => { el.textContent = el.dataset.code ? t(el.dataset.code) : ''; });
     $('#langBtn').title = t('lang_aria'); // the globe has no words, so hovering tells what it does
-    $('#askLabel').textContent = t(askKey());
     updateCount();
     renderMade();
     if (statsLoaded) renderScene(false);
     if (myWish && !$('#done').hidden) renderDone(false);
+    if (wall) renderWall();
   }
 
   $('#langBtn').addEventListener('click', () => {
@@ -67,48 +70,21 @@
     applyLang();
   });
 
-  // ── the opening scene ─────────────────────────────────────────────────
-  // With a picked wish: that one wish, typed out, and the Lamp filling for it.
-  // Before the Genie picks one: the question itself, and a full, glowing Lamp.
-  const graphemes = (s) => (window.Intl && Intl.Segmenter
-    ? [...new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(s)].map((g) => g.segment)
-    : Array.from(s));
-
-  // Arabic stays joined while typing because the growing text is one string, reshaped at every letter.
-  function typeOut(text, seq, done) {
-    const el = $('#storyTyped');
-    const parts = graphemes(text);
-    const step = Math.min(45, Math.max(18, 2400 / parts.length)); // ~2.4 s whatever the length
-    let i = 0;
-    el.textContent = '';
-    el.classList.add('typing');
-    (function tick() {
-      if (seq !== typeSeq) return; // a language switch or a re-render took over
-      i++;
-      el.textContent = parts.slice(0, i).join('');
-      if (i < parts.length) setTimeout(tick, step);
-      else { el.classList.remove('typing'); done(); }
-    })();
-  }
-
+  // ── 1 · the hook: the Lamp ────────────────────────────────────────────
+  // With a picked wish: the Lamp fills to its price, and the caption says whose wish it is
+  // (the wish itself is the first card of the Wall, part 3). Before the Genie picks one: a full, glowing Lamp.
   function renderScene(animate) {
     const c = stats && stats.current;
     const scene = $('#scene'), lamp = $('#lamp'), cap = $('#lampCaption');
-    let text, dir, fill;
+    let fill;
     if (c) {
       const p = L.lampProgress(c.raised, c.cost);
       const done = p.full || !!c.granted;
       if (c.private || !c.wish) {
         // its owner kept it private: the Lamp still fills, but only the number is shown
-        text = t('story_private');
-        dir = lang === 'ar' ? 'rtl' : 'ltr';
-        $('#storyBy').textContent = t('story_by_anon', { n: c.id });
         cap.textContent = t(c.granted ? 'lamp_came_true_anon' : 'lamp_filling_anon', { n: c.id });
       } else {
         const name = '⁨' + c.name + '⁩'; // isolated, so a Latin name in an Arabic line can't drag the punctuation around
-        dir = L.textDir(c.wish);
-        text = dir === 'rtl' ? '«' + c.wish + '»' : '“' + c.wish + '”';
-        $('#storyBy').textContent = t('story_by', { name, n: c.id });
         cap.textContent = t(c.granted ? 'lamp_came_true' : 'lamp_filling', { name });
       }
       fill = done ? 108 : p.pct; // past 100 so the soft top edge of the gold clears the finial
@@ -116,9 +92,6 @@
       lamp.setAttribute('aria-valuenow', String(p.pct));
       lamp.setAttribute('aria-valuetext', t('lamp_of', { raised: L.formatUSD(c.raised), cost: L.formatUSD(c.cost) }));
     } else {
-      text = t('story_ask');
-      dir = lang === 'ar' ? 'rtl' : 'ltr';
-      $('#storyBy').textContent = '';
       cap.textContent = t('lamp_waiting');
       fill = 108;
       lamp.classList.add('glow');
@@ -130,23 +103,18 @@
     const txOk = !!(c && c.granted && /^https:\/\//.test(c.tx_url || ''));
     tx.hidden = !txOk;
     if (txOk) tx.href = c.tx_url;
-    $('#askLabel').textContent = t(askKey());
 
-    $('.story-text').dir = dir;
-    $('#storyGhost').textContent = text;
-    const seq = ++typeSeq;
+    const seq = ++sceneSeq;
     if (animate && !reduceMotion) {
-      // let the headline land first, then the gold rises while the wish is written
-      const wait = Math.max(0, 1100 - (performance.now() - startedAt));
+      // let the headline land first, then the gold rises, then the caption says what it is for
+      const wait = Math.max(0, 900 - (performance.now() - startedAt));
       setTimeout(() => {
-        if (seq !== typeSeq) return;
+        if (seq !== sceneSeq) return;
         lamp.style.setProperty('--fill', fill + '%');
-        typeOut(text, seq, () => scene.classList.add('told'));
+        setTimeout(() => { if (seq === sceneSeq) scene.classList.add('told'); }, 1300);
       }, wait);
     } else {
       lamp.style.setProperty('--fill', fill + '%');
-      $('#storyTyped').textContent = text;
-      $('#storyTyped').classList.remove('typing');
       scene.classList.add('told');
     }
   }
@@ -169,6 +137,30 @@
     statsLoaded = true;
     renderMade();
     renderScene(true);
+  }
+
+  // ── 3 · the Wish Wall: the wish the Lamp is filling for, then the latest ones ──
+  function renderWall() {
+    const f = $('#featured');
+    f.replaceChildren();
+    const cur = wall && wall.current;
+    f.hidden = !cur;
+    if (cur) {
+      const label = document.createElement('p');
+      label.className = 'featured-label';
+      label.textContent = t('wall_now');
+      f.append(label, Cards.card(cur, true));
+    }
+    const items = ((wall && wall.items) || []).filter((w) => !cur || w.id !== cur.id).slice(0, WALL_PREVIEW);
+    $('#grid').replaceChildren(...items.map((w) => Cards.card(w, false)));
+    $('#wallMsg').textContent = wall ? (wall.error ? t('wall_error') : (!items.length && !cur ? t('wall_empty') : '')) : '';
+    $('#wallAll').hidden = !(wall && !wall.error && (items.length || cur));
+  }
+
+  async function loadWall() {
+    if (!API.configured()) return;
+    try { wall = await API.wall({ sort: 'new' }); } catch (e) { wall = { error: true }; }
+    renderWall();
   }
 
   // ── the form: the wish first, the rest opens once they start writing ──
@@ -266,6 +258,7 @@
       if (stats) { stats.made += 1; renderMade(); }
       await renderDone(true);
       celebrate();
+      if (isPublic) loadWall(); // their wish joins the Wall below straight away
     } catch (err) {
       const code = L.serverErrorCode(err);
       if (code === 'already_wished') { setFieldErr('handle', 'err_already_wished'); input.handle.focus(); }
@@ -284,6 +277,7 @@
 
   async function renderDone(scroll) {
     form.hidden = true;
+    $('#askHead').hidden = true; // the question is answered; the card below says "Wish #n"
     const done = $('#done');
     done.hidden = false;
     const n = myWish.num;
@@ -357,4 +351,5 @@
   applyLang();
   if (myWish) renderDone(false);
   loadStats();
+  loadWall();
 })();
