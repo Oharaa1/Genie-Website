@@ -134,6 +134,13 @@
         </div>
         <p class="field-err" id="err-handle" aria-live="polite"></p>
       </fieldset>
+
+      <!-- public by default (the Wall shows first name, wish and @); one tap keeps it between them and the Genie -->
+      <label class="check">
+        <input type="checkbox" id="fPrivate" name="private">
+        <span class="box" aria-hidden="true"></span>
+        <span><b data-i18n="f_private">Keep my wish private</b><small data-i18n="f_private_hint">Otherwise your first name, wish and @ go on the public Wish Wall.</small></span>
+      </label>
        </div>
       </div>
 
@@ -145,6 +152,7 @@
       <button class="btn btn-gold submit" type="submit" id="submitBtn"><span data-i18n="btn_submit">Make my wish</span> <span aria-hidden="true">✨</span></button>
       <p class="form-err" id="formErr" role="alert"></p>
       <p class="made-line" id="madeLine" hidden></p>
+      <a class="wall-link" href="wishes.html" data-i18n="wall_link">Read everyone’s wishes on the Wish Wall →</a>
     </form>
 
     <div id="done" class="done" hidden>
@@ -164,16 +172,18 @@
         </a>
         <button type="button" class="btn btn-white" id="shareSave" style="grid-column:1 / -1"><span data-i18n="share_save">Save image</span></button>
       </div>
+      <a class="wall-link" id="doneWall" href="wishes.html" data-i18n="done_wall">See your wish on the Wish Wall →</a>
+      <p class="done-text" id="donePrivate" data-i18n="done_private" hidden>Your wish is private — only the Genie sees it.</p>
       <p class="scam">🛡️ <span data-i18n="scam">The Genie never DMs first and never asks you for money.</span></p>
     </div>
   </section>
 
-  <!-- how it works: one quiet row, no boxes. Step 1–2 also carry "free" and "your first name is shown" -->
+  <!-- how it works: one quiet row, no boxes. Step 1–2 also carry "free" and "your wish goes on the Wall" -->
   <section class="how" aria-labelledby="howTitle">
     <h2 id="howTitle" data-i18n="how_title">How it works</h2>
     <ol class="steps">
       <li><span class="num" aria-hidden="true">1</span><p data-i18n="step_1">Free. No purchase needed.</p></li>
-      <li><span class="num" aria-hidden="true">2</span><p data-i18n="step_2">The Genie picks one wish and shares it with your first name.</p></li>
+      <li><span class="num" aria-hidden="true">2</span><p data-i18n="step_2">Your wish goes on the Wish Wall (unless you keep it private). The Genie picks one.</p></li>
       <li><span class="num" aria-hidden="true">3</span><p data-i18n="step_3">$GENIE trading fees fill the Lamp. Then the Genie sends the money.</p></li>
     </ol>
   </section>

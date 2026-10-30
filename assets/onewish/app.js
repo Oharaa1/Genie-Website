@@ -98,11 +98,19 @@
     if (c) {
       const p = L.lampProgress(c.raised, c.cost);
       const done = p.full || !!c.granted;
-      const name = '⁨' + c.name + '⁩'; // isolated, so a Latin name in an Arabic line can't drag the punctuation around
-      dir = L.textDir(c.wish);
-      text = dir === 'rtl' ? '«' + c.wish + '»' : '“' + c.wish + '”';
-      $('#storyBy').textContent = t('story_by', { name, n: c.id });
-      cap.textContent = t(c.granted ? 'lamp_came_true' : 'lamp_filling', { name });
+      if (c.private || !c.wish) {
+        // its owner kept it private: the Lamp still fills, but only the number is shown
+        text = t('story_private');
+        dir = lang === 'ar' ? 'rtl' : 'ltr';
+        $('#storyBy').textContent = t('story_by_anon', { n: c.id });
+        cap.textContent = t(c.granted ? 'lamp_came_true_anon' : 'lamp_filling_anon', { n: c.id });
+      } else {
+        const name = '⁨' + c.name + '⁩'; // isolated, so a Latin name in an Arabic line can't drag the punctuation around
+        dir = L.textDir(c.wish);
+        text = dir === 'rtl' ? '«' + c.wish + '»' : '“' + c.wish + '”';
+        $('#storyBy').textContent = t('story_by', { name, n: c.id });
+        cap.textContent = t(c.granted ? 'lamp_came_true' : 'lamp_filling', { name });
+      }
       fill = done ? 108 : p.pct; // past 100 so the soft top edge of the gold clears the finial
       lamp.classList.toggle('glow', done);
       lamp.setAttribute('aria-valuenow', String(p.pct));
@@ -250,8 +258,9 @@
 
     setBusy(true);
     try {
-      const num = Number(await API.makeWish(r.value, lang));
-      myWish = { num, name: r.value.name, wish: r.value.wish, src: API.source() };
+      const isPublic = !$('#fPrivate').checked;
+      const num = Number(await API.makeWish(r.value, lang, isPublic));
+      myWish = { num, name: r.value.name, wish: r.value.wish, src: API.source(), pub: isPublic };
       if (myWish.src) store.set('genie.wish', myWish);
       store.del('genie.draft');
       if (stats) { stats.made += 1; renderMade(); }
@@ -283,6 +292,11 @@
     $('#shareX').href = L.xShareUrl(text, siteUrl());
     $('#shareTg').href = L.telegramShareUrl(text, siteUrl());
     $('#shareNative').hidden = !canShareFiles();
+    // a public wish has its own place on the Wall; a private one says so plainly
+    const pub = myWish.pub !== false;
+    $('#doneWall').hidden = !pub;
+    $('#doneWall').href = 'wishes.html#w' + n;
+    $('#donePrivate').hidden = pub;
     const canvas = $('#cardCanvas');
     canvas.setAttribute('aria-label', t('card_alt', { n }));
     if (scroll) {
