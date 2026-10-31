@@ -25,8 +25,10 @@
   let stats = null;                    // { made, granted, current } from wish_stats()
   let statsLoaded = false;             // the scene waits for the server, so it never flashes the wrong caption
   let wall = null;                     // { current, items } from wish_wall(): the latest public wishes
-  // { num, name, wish, src } once this browser made a wish. src = the database it went to,
+  // { num, key, name, wish, src } once this browser made a wish. src = the database it went to,
   // so demo tries and wiped test data never lock a visitor out of the real form.
+  // key = the secret that lets them delete it (wishes from before delete have none).
+  // cost, platform, handle = so a deleted wish comes back into the form, ready to fix and send again.
   let myWish = store.get('genie.wish');
   if (!myWish || !(Number(myWish.num) > 0) || !API.source() || myWish.src !== API.source()) myWish = null;
   let drawSeq = 0;
@@ -196,6 +198,7 @@
     const el = $('#wishCount');
     el.textContent = t('chars', { n });
     el.classList.toggle('over', n > L.LIMITS.WISH_MAX);
+    el.hidden = n < 200; // a counter is noise until the limit is near
   }
 
   FIELDS.forEach((f) => input[f].addEventListener('input', () => {
@@ -250,15 +253,16 @@
 
     setBusy(true);
     try {
-      const isPublic = !$('#fPrivate').checked;
-      const num = Number(await API.makeWish(r.value, lang, isPublic));
-      myWish = { num, name: r.value.name, wish: r.value.wish, src: API.source(), pub: isPublic };
+      const made = await API.makeWish(r.value, lang);
+      const v = r.value;
+      myWish = { num: Number(made.id), key: made.key, name: v.name, wish: v.wish,
+        cost: v.cost, platform: v.platform, handle: v.handle, src: API.source(), pub: true };
       if (myWish.src) store.set('genie.wish', myWish);
       store.del('genie.draft');
       if (stats) { stats.made += 1; renderMade(); }
       await renderDone(true);
       celebrate();
-      if (isPublic) loadWall(); // their wish joins the Wall below straight away
+      loadWall(); // their wish shows on the Wall below straight away
     } catch (err) {
       const code = L.serverErrorCode(err);
       if (code === 'already_wished') { setFieldErr('handle', 'err_already_wished'); input.handle.focus(); }
@@ -291,6 +295,7 @@
     $('#doneWall').hidden = !pub;
     $('#doneWall').href = 'wishes.html#w' + n;
     $('#donePrivate').hidden = pub;
+    $('#delBtn').hidden = !myWish.key || !$('#delConfirm').hidden;
     const canvas = $('#cardCanvas');
     canvas.setAttribute('aria-label', t('card_alt', { n }));
     if (scroll) {
@@ -328,6 +333,81 @@
         text: t('share_text', { n: myWish.num }) + ' ' + siteUrl(),
       });
     } catch (e) { /* closed the share sheet */ }
+  });
+
+  // ── their wish, their choice: delete it while it waits ────────────────
+  let mineBusy = false;
+  function setMineErr(key) {
+    const el = $('#mineErr');
+    el.dataset.code = key || '';
+    el.textContent = key ? t(key) : '';
+  }
+  function hideConfirm() {
+    $('#delConfirm').hidden = true;
+    $('#delBtn').hidden = false;
+  }
+
+  // Back to the form: after a delete, or when their wish no longer exists on the server.
+  // refill: a wish they deleted comes back into the form, so fixing a typo is "delete, fix, send again".
+  function forgetWish(refill) {
+    const old = myWish;
+    myWish = null;
+    store.del('genie.wish');
+    hideConfirm();
+    form.reset();
+    FIELDS.forEach((f) => setFieldErr(f, ''));
+    setFormErr('');
+    if (refill && old) {
+      input.wish.value = old.wish || '';
+      input.name.value = old.name || '';
+      if (old.cost) input.cost.value = String(old.cost);
+      if (old.handle) input.handle.value = old.handle;
+      if (old.platform === 'x' || old.platform === 'telegram') {
+        form.querySelector('input[name=platform][value="' + old.platform + '"]').checked = true;
+      }
+      openMore();
+    }
+    updateCount();
+    $('#done').hidden = true;
+    form.hidden = false;
+    $('#askHead').hidden = false;
+    $('#askHead').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  function mineFail(err) {
+    const code = L.serverErrorCode(err);
+    hideConfirm();
+    if (code === 'bad_key') { forgetWish(false); setFormErr('err_gone'); } // removed by the Genie, or the database was reset
+    else setMineErr('err_' + code);
+  }
+
+  // delete asks once more, with "No" as the safe default
+  $('#delBtn').addEventListener('click', () => {
+    setMineErr('');
+    $('#delBtn').hidden = true;
+    $('#delConfirm').hidden = false;
+    $('#delNo').focus();
+  });
+  $('#delNo').addEventListener('click', () => {
+    hideConfirm();
+    $('#delBtn').focus();
+  });
+  $('#delYes').addEventListener('click', async () => {
+    if (mineBusy || !myWish || !myWish.key) return;
+    mineBusy = true;
+    $('#delYes').disabled = true;
+    try {
+      await API.deleteWish(myWish.num, myWish.key);
+      if (stats) { stats.made = Math.max(0, stats.made - 1); renderMade(); }
+      forgetWish(true);
+      Cards.toast(t('deleted'));
+      loadWall();
+    } catch (err) {
+      mineFail(err);
+    } finally {
+      mineBusy = false;
+      $('#delYes').disabled = false;
+    }
   });
 
   function celebrate() {

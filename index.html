@@ -5,21 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#FBB417">
 
-<title>Genie — Make one wish</title>
-<meta name="description" content="Make one wish. The Genie picks one wish at a time — when the Lamp holds enough to make it real, the Genie sends the money. Free to enter.">
+<title>$GENIE — the memecoin that grants wishes</title>
+<meta name="description" content="$GENIE is a memecoin. Trading fees fill the Lamp, and the Lamp pays for real wishes, one at a time. Make your wish — it’s free.">
 <link rel="canonical" href="https://genie-coin.com/">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://genie-coin.com/">
-<meta property="og:title" content="Genies grant three wishes. This one grants one — and pays for it.">
-<meta property="og:description" content="Tell the Genie your wish and what it costs. When the Lamp fills to that price, the Genie sends the money. Free to enter.">
+<meta property="og:title" content="$GENIE — the memecoin that grants wishes">
+<meta property="og:description" content="Genies grant three wishes. $GENIE grants one — and pays for it. Make your wish, it’s free.">
 <meta property="og:image" content="https://genie-coin.com/img/og-wish.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@MoonEmpirE0">
-<meta name="twitter:title" content="Genies grant three wishes. This one grants one — and pays for it.">
-<meta name="twitter:description" content="Tell the Genie your wish and what it costs. When the Lamp fills to that price, the Genie sends the money. Free to enter.">
+<meta name="twitter:title" content="$GENIE — the memecoin that grants wishes">
+<meta name="twitter:description" content="Genies grant three wishes. $GENIE grants one — and pays for it. Make your wish, it’s free.">
 <meta name="twitter:image" content="https://genie-coin.com/img/og-wish.png">
 
 <link rel="icon" type="image/png" href="img/favicon-lamp.png">
@@ -34,9 +34,9 @@
 <body>
 
 <header class="top">
-  <a class="brand" href="./" aria-label="Genie">
+  <a class="brand" href="./" aria-label="$GENIE">
     <img src="img/lamp-gold.webp" alt="" width="900" height="542">
-    <span>Genie</span>
+    <span dir="ltr">$GENIE</span>
   </a>
   <div class="top-right">
     <button type="button" class="lang-btn" id="langBtn" data-i18n-aria="lang_aria" aria-label="Language: switch to Arabic">
@@ -55,13 +55,15 @@
 
 <main class="wrap">
 
-  <!-- the page is three parts, top to bottom: 1 the hook and the Lamp · 2 your wish · 3 the Wish Wall -->
+  <!-- the page, top to bottom: 1 the hook and the Lamp · 2 your wish · 3 what $GENIE is · 4 the Wish Wall -->
 
-  <!-- 1 · the hook: a twist on a story everyone knows (curiosity gap), and the Lamp filling -->
+  <!-- 1 · the hook: a twist on a story everyone knows (curiosity gap), and the Lamp filling.
+       The pill says it first: this is a coin. -->
   <section class="scene" id="scene" aria-labelledby="h1">
+    <p class="kicker" data-i18n="kicker">$GENIE · the memecoin that grants wishes</p>
     <h1 id="h1">
       <span class="h1-a" data-i18n="hook_1">Genies grant three wishes.</span>
-      <span class="h1-b" data-i18n="hook_2">This one grants one — and pays for it.</span>
+      <span class="h1-b" data-i18n="hook_2">$GENIE grants one — and pays for it.</span>
     </h1>
 
     <div class="lamp" id="lamp" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"
@@ -80,7 +82,7 @@
   <section class="part" id="wish" aria-labelledby="askLabel">
    <div class="part-head" id="askHead">
     <h2><label for="fWish" id="askLabel" data-i18n="ask">What’s your one wish?</label></h2>
-    <p class="part-sub" data-i18n="ask_sub">Free. No purchase needed.</p>
+    <p class="part-sub" data-i18n="ask_sub">It’s free. You don’t need to buy anything.</p>
    </div>
    <div class="panel">
     <form id="wishForm" novalidate>
@@ -90,7 +92,7 @@
                   placeholder="What would change your life?" data-i18n-ph="ph_wish" aria-describedby="err-wish"></textarea>
         <div class="under-row">
           <p class="field-err" id="err-wish" aria-live="polite"></p>
-          <span class="count" id="wishCount" aria-hidden="true">0/280</span>
+          <span class="count" id="wishCount" aria-hidden="true" hidden>0/280</span>
         </div>
       </div>
 
@@ -135,12 +137,8 @@
         <p class="field-err" id="err-handle" aria-live="polite"></p>
       </fieldset>
 
-      <!-- public by default (the Wall shows first name, wish and @); one tap keeps it between them and the Genie -->
-      <label class="check">
-        <input type="checkbox" id="fPrivate" name="private">
-        <span class="box" aria-hidden="true"></span>
-        <span><b data-i18n="f_private">Keep my wish private</b><small data-i18n="f_private_hint">Otherwise your first name, wish and @ go on the public Wish Wall.</small></span>
-      </label>
+      <!-- every wish is public: say so plainly before they press the button -->
+      <p class="public-note"><span aria-hidden="true">👀</span> <span data-i18n="public_note">Your wish, first name and @ will be public on the Wish Wall. You can’t change it later, but you can delete it.</span></p>
        </div>
       </div>
 
@@ -155,10 +153,9 @@
     </form>
 
     <div id="done" class="done" hidden>
-      <p class="kicker" data-i18n="done_kicker">Your wish is in the Lamp ✨</p>
+      <!-- the card already shows the number, so this heading is only for screen readers -->
       <h2 id="doneNum" tabindex="-1"></h2>
       <canvas id="cardCanvas" class="card-canvas" width="1200" height="630" role="img"></canvas>
-      <p class="done-text" data-i18n="done_text">Share it — the more people see the Lamp, the faster it fills.</p>
       <div class="share">
         <button type="button" class="btn btn-gold" id="shareNative" hidden><span data-i18n="share_native">Share</span></button>
         <a class="btn btn-ink" id="shareX" href="#" target="_blank" rel="noopener noreferrer">
@@ -169,16 +166,54 @@
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
           <span data-i18n="share_tg">Send on Telegram</span>
         </a>
-        <button type="button" class="btn btn-white" id="shareSave" style="grid-column:1 / -1"><span data-i18n="share_save">Save image</span></button>
       </div>
-      <a class="wall-link" id="doneWall" href="wishes.html" data-i18n="done_wall">See your wish on the Wish Wall →</a>
+      <!-- X and Telegram are small buttons; the rest are quiet links -->
+      <div class="done-links">
+        <a class="wall-link" id="doneWall" href="wishes.html" data-i18n="done_wall">See your wish on the Wish Wall →</a>
+        <button type="button" class="link-btn quiet" id="shareSave"><span data-i18n="share_save">Save image</span></button>
+        <!-- their wish, their choice: delete it while it waits. No editing, so the words people ❤ can't be swapped later -->
+        <button type="button" class="link-btn quiet" id="delBtn" hidden><span data-i18n="mine_delete">Delete my wish</span></button>
+      </div>
+      <div class="mine-confirm" id="delConfirm" hidden>
+        <p data-i18n="mine_confirm">Delete your wish? You can’t undo this.</p>
+        <div class="confirm-btns">
+          <button type="button" class="btn btn-red" id="delYes"><span data-i18n="mine_yes">Yes, delete it</span></button>
+          <button type="button" class="btn btn-white" id="delNo"><span data-i18n="mine_no">No, keep it</span></button>
+        </div>
+      </div>
+      <p class="form-err" id="mineErr" role="alert"></p>
       <p class="done-text" id="donePrivate" data-i18n="done_private" hidden>Your wish is private — only the Genie sees it.</p>
-      <p class="scam">🛡️ <span data-i18n="scam">The Genie never DMs first and never asks you for money.</span></p>
+
+      <p class="scam">🛡️ <span data-i18n="scam">The Genie never messages you first and never asks for money.</span></p>
     </div>
    </div>
   </section>
 
-  <!-- 3 · the Wish Wall: the latest wishes (the whole Wall is wishes.html).
+  <!-- 3 · what $GENIE is: the coin, how it pays for wishes, and that it is not live yet -->
+  <section class="part coin" id="coin" aria-labelledby="coinTitle">
+    <div class="part-head">
+      <h2 id="coinTitle" data-i18n="coin_title">What is $GENIE?</h2>
+      <p class="part-sub" data-i18n="coin_sub">$GENIE is a memecoin on Ethereum with one job: pay for real wishes.</p>
+    </div>
+    <ol class="coin-steps">
+      <li><span class="num" aria-hidden="true">1</span><b data-i18n="coin_1_t">You make a wish</b><p data-i18n="coin_1">It’s free. You don’t need to buy anything.</p></li>
+      <li><span class="num" aria-hidden="true">2</span><b data-i18n="coin_2_t">Trading fills the Lamp</b><p data-i18n="coin_2">Every time someone buys or sells $GENIE, a small fee goes into the Lamp.</p></li>
+      <li><span class="num" aria-hidden="true">3</span><b data-i18n="coin_3_t">The Genie pays</b><p data-i18n="coin_3">The Genie picks one wish and sends the money. Everyone can see the transfer.</p></li>
+    </ol>
+    <aside class="coin-status" role="note">
+      <span class="soon-dot" aria-hidden="true"></span>
+      <div>
+        <strong data-i18n="coin_status_t">$GENIE is not live yet</strong>
+        <p data-i18n="coin_status">The real contract address will be posted here and in our Telegram first. Anyone selling $GENIE before that is a scammer.</p>
+      </div>
+      <a class="btn btn-blue" href="https://t.me/GenieCoinChat" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+        <span data-i18n="coin_tg">Get launch news on Telegram</span>
+      </a>
+    </aside>
+  </section>
+
+  <!-- 4 · the Wish Wall: the latest wishes (the whole Wall is wishes.html).
        People's @ are public here, so the scam warning comes before any of them. -->
   <section class="part part-wall" id="wall" aria-labelledby="wallTitle">
     <div class="part-head">
@@ -189,23 +224,13 @@
       <span class="shield" aria-hidden="true">🛡️</span>
       <div>
         <strong data-i18n="wall_warn_title">The Genie never asks you for anything.</strong>
-        <p data-i18n="wall_warn">No fees, no “gas”, no wallet connect — and the Genie never DMs first. Anyone who messages you as the Genie is a scammer.</p>
+        <p data-i18n="wall_warn">No fees, no “gas”, no wallet connect. The Genie never messages you first. If someone messages you as the Genie, it’s a scam.</p>
       </div>
     </aside>
     <div class="featured" id="featured" hidden></div>
     <div class="wgrid" id="grid"></div>
     <p class="wall-msg" id="wallMsg" role="status"></p>
     <a class="btn btn-white wall-all" id="wallAll" href="wishes.html" data-i18n="wall_all" hidden>See all the wishes →</a>
-  </section>
-
-  <!-- how it works: one quiet row, no boxes. Step 1–2 also carry "free" and "your wish goes on the Wall" -->
-  <section class="how" aria-labelledby="howTitle">
-    <h2 id="howTitle" data-i18n="how_title">How it works</h2>
-    <ol class="steps">
-      <li><span class="num" aria-hidden="true">1</span><p data-i18n="step_1">Free. No purchase needed.</p></li>
-      <li><span class="num" aria-hidden="true">2</span><p data-i18n="step_2">Your wish goes on the Wish Wall (unless you keep it private). The Genie picks one.</p></li>
-      <li><span class="num" aria-hidden="true">3</span><p data-i18n="step_3">$GENIE trading fees fill the Lamp. Then the Genie sends the money.</p></li>
-    </ol>
   </section>
 
 </main>
@@ -219,9 +244,11 @@
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
     </a>
   </nav>
-  <p class="scam">🛡️ <span data-i18n="scam">The Genie never DMs first and never asks you for money.</span></p>
-  <p class="disclaimer" data-i18n="foot_disclaimer">Not financial advice. $GENIE is a memecoin with no promise of profit. Wishes are picked at the Genie’s discretion.</p>
-  <p class="copy">© 2026 Genie</p>
+  <p class="scam">🛡️ <span data-i18n="scam">The Genie never messages you first and never asks for money.</span></p>
+  <!-- for a wish made on another phone: the same @ proves it's theirs, and we delete it by hand -->
+  <p class="foot-help" data-i18n="foot_remove">Want your wish removed? Message us on X or Telegram from the same @.</p>
+  <p class="disclaimer" data-i18n="foot_disclaimer">Not financial advice. $GENIE is a memecoin. It does not promise any profit. The Genie chooses which wishes to pay for.</p>
+  <p class="copy" dir="ltr">© 2026 $GENIE</p>
 </footer>
 
 <div class="toast" id="toast" role="status" hidden></div>

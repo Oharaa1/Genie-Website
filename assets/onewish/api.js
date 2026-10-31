@@ -83,8 +83,14 @@
     },
   };
 
+  // Demo wishes made on this page keep their key here, like the server does (the Wall never shows it).
+  let demoSeq = demoWall.reduce((m, w) => Math.max(m, w.id), 0);
+  const demoKey = () => [...crypto.getRandomValues(new Uint8Array(16))].map((b) => b.toString(16).padStart(2, '0')).join('');
+  const demoTaken = (platform, handle) => handle.toLowerCase() === 'taken' || demoWall.some((w) =>
+    w.platform === platform && w.handle.toLowerCase() === handle.toLowerCase());
+
   function demoWallPage(q) {
-    const strip = (w) => { const o = copy(w); delete o.hours; return o; };
+    const strip = (w) => { const o = copy(w); delete o.hours; delete o.key; return o; };
     const base = {
       made: demoState.made, granted: demoState.granted,
       current: (demoWall.find((w) => w.status === 'picked') && strip(demoWall.find((w) => w.status === 'picked'))) || null,
@@ -107,16 +113,36 @@
     source: () => (demo ? '' : cfg.url || ''),
     WALL_PAGE,
 
-    makeWish: async (v, lang, isPublic) => {
+    // Every wish is public. → { id, key }: the key is the wisher's secret for deleting it.
+    makeWish: async (v, lang) => {
       if (demo) {
         await wait(700);
-        if (v.handle.toLowerCase() === 'taken') throw new Error('already_wished');
-        return ++demoState.made;
+        if (demoTaken(v.platform, v.handle)) throw new Error('already_wished');
+        demoState.made += 1;
+        const w = { id: ++demoSeq, status: 'new', hearts: 0, cost: null, raised: null, tx_url: null,
+          created_at: new Date().toISOString(), key: demoKey(),
+          name: v.name, wish: v.wish, platform: v.platform, handle: v.handle };
+        demoWall.unshift(w);
+        return { id: w.id, key: w.key };
       }
       return rpc('make_wish', {
         p_name: v.name, p_wish: v.wish, p_cost: v.cost,
-        p_platform: v.platform, p_handle: v.handle, p_lang: lang, p_public: isPublic !== false,
+        p_platform: v.platform, p_handle: v.handle, p_lang: lang,
       });
+    },
+
+    // Only while the wish waits: once the Genie picks it, the server answers wish_locked.
+    deleteWish: async (id, key) => {
+      if (demo) {
+        await wait(500);
+        const w = demoWall.find((x) => x.id === id && x.key && x.key === key);
+        if (!w) throw new Error('invalid_key');
+        if (w.status !== 'new') throw new Error('wish_locked');
+        demoWall.splice(demoWall.indexOf(w), 1);
+        demoState.made -= 1;
+        return true;
+      }
+      return rpc('delete_wish', { p_id: id, p_key: key });
     },
 
     stats: async () => {

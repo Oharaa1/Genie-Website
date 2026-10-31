@@ -69,7 +69,7 @@ html[lang="ar"] label,html[lang="ar"] legend,html[lang="ar"] .kicker{font-weight
 .wrap{max-width:1140px;margin:0 auto;padding:8px 16px 72px;}
 /* the question sits close under the Lamp (they belong together); the Wall and the steps get more air */
 #wish{margin-top:clamp(40px,6vw,64px);scroll-margin-top:24px;}
-.part-wall,.how{margin-top:clamp(88px,12vw,136px);}
+.part-wall,.coin{margin-top:clamp(88px,12vw,136px);}
 .part-head{text-align:center;margin:0 auto 24px;max-width:640px;}
 .part-head h2{font-family:var(--head);font-weight:400;font-size:clamp(1.95rem,6.2vw,2.7rem);line-height:1.12;}
 .part-head h2 label{display:inline;font:inherit;margin:0;cursor:pointer;}
@@ -83,6 +83,7 @@ html[lang="ar"] label,html[lang="ar"] legend,html[lang="ar"] .kicker{font-weight
   display:inline-block;font-family:var(--head);font-size:.95rem;letter-spacing:.05em;
   background:var(--ink);color:var(--gold);padding:.25rem .85rem;border-radius:999px;transform:rotate(-2deg);
 }
+.scene .kicker{margin-bottom:.6rem;}
 h1{font-family:var(--head);font-weight:400;line-height:1.05;margin:.3rem 0 1rem;}
 .h1-a,.h1-b{display:block;animation:rise .7s cubic-bezier(.2,.8,.3,1) both;}
 .h1-a{font-size:clamp(1.35rem,4.6vw,2rem);}
@@ -195,19 +196,17 @@ input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:var(--red)
 
 /* ---------- after the wish ---------- */
 .done{text-align:center;position:relative;}
-.done h2{
-  font-family:var(--head);font-weight:400;font-size:clamp(2.2rem,7vw,2.8rem);line-height:1.1;margin:.5rem 0 .2rem;
-  color:var(--gold);-webkit-text-stroke:2px var(--ink);outline:none;
-}
-html[lang="ar"] .done h2{color:var(--ink);-webkit-text-stroke:0;text-shadow:3px 3px 0 var(--gold);}
+/* "Wish #n" for screen readers only: the card shows the number */
+.done h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;outline:none;}
 .card-canvas{
   display:block;width:100%;height:auto;aspect-ratio:1200/630;margin:12px 0;
   border:3px solid var(--ink);border-radius:14px;box-shadow:4px 5px 0 var(--ink);background:var(--cream);
 }
 .done-text{font-weight:700;}
-.share{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
-.share .btn{font-size:1rem;padding:.7rem .6rem;}
-#shareNative{grid-column:1 / -1;}
+.share{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:6px;}
+.share .btn{font-size:.88rem;padding:.4rem .9rem;border-width:2px;border-radius:12px;box-shadow:2px 3px 0 var(--ink);}
+.share .btn:hover{box-shadow:3px 4px 0 var(--ink);}
+.share .btn svg{width:15px;height:15px;}
 .scam{font-size:.92rem;font-weight:700;margin-top:14px;}
 .spark{
   position:absolute;left:50%;top:70px;width:16px;height:16px;margin:-8px;pointer-events:none;
@@ -218,17 +217,30 @@ html[lang="ar"] .done h2{color:var(--ink);-webkit-text-stroke:0;text-shadow:3px 
 
 .tx-link{display:inline-block;margin-top:6px;font-weight:800;color:var(--blue-deep);}
 
-/* ---------- how it works: one quiet row, no boxes ---------- */
-.how{border-top:2px dashed rgba(20,20,20,.14);padding-top:28px;}
-.how h2{font-family:var(--head);font-weight:400;font-size:1.15rem;letter-spacing:.03em;text-align:center;color:var(--muted);margin-bottom:14px;}
-.steps{list-style:none;display:grid;gap:12px;grid-template-columns:minmax(0,1fr);max-width:980px;margin:0 auto;}
-@media (min-width:700px){.steps{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;}}
-.steps li{display:flex;align-items:flex-start;gap:10px;}
-.steps .num{
-  flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;
-  background:var(--blue);color:#fff;font-family:'Lilita One',sans-serif;font-size:1rem;
+/* ---------- 3 · what $GENIE is: three steps, then the launch status ---------- */
+.coin-steps{list-style:none;display:grid;gap:14px;grid-template-columns:minmax(0,1fr);max-width:980px;margin:0 auto;}
+@media (min-width:760px){.coin-steps{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;}}
+.coin-steps li{
+  display:grid;grid-template-columns:auto 1fr;column-gap:12px;row-gap:4px;align-items:start;align-content:start;
+  background:#fff;border:2.5px solid var(--ink);border-radius:20px;box-shadow:4px 5px 0 var(--ink);padding:16px 18px;
 }
-.steps p{color:#3a342a;font-weight:600;line-height:1.4;padding-top:3px;}
+.coin-steps .num{
+  grid-row:span 2;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;
+  background:var(--blue);color:#fff;font-family:'Lilita One',sans-serif;font-size:1.05rem;border:2px solid var(--ink);
+}
+.coin-steps b{font-family:var(--head);font-weight:400;font-size:1.15rem;line-height:1.2;padding-top:5px;}
+html[lang="ar"] .coin-steps b{font-weight:800;}
+.coin-steps p{color:#3a342a;font-weight:600;line-height:1.4;}
+.coin-status{
+  max-width:980px;margin:22px auto 0;display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;
+  background:var(--ink);color:#fff;border-radius:20px;padding:16px 20px;
+}
+.coin-status > div{flex:1 1 280px;}
+.coin-status strong{display:block;font-family:var(--head);font-weight:400;font-size:1.15rem;color:var(--gold);}
+html[lang="ar"] .coin-status strong{font-weight:800;}
+.coin-status p{font-weight:600;line-height:1.45;opacity:.9;margin-top:2px;}
+.coin-status .btn{box-shadow:3px 4px 0 var(--gold);border-color:#fff;}
+.soon-dot{flex:none;width:14px;height:14px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 rgba(251,180,23,.7);animation:pulse 2s ease-out infinite;}
 
 /* ---------- footer ---------- */
 .foot{
@@ -239,24 +251,25 @@ html[lang="ar"] .done h2{color:var(--ink);-webkit-text-stroke:0;text-shadow:3px 
 .foot .scam{margin-top:4px;}
 .disclaimer{font-size:.84rem;opacity:.75;max-width:62ch;}
 .copy{font-size:.8rem;opacity:.5;}
+.foot-help{font-size:.88rem;opacity:.8;max-width:62ch;}
 
-/* ---------- the private choice + the way to the Wall (form) ---------- */
-.check{display:flex;gap:10px;align-items:flex-start;margin:0 0 14px;font-family:var(--body);font-size:1rem;cursor:pointer;}
-.check input{position:absolute;opacity:0;width:1px;height:1px;}
-.check .box{
-  flex:none;width:24px;height:24px;margin-top:2px;display:grid;place-items:center;
-  border:2.5px solid var(--ink);border-radius:7px;background:#fff;transition:background .12s ease;
+/* ---------- the "it will be public" note, and deleting your wish ---------- */
+.public-note{display:flex;gap:8px;align-items:flex-start;margin:0 0 14px;font-size:.95rem;font-weight:600;color:var(--muted);line-height:1.4;}
+.btn-red{background:var(--red);color:#fff;}
+.mine-confirm{width:100%;margin-top:14px;}
+.mine-confirm p{font-weight:800;color:var(--red);margin-bottom:10px;}
+.confirm-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.confirm-btns .btn{font-size:1rem;padding:.6rem .6rem;}
+.link-btn{
+  font:inherit;font-weight:800;color:var(--blue-deep);background:none;border:0;cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;padding:2px 0;
 }
-.check .box::after{
-  content:"";width:11px;height:6px;border:3px solid #fff;border-top:0;border-right:0;
-  transform:translateY(-1px) rotate(-45deg);opacity:0;
-}
-.check input:checked + .box{background:var(--ink);}
-.check input:checked + .box::after{opacity:1;}
-.check input:focus-visible + .box{outline:3px solid var(--blue);outline-offset:2px;}
-.check b{display:block;font-family:var(--head);font-weight:400;font-size:1.05rem;}
-.check small{display:block;font-size:.88rem;font-weight:600;color:var(--muted);line-height:1.35;}
+.link-btn.quiet{color:var(--muted);font-weight:700;font-size:.92rem;}
+.link-btn:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:4px;}
 .wall-link{display:block;text-align:center;margin-top:12px;font-weight:800;color:var(--blue-deep);}
+.done-links{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 18px;margin-top:14px;}
+.done-links .wall-link{margin-top:0;}
+.done .form-err:empty{display:none;}
 
 /* ---------- 3 · the Wish Wall (home: the latest wishes · wishes.html: all of them) ---------- */
 .wall-wrap{max-width:1140px;margin:0 auto;padding:8px 16px 72px;}
@@ -378,6 +391,7 @@ html[lang="ar"] .wall-head h1{color:var(--ink);-webkit-text-stroke:0;text-shadow
   50%{filter:drop-shadow(0 0 22px rgba(251,180,23,.95));}
 }
 @keyframes pop{50%{transform:scale(1.4);}}
+@keyframes pulse{70%{box-shadow:0 0 0 10px rgba(251,180,23,0);}100%{box-shadow:0 0 0 0 rgba(251,180,23,0);}}
 @keyframes flash{50%{box-shadow:0 0 0 5px var(--blue),4px 5px 0 var(--ink);}}
 @keyframes fly{
   0%{transform:translate(0,0) scale(.4) rotate(0);opacity:1;}

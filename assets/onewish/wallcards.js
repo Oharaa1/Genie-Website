@@ -187,5 +187,6 @@
     setup(o) { t = o.t; },
     card,
     warnStrip,
+    toast,
   };
 })();

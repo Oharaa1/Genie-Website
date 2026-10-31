@@ -91,6 +91,8 @@ test('serverErrorCode maps database errors to friendly codes', () => {
   assert.equal(L.serverErrorCode({ message: 'already_wished' }), 'already_wished');
   assert.equal(L.serverErrorCode({ message: 'rate_limited' }), 'rate_limited');
   assert.equal(L.serverErrorCode({ message: 'invalid_wish' }), 'invalid');
+  assert.equal(L.serverErrorCode({ message: 'invalid_key' }), 'bad_key');
+  assert.equal(L.serverErrorCode({ message: 'wish_locked' }), 'locked');
   assert.equal(L.serverErrorCode({ message: 'Failed to fetch' }), 'network');
   assert.equal(L.serverErrorCode(null), 'network');
 });

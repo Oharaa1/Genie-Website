@@ -98,6 +98,8 @@
     const msg = String((err && (err.message || err.code)) || '');
     if (msg.includes('already_wished')) return 'already_wished';
     if (msg.includes('rate_limited')) return 'rate_limited';
+    if (msg.includes('invalid_key')) return 'bad_key';   // before invalid_: a wrong secret, not a wrong field
+    if (msg.includes('wish_locked')) return 'locked';    // the Genie picked (or hid) it, it can't be deleted now
     if (msg.includes('invalid_')) return 'invalid';
     return 'network';
   }
