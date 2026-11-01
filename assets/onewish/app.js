@@ -3,7 +3,8 @@
   'use strict';
   const L = window.WishLogic, I18N = window.WishI18n, API = window.WishAPI, Card = window.WishCard;
   const Cards = window.WishWallCards;
-  const WALL_PREVIEW = 6; // two rows of three on a wide screen; the rest are on wishes.html
+  const WALL_PREVIEW = 3; // a taste; the rest are on wishes.html
+  const WALL_MIN = 3;     // fewer wishes than this read as an empty room, so the Wall waits
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => [...document.querySelectorAll(s)];
   const isLocal = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:';
@@ -94,7 +95,7 @@
       lamp.setAttribute('aria-valuenow', String(p.pct));
       lamp.setAttribute('aria-valuetext', t('lamp_of', { raised: L.formatUSD(c.raised), cost: L.formatUSD(c.cost) }));
     } else {
-      cap.textContent = t('lamp_waiting');
+      cap.textContent = '';
       fill = 108;
       lamp.classList.add('glow');
       lamp.setAttribute('aria-valuenow', '0');
@@ -142,21 +143,18 @@
   }
 
   // ── 3 · the Wish Wall: the wish the Lamp is filling for, then the latest ones ──
+  // Shown only once there is something to see; if it fails to load it just stays hidden.
   function renderWall() {
+    const ok = !!(wall && !wall.error);
+    const cur = ok ? wall.current : null;
+    const all = (ok && wall.items) || [];
+    $('#wall').hidden = !(cur || all.length >= WALL_MIN);
     const f = $('#featured');
     f.replaceChildren();
-    const cur = wall && wall.current;
     f.hidden = !cur;
-    if (cur) {
-      const label = document.createElement('p');
-      label.className = 'featured-label';
-      label.textContent = t('wall_now');
-      f.append(label, Cards.card(cur, true));
-    }
-    const items = ((wall && wall.items) || []).filter((w) => !cur || w.id !== cur.id).slice(0, WALL_PREVIEW);
+    if (cur) f.append(Cards.card(cur, true));
+    const items = all.filter((w) => !cur || w.id !== cur.id).slice(0, WALL_PREVIEW);
     $('#grid').replaceChildren(...items.map((w) => Cards.card(w, false)));
-    $('#wallMsg').textContent = wall ? (wall.error ? t('wall_error') : (!items.length && !cur ? t('wall_empty') : '')) : '';
-    $('#wallAll').hidden = !(wall && !wall.error && (items.length || cur));
   }
 
   async function loadWall() {
@@ -201,17 +199,58 @@
     el.hidden = n < 200; // a counter is noise until the limit is near
   }
 
+  // the wish box grows with the words, so nobody scrolls inside a small box
+  function fitWish() {
+    const w = input.wish;
+    w.style.height = 'auto';
+    w.style.height = w.scrollHeight + (w.offsetHeight - w.clientHeight) + 'px';
+  }
+  window.addEventListener('resize', fitWish);
+
+  // a quiet ✓ once the username fits the app's rules; mistakes are still only said after the button
+  function showHandleOk() {
+    const p = platform();
+    $('#handleOk').hidden = !L.validHandle(p, L.normalizeHandle(p, input.handle.value));
+  }
+
+  // the @ box: a pasted profile link picks X or Telegram by itself, and only the username stays
+  input.handle.addEventListener('input', () => {
+    const v = input.handle.value;
+    const p = L.linkPlatform(v);
+    if (p) form.querySelector('input[name=platform][value="' + p + '"]').checked = true;
+    if (p || /^\s*@/.test(v)) input.handle.value = L.normalizeHandle(platform(), v);
+    showHandleOk();
+  });
+
+  // the price box writes 2400 as "2,400" (and Arabic digits as Western ones, like the rest of the site)
+  input.cost.addEventListener('input', () => {
+    const el = input.cost;
+    const f = L.formatCostInput(el.value, el.selectionStart);
+    if (f.value !== el.value) { el.value = f.value; el.setSelectionRange(f.caret, f.caret); }
+  });
+
+  // the phone's Enter key says "Next" and moves on (enterkeyhint in index.html); on the @ box it sends
+  const NEXT = { wish: 'cost', cost: 'name', name: 'handle' };
+  Object.keys(NEXT).forEach((f) => input[f].addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' || e.shiftKey || e.isComposing) return;
+    e.preventDefault();
+    openMore();
+    input[NEXT[f]].focus();
+  }));
+
   FIELDS.forEach((f) => input[f].addEventListener('input', () => {
     if ($('#err-' + f).dataset.code) setFieldErr(f, '');
     if ($('#formErr').dataset.code) setFormErr('');
     if (f === 'wish') {
       updateCount();
+      fitWish();
       openMore();
       store.set('genie.draft', input.wish.value); // a half-written wish waits for them if they leave
     }
   }));
   $$('input[name=platform]').forEach((r) => r.addEventListener('change', () => {
     if ($('#err-handle').dataset.code) setFieldErr('handle', '');
+    showHandleOk();
     input.handle.focus();
   }));
 
@@ -261,8 +300,7 @@
       store.del('genie.draft');
       if (stats) { stats.made += 1; renderMade(); }
       await renderDone(true);
-      celebrate();
-      loadWall(); // their wish shows on the Wall below straight away
+      loadWall(); // their wish shows on the Wall below straight away (once the Wall has WALL_MIN wishes)
     } catch (err) {
       const code = L.serverErrorCode(err);
       if (code === 'already_wished') { setFieldErr('handle', 'err_already_wished'); input.handle.focus(); }
@@ -290,11 +328,7 @@
     $('#shareX').href = L.xShareUrl(text, siteUrl());
     $('#shareTg').href = L.telegramShareUrl(text, siteUrl());
     $('#shareNative').hidden = !canShareFiles();
-    // a public wish has its own place on the Wall; a private one says so plainly
-    const pub = myWish.pub !== false;
-    $('#doneWall').hidden = !pub;
-    $('#doneWall').href = 'wishes.html#w' + n;
-    $('#donePrivate').hidden = pub;
+    $('#donePrivate').hidden = myWish.pub !== false; // only wishes made before every wish was public
     $('#delBtn').hidden = !myWish.key || !$('#delConfirm').hidden;
     const canvas = $('#cardCanvas');
     canvas.setAttribute('aria-label', t('card_alt', { n }));
@@ -360,7 +394,7 @@
     if (refill && old) {
       input.wish.value = old.wish || '';
       input.name.value = old.name || '';
-      if (old.cost) input.cost.value = String(old.cost);
+      if (old.cost) input.cost.value = L.formatCostInput(String(old.cost), 0).value;
       if (old.handle) input.handle.value = old.handle;
       if (old.platform === 'x' || old.platform === 'telegram') {
         form.querySelector('input[name=platform][value="' + old.platform + '"]').checked = true;
@@ -368,8 +402,10 @@
       openMore();
     }
     updateCount();
+    showHandleOk();
     $('#done').hidden = true;
     form.hidden = false;
+    fitWish(); // after the form shows: a hidden box has no height to measure
     $('#askHead').hidden = false;
     $('#askHead').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
   }
@@ -410,25 +446,11 @@
     }
   });
 
-  function celebrate() {
-    if (reduceMotion) return;
-    const host = $('#done');
-    for (let i = 0; i < 16; i++) {
-      const s = document.createElement('span');
-      s.className = 'spark';
-      const a = (Math.PI * 2 * i) / 16 + Math.random() * 0.3;
-      const d = 90 + Math.random() * 90;
-      s.style.setProperty('--dx', Math.cos(a) * d + 'px');
-      s.style.setProperty('--dy', Math.sin(a) * d + 'px');
-      host.appendChild(s);
-      setTimeout(() => s.remove(), 1300);
-    }
-  }
-
   // ── start ─────────────────────────────────────────────────────────────
   const draft = store.get('genie.draft');
   if (!myWish && typeof draft === 'string' && draft.trim()) { input.wish.value = draft; openMore(); }
   applyLang();
+  fitWish();
   if (myWish) renderDone(false);
   loadStats();
   loadWall();

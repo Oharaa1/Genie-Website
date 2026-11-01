@@ -27,21 +27,15 @@
     return s;
   }
   Cards.setup({ t });
-  const fmtInt = (n) => new Intl.NumberFormat('en-US').format(n);
   const el = (tag, cls, text) => { const e = document.createElement(tag); e.className = cls; e.textContent = text; return e; };
 
   // ── render ────────────────────────────────────────────────────────────
   function renderTop() {
-    const sub = $('#wallSub');
-    const ok = !!(page && page.made >= 10); // a tiny number reads as "nobody's here"
-    sub.hidden = !ok;
-    if (ok) sub.textContent = t('wall_sub', { n: fmtInt(page.made) }) + (page.granted > 0 ? t('made_granted', { g: fmtInt(page.granted) }) : '');
-
     const f = $('#featured');
     f.replaceChildren();
     const cur = page && page.current;
     f.hidden = !cur;
-    if (cur) f.append(el('p', 'featured-label', t('wall_now')), Cards.card(cur, true));
+    if (cur) f.append(Cards.card(cur, true));
 
     const sh = $('#shared');
     sh.replaceChildren();
@@ -58,11 +52,7 @@
   function renderGrid() {
     const g = $('#grid');
     g.replaceChildren();
-    items.forEach((w, i) => {
-      g.append(Cards.card(w, false));
-      // the warning comes back inside the list too: after the 6th card, then every 12 (whole rows at 1, 2 or 3 columns)
-      if ((i + 1 - 6) % 12 === 0 && i + 1 < items.length) g.append(Cards.warnStrip());
-    });
+    g.append(...items.map((w) => Cards.card(w, false)));
     const msg = $('#wallMsg');
     msg.textContent = page && !items.length ? t(sort === 'true' ? 'wall_empty_true' : 'wall_empty') : '';
     $('#moreBtn').hidden = !(page && page.more);
@@ -109,7 +99,7 @@
       setTimeout(() => { flashId = null; }, 3500);
       renderTop();
       // stop at the scam warning, so it is on screen together with the shared wish and its @
-      $('.warn-box').scrollIntoView({ block: 'start' });
+      $('#wallScam').scrollIntoView({ block: 'start' });
     } catch (e) { /* the wall still loads */ }
   }
 

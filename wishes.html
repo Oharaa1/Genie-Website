@@ -54,52 +54,32 @@
 
   <section class="wall-head" aria-labelledby="wallTitle">
     <h1 id="wallTitle" data-i18n="wall_title">The Wish Wall</h1>
-    <p class="wall-sub" id="wallSub"></p>
-    <a class="btn btn-gold" href="./#wish"><span data-i18n="wall_cta">Make your wish</span> <span aria-hidden="true">✨</span></a>
+    <p class="part-sub" data-i18n="wall_reading">The Genie is reading your wishes.</p>
+    <a class="btn btn-gold" href="./#wish"><span data-i18n="wall_cta">Make your wish</span></a>
+    <!-- people's @ are public here, so the scam warning comes before any of them -->
+    <p class="scam" id="wallScam" data-i18n="scam">The Genie never messages you first and never asks for money or your wallet.</p>
   </section>
-
-  <!-- people's @ are public here, so the scam warning comes before any of them -->
-  <aside class="warn-box" role="note">
-    <span class="shield" aria-hidden="true">🛡️</span>
-    <div>
-      <strong data-i18n="wall_warn_title">The Genie never asks you for anything.</strong>
-      <p data-i18n="wall_warn">No fees, no “gas”, no wallet connect. The Genie never messages you first. If someone messages you as the Genie, it’s a scam.</p>
-      <a href="https://t.me/GenieCoinChat" target="_blank" rel="noopener noreferrer" data-i18n="wall_report">See your @ on a wish you didn’t make? Tell us on Telegram.</a>
-    </div>
-  </aside>
 
   <section class="featured" id="shared" hidden></section>
   <section class="featured" id="featured" hidden></section>
 
   <div class="tabs" role="group" aria-label="Sort the wishes">
     <button type="button" class="tab" data-sort="new" aria-pressed="true" data-i18n="wall_tab_new">Newest</button>
-    <button type="button" class="tab" data-sort="loved" aria-pressed="false" data-i18n="wall_tab_loved">Most ❤</button>
-    <button type="button" class="tab" data-sort="true" aria-pressed="false" data-i18n="wall_tab_true">Came true ✓</button>
+    <button type="button" class="tab" data-sort="loved" aria-pressed="false" data-i18n="wall_tab_loved">Most loved</button>
+    <button type="button" class="tab" data-sort="true" aria-pressed="false" data-i18n="wall_tab_true">Came true</button>
   </div>
-  <p class="wall-hint" data-i18n="wall_hint">Tap ❤ on the wishes you hope come true.</p>
 
   <div class="wgrid" id="grid"></div>
   <p class="wall-msg" id="wallMsg" role="status"></p>
-  <button type="button" class="btn btn-white more-btn" id="moreBtn" hidden><span data-i18n="wall_more">Show more wishes</span></button>
+  <button type="button" class="more-btn" id="moreBtn" hidden><span data-i18n="wall_more">Show more</span></button>
 
 </main>
 
 <footer class="foot">
-  <nav class="socials" aria-label="Genie on social media">
-    <a href="https://x.com/MoonEmpirE0" target="_blank" rel="noopener noreferrer" aria-label="X">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-    </a>
-    <a href="https://t.me/GenieCoinChat" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
-    </a>
-  </nav>
-  <p class="scam">🛡️ <span data-i18n="scam">The Genie never messages you first and never asks for money.</span></p>
   <p class="foot-help" data-i18n="foot_remove">Want your wish removed? Message us on X or Telegram from the same @.</p>
   <p class="disclaimer" data-i18n="foot_disclaimer">Not financial advice. $GENIE is a memecoin. It does not promise any profit. The Genie chooses which wishes to pay for.</p>
   <p class="copy" dir="ltr">© 2026 $GENIE</p>
 </footer>
-
-<div class="toast" id="toast" role="status" hidden></div>
 
 <script src="assets/onewish/config.js"></script>
 <script src="assets/onewish/logic.js"></script>

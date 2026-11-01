@@ -1,3 +1,6 @@
+/* Each color has one job, so the eye learns it fast:
+   ink = text · deep blue = headings and links · gold = the Lamp, the main button and money ·
+   green = came true / OK · red = delete and errors. Gold is never used for text (1.8:1 on paper). */
 :root{
   --blue:#2BA9E0;
   --blue-deep:#1478A8;
@@ -6,10 +9,16 @@
   --gold-deep:#E09A00;
   --ink:#141414;
   --red:#C9271D;
-  --green:#1F9A55;
+  --green:#178048;
   --paper:#FFFDF6;
   --cream:#FFF6E3;
   --muted:#5E5646;
+  --line:rgba(20,20,20,.12);   /* quiet lines around cards */
+  --field:#8A8274;             /* borders of things you type in or tap: soft, but 3.7:1 so they stay visible */
+  --shadow:0 1px 2px rgba(20,20,20,.05),0 6px 20px rgba(20,20,20,.07);
+  --shadow-up:0 2px 4px rgba(20,20,20,.06),0 12px 28px rgba(20,20,20,.11);
+  /* spacing steps: the main gaps on the page all come from these */
+  --s1:8px;--s2:16px;--s3:24px;--s4:48px;--s5:clamp(72px,12vw,112px);
   --head:'Lilita One','Baloo Bhaijaan 2',system-ui,sans-serif;
   --body:'Baloo 2','Baloo Bhaijaan 2',system-ui,sans-serif;
 }
@@ -20,10 +29,8 @@ html[lang="ar"]{
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{-webkit-text-size-adjust:100%;}
 body{
-  /* warm paper + faint halftone dots = printed-comic feel */
-  background:
-    radial-gradient(rgba(20,20,20,.045) 1px, transparent 1.4px) 0 0/26px 26px,
-    linear-gradient(#fff 0%, var(--paper) 55%, var(--cream) 100%);
+  /* plain warm paper */
+  background:linear-gradient(#fff 0%, var(--paper) 55%, var(--cream) 100%);
   font-family:var(--body);
   color:var(--ink);
   line-height:1.45;
@@ -34,7 +41,7 @@ body{
 ::selection{background:var(--gold);color:var(--ink);}
 [hidden]{display:none !important;}
 html[lang="ar"] h1,html[lang="ar"] h2,html[lang="ar"] h3,html[lang="ar"] .btn,
-html[lang="ar"] label,html[lang="ar"] legend,html[lang="ar"] .kicker{font-weight:800;}
+html[lang="ar"] label,html[lang="ar"] legend,html[lang="ar"] .tab,html[lang="ar"] .wall-all,html[lang="ar"] .more-btn{font-weight:800;}
 
 /* ---------- top bar ---------- */
 .top{
@@ -44,124 +51,106 @@ html[lang="ar"] label,html[lang="ar"] legend,html[lang="ar"] .kicker{font-weight
 .brand{display:flex;align-items:center;gap:8px;text-decoration:none;}
 .brand img{width:52px;height:auto;filter:drop-shadow(1px 2px 0 rgba(20,20,20,.25));}
 .brand span{
-  font-family:'Lilita One',sans-serif;font-size:1.6rem;color:var(--blue);
-  -webkit-text-stroke:1.5px var(--ink);letter-spacing:.02em;
+  font-family:'Lilita One',sans-serif;font-size:1.25rem;color:var(--blue);
+  -webkit-text-stroke:1px var(--ink);letter-spacing:.02em;
 }
-.top-right{display:flex;align-items:center;gap:8px;}
-/* the globe: same size as the social circles, outlined so it reads as a switch, not a link */
-.lang-btn{
-  width:38px;height:38px;display:grid;place-items:center;padding:0;border-radius:50%;
-  border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;transition:transform .15s ease;
+.top-right{display:flex;align-items:center;gap:2px;}
+/* the globe and the social links: plain icons, no circles, each with a thumb-sized tap area */
+.lang-btn,.socials a{
+  width:44px;height:44px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;
+  background:none;color:var(--ink);cursor:pointer;transition:background-color .15s ease;
 }
-.lang-btn:hover{transform:translateY(-3px) scale(1.06);}
-.lang-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;transition:transform .4s ease;}
-.lang-btn:hover svg{transform:rotate(-25deg);}
-.lang-btn:focus-visible,.socials a:focus-visible,.btn:focus-visible,.tx-link:focus-visible{outline:3px solid var(--blue);outline-offset:3px;}
-.socials{display:flex;gap:8px;}
-.socials a{
-  width:38px;height:38px;display:grid;place-items:center;border-radius:50%;
-  color:#fff;background:var(--ink);transition:transform .15s ease;
-}
-.socials a:hover{transform:translateY(-3px) scale(1.06);}
-.socials svg{width:18px;height:18px;}
+.lang-btn:hover,.socials a:hover{background:rgba(20,20,20,.06);}
+.lang-btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;}
+.lang-btn:focus-visible,.socials a:focus-visible,.btn:focus-visible,.tx-link:focus-visible{outline:3px solid var(--blue-deep);outline-offset:3px;}
+.socials{display:flex;gap:2px;}
+.socials svg{width:19px;height:19px;}
 
 /* ---------- layout: one column, three parts, room to breathe between them ---------- */
-.wrap{max-width:1140px;margin:0 auto;padding:8px 16px 72px;}
-/* the question sits close under the Lamp (they belong together); the Wall and the steps get more air */
-#wish{margin-top:clamp(40px,6vw,64px);scroll-margin-top:24px;}
-.part-wall,.coin{margin-top:clamp(88px,12vw,136px);}
-.part-head{text-align:center;margin:0 auto 24px;max-width:640px;}
-.part-head h2{font-family:var(--head);font-weight:400;font-size:clamp(1.95rem,6.2vw,2.7rem);line-height:1.12;}
+.wrap{max-width:1140px;margin:0 auto;padding:var(--s1) var(--s2) var(--s5);}
+/* the wish box sits close under the hook, high on the first screen; the Wall and the steps get more air */
+#wish{margin-top:var(--s3);scroll-margin-top:var(--s3);}
+.part-wall,.coin{margin-top:var(--s5);}
+.part-head{text-align:center;margin:0 auto var(--s3);max-width:640px;}
+.part-head h2{font-family:var(--head);font-weight:400;font-size:clamp(1.95rem,6.2vw,2.7rem);line-height:1.12;color:var(--blue-deep);}
 .part-head h2 label{display:inline;font:inherit;margin:0;cursor:pointer;}
-.part-sub{margin-top:8px;font-size:1.05rem;font-weight:600;color:var(--muted);}
+.part-sub{margin-top:var(--s1);font-size:1.05rem;font-weight:600;color:var(--muted);text-wrap:balance;}
 
 /* ---------- 1 · the hook ---------- */
 /* registered so the Lamp's fill level can animate smoothly */
 @property --fill{syntax:'<percentage>';inherits:true;initial-value:0%;}
-.scene{text-align:center;display:flex;flex-direction:column;align-items:center;padding-top:clamp(4px,2vw,24px);}
-.kicker{
-  display:inline-block;font-family:var(--head);font-size:.95rem;letter-spacing:.05em;
-  background:var(--ink);color:var(--gold);padding:.25rem .85rem;border-radius:999px;transform:rotate(-2deg);
-}
-.scene .kicker{margin-bottom:.6rem;}
-h1{font-family:var(--head);font-weight:400;line-height:1.05;margin:.3rem 0 1rem;}
-.h1-a,.h1-b{display:block;animation:rise .7s cubic-bezier(.2,.8,.3,1) both;}
-.h1-a{font-size:clamp(1.35rem,4.6vw,2rem);}
-.h1-b{
-  font-size:clamp(2.05rem,7.2vw,3.4rem);margin-top:.12em;animation-delay:.45s;
-  color:var(--gold);-webkit-text-stroke:2.5px var(--ink);text-shadow:4px 5px 0 rgba(20,20,20,.16);
-}
-html[lang="ar"] h1{line-height:1.3;}
-html[lang="ar"] .h1-b{color:var(--ink);-webkit-text-stroke:0;text-shadow:3px 3px 0 var(--gold);}
+.scene{text-align:center;display:flex;flex-direction:column;align-items:center;padding-top:clamp(8px,2vw,24px);}
+/* small on purpose: the wish question below is the one big thing on the screen.
+   The other genies are grey; this Genie is the same deep blue as the question */
+h1{font-family:var(--head);font-weight:400;line-height:1.12;margin:0 0 clamp(12px,3vw,24px);}
+.h1-a,.h1-b{display:block;text-wrap:balance;animation:rise .7s cubic-bezier(.2,.8,.3,1) both;}
+.h1-a{font-size:clamp(1rem,2.6vw,1.2rem);color:var(--muted);}
+.h1-b{font-size:clamp(1.12rem,3vw,1.4rem);margin-top:.15em;animation-delay:.45s;color:var(--blue-deep);}
+html[lang="ar"] h1{line-height:1.35;}
 
 .lamp-caption{opacity:0;transition:opacity .7s ease;}
 .scene.told .lamp-caption{opacity:1;}
 
 /* the Lamp is the meter: a pale ghost of the lamp, with gold rising from the base as it fills */
 .lamp{
-  --fill:0%;position:relative;width:min(290px,70vw);margin-top:clamp(14px,3vw,28px);
+  --fill:0%;position:relative;width:clamp(132px,36vw,190px);
   transition:--fill 2.2s cubic-bezier(.25,.8,.3,1);
   animation:rise .8s .7s cubic-bezier(.2,.8,.3,1) both;
 }
-.lamp-bob{position:relative;aspect-ratio:900/542;animation:bob 4.5s ease-in-out infinite;filter:drop-shadow(0 16px 14px rgba(20,20,20,.14));}
+.lamp-art{position:relative;aspect-ratio:900/542;filter:drop-shadow(0 6px 6px rgba(20,20,20,.14));}
 .lamp img{position:absolute;inset:0;width:100%;height:100%;}
 .lamp-empty{filter:grayscale(1) brightness(1.25);opacity:.3;}
 .lamp-gold{
   -webkit-mask-image:linear-gradient(to top,#000 calc(var(--fill) - 4%),transparent calc(var(--fill) + 4%));
           mask-image:linear-gradient(to top,#000 calc(var(--fill) - 4%),transparent calc(var(--fill) + 4%));
 }
-.lamp.glow .lamp-bob{animation:bob 4.5s ease-in-out infinite,lampGlow 2.6s ease-in-out infinite;}
-/* magic smoke curling up from the spout toward the wish */
-.smoke{position:absolute;left:4%;top:36%;z-index:1;}
-.smoke i{
-  position:absolute;left:0;top:0;width:30px;height:30px;margin:-15px;border-radius:50%;opacity:0;
-  background:radial-gradient(circle,rgba(43,169,224,.45),rgba(43,169,224,0) 70%);
-  animation:smoke 4.2s ease-out infinite;
-}
-.smoke i:nth-child(2){animation-delay:1.4s;--sx:-20px;}
-.smoke i:nth-child(3){animation-delay:2.8s;--sx:14px;}
-.lamp-caption{margin-top:.6rem;font-weight:700;color:var(--muted);}
+/* a full Lamp glows, still, once the gold has risen */
+.lamp.glow .lamp-art{filter:drop-shadow(0 0 10px rgba(251,180,23,.8));transition:filter 1.2s ease 2s;}
+.lamp-caption{margin-top:var(--s1);font-size:.88rem;font-weight:700;color:var(--muted);text-wrap:balance;}
 .lamp-caption.came-true{color:var(--green);font-weight:800;}
-@media (min-width:900px){.lamp{width:330px;}}
+.lamp-caption:empty{display:none;}
 
-/* ---------- 2 · the wish ---------- */
+/* ---------- 2 · the wish: the main element of the page ---------- */
 .panel{
-  position:relative;max-width:540px;margin:0 auto;background:#fff;border:3px solid var(--ink);border-radius:24px;
-  box-shadow:6px 8px 0 var(--ink);padding:22px 18px 20px;
+  position:relative;max-width:600px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:24px;
+  box-shadow:var(--shadow);padding:var(--s3);
 }
-@media (min-width:640px){.panel{padding:28px 28px 24px;}}
-.field{border:0;margin:0 0 14px;min-width:0;}
+/* the biggest words on the page, in one object with the box they ask you to fill */
+#askHead{margin-bottom:var(--s2);scroll-margin-top:calc(var(--s3) + var(--s3));}
+#askHead h2{font-size:clamp(2.4rem,7vw,3rem);text-wrap:balance;}
+.field{border:0;margin:0 0 var(--s2);min-width:0;}
 label,legend{display:block;font-family:var(--head);font-weight:400;font-size:1.08rem;margin-bottom:6px;}
 .count{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums;}
 .count.over{color:var(--red);font-weight:800;}
 input[type="text"],textarea{
   width:100%;font:inherit;font-size:1.06rem;color:var(--ink);
-  padding:.7rem .9rem;border:2.5px solid var(--ink);border-radius:14px;background:var(--paper);
+  padding:.7rem .9rem;border:1.5px solid var(--field);border-radius:12px;background:var(--paper);
   transition:border-color .15s ease,box-shadow .15s ease;
 }
 textarea{resize:vertical;min-height:100px;line-height:1.4;}
-input::placeholder,textarea::placeholder{color:#9a9182;}
-input[type="text"]:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(43,169,224,.25);}
+input::placeholder,textarea::placeholder{color:#776F61;}
+input[type="text"]:focus,textarea:focus{outline:none;border-color:var(--blue-deep);box-shadow:0 0 0 4px rgba(20,120,168,.18);}
 input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:var(--red);background:#FFF4F3;}
 .affix{
-  display:flex;align-items:stretch;border:2.5px solid var(--ink);border-radius:14px;background:var(--paper);
+  display:flex;align-items:stretch;border:1.5px solid var(--field);border-radius:12px;background:var(--paper);
   overflow:hidden;transition:border-color .15s ease,box-shadow .15s ease;
 }
-.affix > span{display:grid;place-items:center;padding:0 .85rem;font-weight:800;background:var(--cream);border-right:2.5px solid var(--ink);}
+.affix > span{display:grid;place-items:center;padding:0 .85rem;font-weight:800;color:var(--muted);background:var(--cream);border-right:1px solid var(--line);}
 .affix input[type="text"]{border:0;border-radius:0;background:transparent;box-shadow:none;}
-.affix:focus-within{border-color:var(--blue);box-shadow:0 0 0 4px rgba(43,169,224,.25);}
+.affix:focus-within{border-color:var(--blue-deep);box-shadow:0 0 0 4px rgba(20,120,168,.18);}
 .affix:has(input[aria-invalid="true"]){border-color:var(--red);background:#FFF4F3;}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
 .seg-opt{position:relative;margin:0;font-family:var(--body);font-size:1rem;}
 .seg-opt input{position:absolute;opacity:0;width:1px;height:1px;}
 .seg-opt span{
   display:flex;align-items:center;justify-content:center;gap:.45rem;min-height:46px;
-  padding:.5rem;border:2.5px solid var(--ink);border-radius:12px;background:#fff;
-  font-family:var(--head);font-weight:400;cursor:pointer;transition:background .12s ease,color .12s ease;
+  padding:.5rem;border:1.5px solid var(--field);border-radius:12px;background:#fff;
+  font-family:var(--head);font-weight:400;cursor:pointer;transition:background .12s ease,color .12s ease,border-color .12s ease;
 }
 .seg-opt svg{width:18px;height:18px;}
-.seg-opt input:checked + span{background:var(--ink);color:#fff;}
-.seg-opt input:focus-visible + span{outline:3px solid var(--blue);outline-offset:2px;}
+/* chosen = the blue of links and headings, with a thicker edge so it never relies on color alone */
+.seg-opt input:checked + span{background:#EAF4FA;border-color:var(--blue-deep);box-shadow:inset 0 0 0 1px var(--blue-deep);color:var(--blue-deep);}
+.seg-opt input:focus-visible + span{outline:3px solid var(--blue-deep);outline-offset:2px;}
 .field-err{color:var(--red);font-size:.92rem;font-weight:700;margin-top:5px;}
 .field-err:empty,.form-err:empty{display:none;}
 .under-row{display:flex;align-items:flex-start;gap:10px;margin-top:5px;}
@@ -171,6 +160,10 @@ input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:var(--red)
 .more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s cubic-bezier(.2,.8,.3,1);}
 .more.open{grid-template-rows:1fr;}
 .more-inner{overflow:hidden;min-height:0;padding:4px 4px 0;margin-inline:-4px;}
+.more:not(.open) .more-inner{visibility:hidden;} /* or Arabic marks peek out of the closed slit */
+/* the wish box grows with the words (app.js sets its height), so nobody scrolls inside a small box */
+#fWish{resize:none;overflow:hidden;font-size:1.18rem;min-height:132px;}
+.affix .ok{display:grid;place-items:center;padding:0 .85rem;font-style:normal;font-weight:900;color:var(--green);}
 .made-line{text-align:center;font-size:.92rem;font-weight:700;color:var(--muted);margin-top:12px;}
 /* clipped in place — an off-screen offset (left:-9999px) becomes a sideways scroll in RTL */
 .hp{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
@@ -179,76 +172,66 @@ input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:var(--red)
 .btn{
   font-family:var(--head);font-weight:400;font-size:1.05rem;letter-spacing:.02em;
   text-decoration:none;cursor:pointer;color:var(--ink);
-  padding:.75rem 1.2rem;border-radius:16px;border:3px solid var(--ink);
+  padding:.75rem 1.2rem;border-radius:14px;border:1.5px solid transparent;
   display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
-  box-shadow:4px 5px 0 var(--ink);transition:transform .12s ease,box-shadow .12s ease;
+  box-shadow:var(--shadow);transition:transform .12s ease,box-shadow .12s ease;
 }
-.btn:hover{transform:translateY(-2px);box-shadow:5px 7px 0 var(--ink);}
-.btn:active{transform:translate(4px,5px);box-shadow:0 0 0 var(--ink);}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-up);}
+.btn:active{transform:translateY(1px);box-shadow:var(--shadow);}
 .btn svg{width:20px;height:20px;flex:none;}
 .btn-gold{background:var(--gold);}
 .btn-ink{background:var(--ink);color:#fff;}
-.btn-blue{background:var(--blue);color:#fff;}
-.btn-white{background:#fff;}
+.btn-blue{background:var(--blue-deep);color:#fff;}
+.btn-white{background:#fff;border-color:var(--field);}
 .submit{width:100%;font-size:1.4rem;padding:.85rem 1.2rem;margin-top:4px;}
 .submit[disabled]{opacity:.75;cursor:progress;transform:none;}
 .form-err{color:var(--red);font-weight:800;text-align:center;margin-top:12px;}
 
 /* ---------- after the wish ---------- */
-.done{text-align:center;position:relative;}
+.done{text-align:center;position:relative;scroll-margin-top:var(--s4);}
 /* "Wish #n" for screen readers only: the card shows the number */
 .done h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;outline:none;}
 .card-canvas{
   display:block;width:100%;height:auto;aspect-ratio:1200/630;margin:12px 0;
-  border:3px solid var(--ink);border-radius:14px;box-shadow:4px 5px 0 var(--ink);background:var(--cream);
+  border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);background:var(--cream);
 }
 .done-text{font-weight:700;}
 .share{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:6px;}
-.share .btn{font-size:.88rem;padding:.4rem .9rem;border-width:2px;border-radius:12px;box-shadow:2px 3px 0 var(--ink);}
-.share .btn:hover{box-shadow:3px 4px 0 var(--ink);}
+.share .btn{font-size:.88rem;padding:.4rem .9rem;border-radius:12px;}
 .share .btn svg{width:15px;height:15px;}
 .scam{font-size:.92rem;font-weight:700;margin-top:14px;}
-.spark{
-  position:absolute;left:50%;top:70px;width:16px;height:16px;margin:-8px;pointer-events:none;
-  background:var(--gold);
-  clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);
-  animation:fly 1.2s cubic-bezier(.2,.8,.3,1) forwards;
-}
 
 .tx-link{display:inline-block;margin-top:6px;font-weight:800;color:var(--blue-deep);}
 
 /* ---------- 3 · what $GENIE is: three steps, then the launch status ---------- */
-.coin-steps{list-style:none;display:grid;gap:14px;grid-template-columns:minmax(0,1fr);max-width:980px;margin:0 auto;}
-@media (min-width:760px){.coin-steps{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;}}
+.coin-steps{list-style:none;display:grid;gap:var(--s2);grid-template-columns:minmax(0,1fr);max-width:980px;margin:0 auto;}
+@media (min-width:760px){.coin-steps{grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s3);}}
 .coin-steps li{
   display:grid;grid-template-columns:auto 1fr;column-gap:12px;row-gap:4px;align-items:start;align-content:start;
-  background:#fff;border:2.5px solid var(--ink);border-radius:20px;box-shadow:4px 5px 0 var(--ink);padding:16px 18px;
+  background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:var(--s2) var(--s3);
 }
 .coin-steps .num{
   grid-row:span 2;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;
-  background:var(--blue);color:#fff;font-family:'Lilita One',sans-serif;font-size:1.05rem;border:2px solid var(--ink);
+  background:var(--blue-deep);color:#fff;font-family:'Lilita One',sans-serif;font-size:1.05rem;
 }
 .coin-steps b{font-family:var(--head);font-weight:400;font-size:1.15rem;line-height:1.2;padding-top:5px;}
 html[lang="ar"] .coin-steps b{font-weight:800;}
 .coin-steps p{color:#3a342a;font-weight:600;line-height:1.4;}
 .coin-status{
-  max-width:980px;margin:22px auto 0;display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;
-  background:var(--ink);color:#fff;border-radius:20px;padding:16px 20px;
+  max-width:980px;margin:var(--s3) auto 0;display:flex;flex-wrap:wrap;align-items:center;gap:12px var(--s2);
+  background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:var(--s2) var(--s3);
 }
 .coin-status > div{flex:1 1 280px;}
-.coin-status strong{display:block;font-family:var(--head);font-weight:400;font-size:1.15rem;color:var(--gold);}
+.coin-status strong{display:block;font-family:var(--head);font-weight:400;font-size:1.15rem;}
 html[lang="ar"] .coin-status strong{font-weight:800;}
-.coin-status p{font-weight:600;line-height:1.45;opacity:.9;margin-top:2px;}
-.coin-status .btn{box-shadow:3px 4px 0 var(--gold);border-color:#fff;}
-.soon-dot{flex:none;width:14px;height:14px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 rgba(251,180,23,.7);animation:pulse 2s ease-out infinite;}
+.coin-status p{font-weight:600;line-height:1.45;color:#3a342a;margin-top:2px;}
 
 /* ---------- footer ---------- */
 .foot{
-  background:var(--ink);color:#fff;text-align:center;padding:28px 16px 34px;
-  display:grid;gap:10px;justify-items:center;
+  background:var(--ink);color:#fff;text-align:center;padding:var(--s4) var(--s2);
+  display:grid;gap:var(--s1);justify-items:center;
 }
-.foot .socials a{background:#fff;color:var(--ink);}
-.foot .scam{margin-top:4px;}
+.foot .scam{margin-top:0;}
 .disclaimer{font-size:.84rem;opacity:.75;max-width:62ch;}
 .copy{font-size:.8rem;opacity:.5;}
 .foot-help{font-size:.88rem;opacity:.8;max-width:62ch;}
@@ -265,113 +248,83 @@ html[lang="ar"] .coin-status strong{font-weight:800;}
   text-decoration:underline;text-underline-offset:3px;padding:2px 0;
 }
 .link-btn.quiet{color:var(--muted);font-weight:700;font-size:.92rem;}
-.link-btn:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:4px;}
-.wall-link{display:block;text-align:center;margin-top:12px;font-weight:800;color:var(--blue-deep);}
+.link-btn:focus-visible{outline:3px solid var(--blue-deep);outline-offset:2px;border-radius:4px;}
 .done-links{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 18px;margin-top:14px;}
-.done-links .wall-link{margin-top:0;}
 .done .form-err:empty{display:none;}
 
 /* ---------- 3 · the Wish Wall (home: the latest wishes · wishes.html: all of them) ---------- */
-.wall-wrap{max-width:1140px;margin:0 auto;padding:8px 16px 72px;}
-.wall-head{text-align:center;margin:clamp(8px,3vw,28px) 0 28px;}
-.wall-head h1{
-  font-size:clamp(2.3rem,8vw,3.4rem);margin:.1em 0 .2em;
-  color:var(--gold);-webkit-text-stroke:2.5px var(--ink);text-shadow:4px 5px 0 rgba(20,20,20,.16);
-}
-html[lang="ar"] .wall-head h1{color:var(--ink);-webkit-text-stroke:0;text-shadow:3px 3px 0 var(--gold);}
-.wall-sub{font-weight:700;color:var(--muted);margin-bottom:16px;}
-
-/* the scam warning: calm, but before any @ */
-.warn-box,.wwarn{background:#FFF3CC;border:2px solid var(--ink);border-radius:18px;color:var(--ink);}
-.warn-box{max-width:720px;margin:0 auto 36px;display:flex;gap:12px;align-items:flex-start;padding:14px 18px;}
-.warn-box .shield{font-size:1.5rem;line-height:1.25;}
-.warn-box strong{display:block;font-family:var(--head);font-weight:400;font-size:1.12rem;}
-.warn-box p{font-weight:600;line-height:1.45;color:#3a342a;margin-top:2px;}
-.warn-box a{display:inline-block;margin-top:6px;color:var(--blue-deep);font-weight:800;font-size:.92rem;}
-.wwarn{
-  grid-column:1 / -1;display:flex;flex-wrap:wrap;align-items:baseline;justify-content:center;gap:4px 8px;
-  padding:12px 16px;text-align:center;font-weight:600;font-size:.95rem;
-}
-.wwarn b{font-family:var(--head);font-weight:400;}
+.wall-wrap{max-width:1140px;margin:0 auto;padding:var(--s1) var(--s2) var(--s5);}
+.wall-head{text-align:center;margin:var(--s3) 0 var(--s4);}
+.wall-head h1{font-size:clamp(1.95rem,6.2vw,2.7rem);margin:0;color:var(--blue-deep);}
+.wall-head .btn{margin-top:var(--s3);}
+/* the scam warning: quiet, but before any @ */
+.wall-head .scam{margin-top:var(--s2);font-size:.86rem;font-weight:600;color:var(--muted);text-wrap:balance;scroll-margin-top:var(--s2);}
 
 /* the wish the Lamp is filling for, or the one a shared link points at */
-.featured{max-width:620px;margin:0 auto 40px;}
+.featured{max-width:600px;margin:0 auto var(--s4);}
 .featured-label{text-align:center;font-family:var(--head);font-size:1.08rem;color:var(--blue-deep);margin-bottom:10px;}
 
-/* sort: one quiet row of pills */
-.tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:10px;}
+/* sort: plain words, the chosen one in blue with a line under it */
+.tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:0 var(--s3);margin-bottom:var(--s3);}
 .tab{
-  font-family:var(--head);font-weight:400;font-size:1rem;color:var(--ink);cursor:pointer;
-  padding:.45rem 1.1rem;border:2px solid var(--ink);border-radius:999px;background:#fff;transition:background .15s ease,color .15s ease;
+  min-height:44px;padding:0 2px;font-family:var(--head);font-weight:400;font-size:1.02rem;color:var(--muted);cursor:pointer;
+  background:none;border:0;border-bottom:2px solid transparent;transition:color .15s ease;
 }
-.tab:hover{background:var(--cream);}
-.tab[aria-pressed="true"]{background:var(--ink);color:#fff;}
-.tab:focus-visible,.wheart:focus-visible,.wlink:focus-visible,.wall-all:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
-.wall-hint{text-align:center;font-size:.95rem;font-weight:600;color:var(--muted);margin-bottom:24px;}
+.tab:hover{color:var(--ink);}
+.tab[aria-pressed="true"]{color:var(--blue-deep);border-bottom-color:var(--blue-deep);}
+.tab:focus-visible,.wheart:focus-visible,.wall-all:focus-visible,.more-btn:focus-visible{outline:3px solid var(--blue-deep);outline-offset:2px;}
 
-/* cards in even rows: same height across a row, the name always at the bottom */
-.wgrid{display:grid;gap:18px;grid-template-columns:minmax(0,1fr);}
-@media (min-width:640px){.wgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;}}
-@media (min-width:980px){.wgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;}}
+/* one column on every screen, the same width as the wish box, with room between the cards */
+.wgrid{display:grid;gap:var(--s3);grid-template-columns:minmax(0,1fr);max-width:600px;margin-inline:auto;}
 
-/* a wish card: the wish first and biggest, who wished it underneath */
+/* a wish card has three levels: the words, the name, then the small details.
+   A thin line and no shadow, so the wish box stays the strongest box on the site */
 .wcard{
-  display:flex;flex-direction:column;gap:12px;padding:18px 18px 14px;
-  background:#fff;border:2.5px solid var(--ink);border-radius:20px;box-shadow:4px 5px 0 var(--ink);
-  transition:transform .2s ease,box-shadow .2s ease;
+  display:flex;flex-direction:column;gap:var(--s1);padding:var(--s3) var(--s3) 12px;
+  background:#fff;border:1px solid var(--line);border-radius:20px;
 }
-.wcard:hover{transform:translateY(-3px);box-shadow:5px 8px 0 var(--ink);}
-.wcard.big{padding:22px 22px 16px;border-width:3px;box-shadow:6px 8px 0 var(--ink);}
-.wcard.big .wtext{font-size:clamp(1.2rem,3.4vw,1.4rem);}
-.wcard.picked{box-shadow:5px 6px 0 var(--blue);}
-.wcard.granted{background:#FFF8DB;box-shadow:4px 5px 0 var(--gold-deep);}
+/* the wish the Lamp is filling for: the one card as strong as the wish box */
+.wcard.big{border-radius:24px;box-shadow:var(--shadow);}
+.wcard.big .wtext{font-size:1.32rem;}
 .wcard.flash{animation:flash 1.1s ease 3;}
-.wcard-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.84rem;font-weight:700;color:var(--muted);}
-.wnum{font-variant-numeric:tabular-nums;}
-.wtext{flex:1;font-size:1.1rem;font-weight:700;line-height:1.45;overflow-wrap:anywhere;}
-.wbar{height:12px;border:2px solid var(--ink);border-radius:999px;background:var(--cream);overflow:hidden;}
+.wtext{font-size:1.2rem;font-weight:600;line-height:1.5;overflow-wrap:anywhere;}
+.wbar{height:8px;border-radius:999px;background:#F1EBDD;overflow:hidden;margin-top:var(--s1);}
 .wbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-soft),var(--gold));}
-.wof{margin-top:-4px;font-size:.9rem;font-weight:700;color:var(--muted);}
-.wtrue{font-weight:800;color:var(--green);}
-.wtrue a{color:var(--blue-deep);}
-.wcard-foot{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1.5px solid rgba(20,20,20,.1);}
-.wface{
-  flex:none;width:36px;height:36px;display:grid;place-items:center;border-radius:50%;
-  border:2px solid var(--ink);font-family:var(--head);font-size:1.05rem;line-height:1;background:var(--gold-soft);
-}
-.wface[data-tone="1"]{background:#BFE7F8;}
-.wface[data-tone="2"]{background:#CBEFD8;}
-.wface[data-tone="3"]{background:#FFD9D2;}
-.wby{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25;}
-.wby b{font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.whandle{display:inline-flex;align-items:center;gap:4px;min-width:0;font-size:.88rem;font-weight:700;color:var(--blue-deep);}
-.whandle svg{flex:none;width:12px;height:12px;}
-.whandle bdi{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.wof{margin-top:-2px;font-size:.88rem;font-weight:600;color:var(--muted);}
+.wtrue{font-size:.92rem;font-weight:700;color:var(--green);}
+.wtrue a{color:var(--blue-deep);font-weight:600;}
+/* these lines read in the page's direction, but line up with the wish above them */
+.wcard[dir="ltr"] .wof,.wcard[dir="ltr"] .wtrue{text-align:left;}
+.wcard[dir="rtl"] .wof,.wcard[dir="rtl"] .wtrue{text-align:right;}
+.wcard-foot{display:flex;align-items:center;gap:var(--s1);}
+.wby{flex:1;min-width:0;line-height:1.3;}
+.wby b{display:block;font-weight:700;font-size:.98rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.whandle{display:flex;align-items:center;gap:4px;font-size:.84rem;font-weight:600;color:var(--muted);white-space:nowrap;}
+.whandle svg{flex:none;width:11px;height:11px;}
+.whandle bdi{overflow:hidden;text-overflow:ellipsis;}
+.whandle time{flex:none;}
+/* grey until you tap it: then it is the only color on the card. Red outside delete and errors means "I hope so" */
 .wheart{
-  flex:none;display:inline-flex;align-items:center;gap:5px;min-height:36px;padding:.25rem .75rem;
-  font:inherit;font-weight:800;color:var(--ink);cursor:pointer;
-  border:2px solid var(--ink);border-radius:999px;background:#fff;transition:background .15s ease,transform .12s ease;
+  flex:none;display:inline-flex;align-items:center;justify-content:flex-end;gap:5px;min-width:44px;min-height:44px;padding:0;
+  font:inherit;font-weight:700;font-size:.92rem;color:var(--muted);cursor:pointer;border:0;background:none;
 }
-.wheart:hover{transform:translateY(-1px);background:#FFF1EF;}
-.wheart svg{width:18px;height:18px;fill:none;stroke:var(--red);stroke-width:2.3;stroke-linejoin:round;}
-.wheart[aria-pressed="true"]{background:#FFE6E3;}
-.wheart[aria-pressed="true"] svg{fill:var(--red);animation:pop .45s ease;}
-.wheart.done{cursor:default;border-color:transparent;background:none;padding-inline:.3rem;}
-.wheart.done svg{fill:var(--red);}
-.wlink{
-  flex:none;width:36px;height:36px;display:grid;place-items:center;padding:0;cursor:pointer;
-  border:0;border-radius:50%;background:none;color:var(--muted);transition:background .15s ease,color .15s ease;
-}
-.wlink:hover{background:var(--cream);color:var(--ink);}
-.wlink svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;}
+.wheart svg{width:20px;height:20px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linejoin:round;}
+.wheart:not(.done):hover svg{stroke:var(--ink);}
+.wheart[aria-pressed="true"]{color:var(--ink);}
+.wheart[aria-pressed="true"] svg{fill:var(--red);stroke:var(--red);animation:pop .45s ease;}
+.wheart.done{cursor:default;}
 
-.wall-msg{text-align:center;font-weight:700;color:var(--muted);margin-top:8px;padding:28px 16px;border:2px dashed rgba(20,20,20,.2);border-radius:20px;}
+.wall-msg{text-align:center;font-weight:700;color:var(--muted);padding:var(--s3) var(--s2);}
 .wall-msg:empty{display:none;}
-.wall-all,.more-btn{display:flex;width:max-content;max-width:100%;margin:32px auto 0;}
+/* quiet links in the heading blue: gold stays for the one main button */
+.wall-all,.more-btn{
+  display:flex;align-items:center;justify-content:center;width:max-content;max-width:100%;min-height:44px;margin:var(--s3) auto 0;
+  font-family:var(--head);font-weight:400;font-size:1.05rem;color:var(--blue-deep);text-decoration:none;background:none;border:0;cursor:pointer;
+}
 .more-btn[disabled]{opacity:.6;cursor:progress;}
 .toast{
   position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:10;
-  background:var(--ink);color:#fff;padding:.55rem 1.1rem;border-radius:999px;font-weight:700;box-shadow:3px 4px 0 var(--gold);
+  background:var(--ink);color:#fff;padding:.55rem 1.1rem;border-radius:999px;font-weight:700;box-shadow:var(--shadow-up);
 }
 /* cards drift up softly as they scroll into view (browsers without scroll-timelines just show them) */
 @supports (animation-timeline:view()){
@@ -380,23 +333,8 @@ html[lang="ar"] .wall-head h1{color:var(--ink);-webkit-text-stroke:0;text-shadow
 
 /* ---------- motion ---------- */
 @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
-@keyframes bob{0%,100%{transform:translateY(0) rotate(0);}50%{transform:translateY(-10px) rotate(1.5deg);}}
-@keyframes smoke{
-  0%{transform:translate(0,0) scale(.35);opacity:0;}
-  15%{opacity:.9;}
-  100%{transform:translate(var(--sx,-6px),-150px) scale(2.6);opacity:0;}
-}
-@keyframes lampGlow{
-  0%,100%{filter:drop-shadow(0 16px 14px rgba(20,20,20,.14));}
-  50%{filter:drop-shadow(0 0 22px rgba(251,180,23,.95));}
-}
 @keyframes pop{50%{transform:scale(1.4);}}
-@keyframes pulse{70%{box-shadow:0 0 0 10px rgba(251,180,23,0);}100%{box-shadow:0 0 0 0 rgba(251,180,23,0);}}
-@keyframes flash{50%{box-shadow:0 0 0 5px var(--blue),4px 5px 0 var(--ink);}}
-@keyframes fly{
-  0%{transform:translate(0,0) scale(.4) rotate(0);opacity:1;}
-  100%{transform:translate(var(--dx),var(--dy)) scale(1.1) rotate(160deg);opacity:0;}
-}
+@keyframes flash{50%{box-shadow:0 0 0 4px rgba(20,120,168,.35),var(--shadow);}}
 /* .motion-ok = the local ?motion=1 preview */
 @media (prefers-reduced-motion:reduce){
   html:not(.motion-ok) *,html:not(.motion-ok) *::before,html:not(.motion-ok) *::after{

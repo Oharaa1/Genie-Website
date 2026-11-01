@@ -37,6 +37,30 @@
     return Math.round(Number(s));
   }
 
+  // The price box while typing: "2400" → "2,400", "٢٤٠٠" → "2,400". caret = the cursor position;
+  // it stays after the same digit. Anything that isn't a plain whole number is left as it is.
+  function formatCostInput(raw, caret) {
+    const s = String(raw == null ? '' : raw);
+    const west = s.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+      .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06F0));
+    const digits = west.replace(/[,٬\s ]/g, '');
+    if (!/^\d+$/.test(digits)) return { value: s, caret };
+    const whole = digits.replace(/^0+(?=\d)/, '');
+    let before = west.slice(0, caret).replace(/\D/g, '').length - (digits.length - whole.length);
+    const value = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    let pos = 0;
+    while (before > 0 && pos < value.length) { if (value[pos] !== ',') before--; pos++; }
+    return { value, caret: pos };
+  }
+
+  // A pasted profile link says which app it is: "t.me/name" → 'telegram', "x.com/name" → 'x', else null.
+  function linkPlatform(raw) {
+    const s = String(raw == null ? '' : raw).trim().replace(/^https?:\/\//i, '').replace(/^www\./i, '');
+    if (/^(?:t\.me|telegram\.me)\/[^/?#\s]/i.test(s)) return 'telegram';
+    if (/^(?:mobile\.)?(?:x\.com|twitter\.com)\/[^/?#\s]/i.test(s)) return 'x';
+    return null;
+  }
+
   // "@name", "https://x.com/name/", "t.me/name" → "name"
   function normalizeHandle(platform, raw) {
     let s = String(raw == null ? '' : raw).trim()
@@ -160,7 +184,7 @@
   }
 
   return {
-    LIMITS, cleanText, parseCost, normalizeHandle, validHandle, validateWish,
+    LIMITS, cleanText, parseCost, formatCostInput, linkPlatform, normalizeHandle, validHandle, validateWish,
     lampProgress, formatUSD, serverErrorCode, textDir, wrapText, pickLang,
     xShareUrl, telegramShareUrl,
   };

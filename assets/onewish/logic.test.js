@@ -18,6 +18,28 @@ test('parseCost accepts common ways people type money', () => {
   assert.ok(Number.isNaN(L.parseCost('12abc')));
 });
 
+test('formatCostInput adds commas and keeps the cursor after the same digit', () => {
+  assert.deepEqual(L.formatCostInput('2400', 4), { value: '2,400', caret: 5 });
+  assert.deepEqual(L.formatCostInput('٢٤٠٠', 4), { value: '2,400', caret: 5 });   // Arabic digits → Western
+  assert.deepEqual(L.formatCostInput('2,4005', 6), { value: '24,005', caret: 6 });
+  assert.deepEqual(L.formatCostInput('12345', 2), { value: '12,345', caret: 2 });  // typing in the middle
+  assert.deepEqual(L.formatCostInput('1000000', 7), { value: '1,000,000', caret: 9 });
+  assert.deepEqual(L.formatCostInput('007', 3), { value: '7', caret: 1 });
+  assert.deepEqual(L.formatCostInput('', 0), { value: '', caret: 0 });
+  assert.deepEqual(L.formatCostInput('$2400', 5), { value: '$2400', caret: 5 });   // not a plain number: left alone
+  assert.deepEqual(L.formatCostInput('99.5', 4), { value: '99.5', caret: 4 });
+});
+
+test('linkPlatform tells X and Telegram links apart', () => {
+  assert.equal(L.linkPlatform('https://t.me/sara_wish'), 'telegram');
+  assert.equal(L.linkPlatform('telegram.me/sara_wish'), 'telegram');
+  assert.equal(L.linkPlatform(' https://www.x.com/Sara_99 '), 'x');
+  assert.equal(L.linkPlatform('mobile.twitter.com/Sara_99'), 'x');
+  assert.equal(L.linkPlatform('@sara_wish'), null);
+  assert.equal(L.linkPlatform('sara_wish'), null);
+  assert.equal(L.linkPlatform('x.com/'), null);   // still typing the link: wait for the name
+});
+
 test('normalizeHandle strips @, spaces and profile links', () => {
   assert.equal(L.normalizeHandle('x', '@Sara_99'), 'Sara_99');
   assert.equal(L.normalizeHandle('x', ' https://x.com/Sara_99/ '), 'Sara_99');
