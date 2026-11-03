@@ -49,8 +49,16 @@
     const a = el('article', 'wcard' + (big ? ' big' : ''));
     if (!big) a.id = 'w' + w.id;
     a.dir = L.textDir(w.wish); // the wish and its name sit on the same side, whatever language the page is in
+    // for the elegant theme, which draws these cards like the share card: its number, and how long the wish is
+    const len = [...w.wish].length;
+    a.dataset.num = w.id;
+    a.dataset.len = len <= 40 ? 's' : len <= 90 ? 'm' : len <= 160 ? 'l' : 'xl';
 
-    a.append(el('p', 'wtext', w.wish));
+    // a no-break space keeps short last words together, so one word is never alone on the last line
+    const last = w.wish.lastIndexOf(' ');
+    const cut = last > 0 ? w.wish.lastIndexOf(' ', last - 1) : -1;
+    const together = last > 0 && [...w.wish.slice(cut + 1)].length <= 17;
+    a.append(el('p', 'wtext', together ? w.wish.slice(0, last) + '\u00A0' + w.wish.slice(last + 1) : w.wish));
 
     // these lines are in the page's language, so they read in its direction wherever the wish sits
     const pageDir = lang() === 'ar' ? 'rtl' : 'ltr';

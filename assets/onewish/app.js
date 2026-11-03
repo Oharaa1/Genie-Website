@@ -71,6 +71,7 @@
     const u = new URL(location.href);
     if (u.searchParams.has('lang')) { u.searchParams.delete('lang'); history.replaceState(null, '', u); }
     applyLang();
+    fitWish();
   });
 
   // ── 1 · the hook: the Lamp ────────────────────────────────────────────
@@ -206,6 +207,7 @@
     w.style.height = w.scrollHeight + (w.offsetHeight - w.clientHeight) + 'px';
   }
   window.addEventListener('resize', fitWish);
+  if (document.fonts) document.fonts.addEventListener('loadingdone', fitWish); // late letters change the height
 
   // a quiet ✓ once the username fits the app's rules; mistakes are still only said after the button
   function showHandleOk() {

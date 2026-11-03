@@ -1,0 +1,143 @@
+/* The elegant theme: the whole site in the share card's paper, ink, type and foil Lamp.
+   Everything here applies only under <html data-theme="elegant"> (theme.js sets it), so the classic look in style.css stays as it was.
+   The color jobs are the same: ink = text and headings · gold = the Lamp, the main button and money ·
+   green = came true / OK · red = delete and errors. Gold is never used for text. */
+html[data-theme="elegant"]{
+  --blue:#0B1A48;
+  --blue-deep:#0B1A48;
+  --gold:#D4A93F;              /* calmer than the classic gold, close to the foil. Ink on it is 7.6:1 */
+  --gold-soft:#E3C479;
+  --gold-deep:#B98F34;
+  --ink:#0B1A48;               /* 15:1 on the paper */
+  --green:#14733F;             /* 5.3:1 on the paper */
+  --paper:#F8F3E7;
+  --cream:#F8F3E7;
+  --sheet:#FFFCF4;             /* a lighter sheet on the paper: the box you write in, and the cards */
+  --muted:#454B66;             /* 7.7:1 on the paper */
+  --line:rgba(11,26,72,.16);
+  --field:#7C7A78;
+  --shadow:none;
+  --shadow-up:none;
+  --head:'Libre Baskerville','Noto Naskh Arabic',serif;
+  --body:'Libre Baskerville','Noto Naskh Arabic',serif;
+}
+html[data-theme="elegant"][lang="ar"]{
+  --head:'Noto Naskh Arabic','Libre Baskerville',serif;
+  --body:'Noto Naskh Arabic','Libre Baskerville',serif;
+  font-size:112%; /* Naskh letters look smaller than Latin ones at the same size */
+}
+html[data-theme="elegant"] body{background:var(--paper);}
+html[data-theme="elegant"][lang="ar"] body{line-height:1.7;}
+html[data-theme="elegant"][lang="ar"] .btn{letter-spacing:0;} /* spacing pulls joined Arabic letters apart */
+
+/* reading text is regular weight, so titles stay stronger than the words under them. Naskh gets a little more, for comfort */
+html[data-theme="elegant"] :is(.part-sub,.lamp-caption,.made-line,.done-text,.scam,.public-note,.coin-steps p,.coin-status p,.wtext,.wof,.whandle,.wheart,.wall-msg,.toast,.link-btn.quiet,.wtrue a){font-weight:400;}
+html[data-theme="elegant"][lang="ar"] :is(.part-sub,.lamp-caption,.made-line,.done-text,.scam,.public-note,.coin-steps p,.coin-status p,.wtext,.wof,.whandle,.wheart,.wall-msg,.toast,.link-btn.quiet,.wtrue a,textarea,input[type="text"]){font-weight:500;}
+html[data-theme="elegant"] .lamp-caption.came-true,html[data-theme="elegant"][lang="ar"] .lamp-caption.came-true{font-weight:700;}
+
+/* ---------- headings: the card's italic. Arabic has no italic, so it stands upright and bold ---------- */
+html[data-theme="elegant"] :is(.part-head h2,.wall-head h1){font-style:italic;}
+html[data-theme="elegant"][lang="ar"] :is(.part-head h2,.wall-head h1){font-style:normal;}
+html[data-theme="elegant"] #askHead h2{font-size:clamp(2.05rem,6.4vw,2.7rem);}
+html[data-theme="elegant"] .h1-a{font-size:clamp(.98rem,2.5vw,1.14rem);}
+html[data-theme="elegant"] .h1-b{font-size:clamp(1.03rem,2.8vw,1.28rem);}
+html[data-theme="elegant"][lang="ar"] h1{font-weight:600;line-height:1.5;}
+
+/* ---------- top bar and Lamp: flat foil, no outlines ---------- */
+html[data-theme="elegant"] .brand img,html[data-theme="elegant"] .lamp-art{filter:none;}
+html[data-theme="elegant"] .brand span{
+  font-family:'Libre Baskerville',serif;font-size:1.08rem;color:var(--ink);-webkit-text-stroke:0;
+}
+html[data-theme="elegant"] .lamp.glow .lamp-art{filter:drop-shadow(0 0 10px rgba(185,143,52,.45));}
+
+/* ---------- the wish: no box around the box, so it takes the full width and is the strongest thing on the paper ---------- */
+html[data-theme="elegant"] .panel{background:transparent;border:0;padding:var(--s2) 0;}
+html[data-theme="elegant"] input[type="text"],html[data-theme="elegant"] textarea,html[data-theme="elegant"] .affix{background:var(--sheet);border-radius:8px;}
+html[data-theme="elegant"] .affix input[type="text"]{background:transparent;border-radius:0;}
+html[data-theme="elegant"] :is(input,textarea)[aria-invalid="true"],html[data-theme="elegant"] .affix:has(input[aria-invalid="true"]){background:#FFF4F3;border-color:var(--red);}
+html[data-theme="elegant"] input::placeholder,html[data-theme="elegant"] textarea::placeholder{color:#5A5F78;}
+html[data-theme="elegant"]:not([lang="ar"]) #fWish::placeholder{font-style:italic;}
+html[data-theme="elegant"] input[type="text"]:focus,html[data-theme="elegant"] textarea:focus,html[data-theme="elegant"] .affix:focus-within{box-shadow:0 0 0 4px rgba(11,26,72,.14);}
+html[data-theme="elegant"] .affix input[type="text"]:focus{box-shadow:none;}
+html[data-theme="elegant"] #fWish{font-size:1.14rem;line-height:1.55;}
+html[data-theme="elegant"][lang="ar"] #fWish{font-size:1.2rem;line-height:1.7;}
+html[data-theme="elegant"]:not([lang="ar"]) #fWish:dir(rtl){font-size:1.34rem;font-weight:500;line-height:1.7;} /* an Arabic wish on the English page */
+html[data-theme="elegant"] .seg-opt span{background:var(--sheet);border-radius:8px;}
+html[data-theme="elegant"] .seg-opt input:checked + span{background:#ECE6D6;}
+
+/* ---------- buttons ---------- */
+html[data-theme="elegant"] .btn,html[data-theme="elegant"] .share .btn{border-radius:8px;}
+html[data-theme="elegant"] .btn-white{background:var(--sheet);}
+html[data-theme="elegant"] .submit{font-size:1.3rem;}
+
+/* ---------- after the wish: the card is the one thing on the site that lifts off the paper ---------- */
+html[data-theme="elegant"] .card-canvas{border-radius:3px;box-shadow:0 1px 2px rgba(11,26,72,.08),0 10px 30px rgba(11,26,72,.12);}
+
+/* ---------- what $GENIE is ---------- */
+html[data-theme="elegant"] .coin-steps li,html[data-theme="elegant"] .coin-status{background:var(--sheet);border-radius:10px;}
+html[data-theme="elegant"] .coin-steps .num{background:none;border:1px solid var(--ink);color:var(--ink);font-family:var(--head);font-size:.95rem;}
+html[data-theme="elegant"] .coin-steps b,html[data-theme="elegant"] .coin-status strong{font-weight:700;font-size:1.06rem;}
+html[data-theme="elegant"] .coin-steps p,html[data-theme="elegant"] .coin-status p{color:var(--ink);}
+html[data-theme="elegant"][lang="ar"] :is(.coin-steps p,.coin-status p){line-height:1.7;}
+
+/* ---------- footer: small text stays easy to read on the ink ---------- */
+html[data-theme="elegant"] .disclaimer,html[data-theme="elegant"] .foot-help{opacity:.85;font-size:.9rem;}
+html[data-theme="elegant"] .copy{opacity:.7;font-size:.85rem;}
+html[data-theme="elegant"] .wall-head .scam{font-size:.94rem;}
+
+/* ---------- the Wish Wall: each wish is a small copy of the share card ----------
+   The same paper, ink and type. The words in the middle with hanging quotes, the name under them,
+   and a foot like the card's: the number, the Lamp as a maker's mark, and the heart. */
+@media (min-width:720px){
+  html[data-theme="elegant"] .wgrid{grid-template-columns:repeat(auto-fill,minmax(300px,340px));justify-content:center;max-width:1068px;}
+}
+html[data-theme="elegant"] .featured{max-width:460px;}
+html[data-theme="elegant"] .wcard{
+  --wish:1.34rem;--k:1;
+  display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  grid-template-rows:1fr repeat(5,auto) 1fr auto; /* air, the words and who wrote them, air, the foot */
+  gap:0;aspect-ratio:1/1;padding:var(--s3) var(--s3) var(--s1);text-align:center;
+  background:var(--paper);border-radius:3px;box-shadow:0 1px 2px rgba(11,26,72,.07),0 6px 18px rgba(11,26,72,.08);
+}
+html[data-theme="elegant"] :is(.wcard-foot,.wby){display:contents;}
+html[data-theme="elegant"] .wcard > *,html[data-theme="elegant"] .wby > *{grid-column:1/-1;}
+
+/* the shorter the wish, the larger it sits on the card (wallcards.js sets data-len) */
+html[data-theme="elegant"] .wcard[data-len="s"]{--wish:1.7rem;}
+html[data-theme="elegant"] .wcard[data-len="l"]{--wish:1.14rem;}
+html[data-theme="elegant"] .wcard[data-len="xl"]{--wish:1rem;}
+/* Naskh looks smaller than Latin, and the Arabic page is already scaled up */
+html[data-theme="elegant"] .wcard[dir="rtl"]{--k:1.12;}
+html[data-theme="elegant"][lang="ar"] .wcard[dir="rtl"]{--k:1;}
+html[data-theme="elegant"][lang="ar"] .wcard[dir="ltr"]{--k:.9;}
+html[data-theme="elegant"] .wcard .wtext{grid-row:2;font-size:calc(var(--wish) * var(--k));line-height:1.4;text-wrap:balance;}
+html[data-theme="elegant"] .wcard[dir="ltr"] .wtext{font-style:italic;font-synthesis-style:none;}
+html[data-theme="elegant"] .wcard[dir="rtl"] .wtext{font-weight:600;line-height:1.7;}
+html[data-theme="elegant"] .wcard[dir="ltr"][data-len="xl"] .wtext{font-style:normal;line-height:1.5;} /* a long wish reads easier upright */
+/* real quotation marks hang outside the text edge, so the words themselves stay centred */
+html[data-theme="elegant"] .wcard[dir="ltr"] .wtext::before{content:'“';margin-inline-start:-.44em;}
+html[data-theme="elegant"] .wcard[dir="ltr"] .wtext::after{content:'”';margin-inline-end:-.44em;}
+html[data-theme="elegant"] .wcard[dir="rtl"] .wtext::before{content:'«';margin-inline-start:-.5em;}
+html[data-theme="elegant"] .wcard[dir="rtl"] .wtext::after{content:'»';margin-inline-end:-.5em;}
+
+/* the foot reads in the page's direction, like the share card; only the words follow their own language */
+html[data-theme="elegant"]:not([lang="ar"]) .wcard[dir="rtl"]{direction:ltr;}
+html[data-theme="elegant"][lang="ar"] .wcard[dir="ltr"]{direction:rtl;}
+html[data-theme="elegant"] .wcard[dir="rtl"] .wtext{direction:rtl;}
+html[data-theme="elegant"] .wcard[dir="ltr"] .wtext{direction:ltr;}
+
+html[data-theme="elegant"] .wby b{grid-row:3;margin-top:var(--s1);font-weight:400;font-size:calc(1.06rem * var(--k));white-space:normal;overflow:visible;overflow-wrap:anywhere;text-wrap:balance;}
+html[data-theme="elegant"] .wcard[dir="rtl"] .wby b{font-weight:500;font-size:calc(1.12rem * var(--k));}
+/* the wish stays the largest thing on the card */
+html[data-theme="elegant"] .wcard[data-len="xl"] .wby b{font-size:calc(.94rem * var(--k));}
+html[data-theme="elegant"] .whandle{grid-row:4;justify-content:center;margin-top:2px;font-size:.86rem;}
+html[data-theme="elegant"][lang="ar"] .whandle bdi{font-size:.9em;} /* Latin @names are wide next to Naskh */
+html[data-theme="elegant"] .wbar{grid-row:5;margin-top:var(--s2);background:#EDE6D5;}
+html[data-theme="elegant"] .wcard .wof,html[data-theme="elegant"] .wcard .wtrue{grid-row:6;margin-top:6px;text-align:center;}
+
+html[data-theme="elegant"] .wcard::before{content:'No. ' attr(data-num);grid-row:8;grid-column:1;align-self:center;justify-self:start;font-size:.88rem;color:var(--muted);}
+html[data-theme="elegant"][lang="ar"] .wcard::before{content:'رقم ' attr(data-num);}
+html[data-theme="elegant"] .wcard::after{content:'';grid-row:8;grid-column:2;align-self:center;width:40px;height:24px;background:url('../../img/lamp-foil.webp') center/contain no-repeat;}
+html[data-theme="elegant"] .wheart{grid-row:8;grid-column:3;}
+html[data-theme="elegant"] .wcard.flash{animation-name:flash-elegant;}
+@keyframes flash-elegant{50%{box-shadow:0 0 0 4px rgba(11,26,72,.25);}}

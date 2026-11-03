@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#FBB417">
+<meta name="theme-color" content="#F8F3E7">
 
 <title>$GENIE — the memecoin that grants wishes</title>
 <meta name="description" content="$GENIE is a memecoin. Trading fees fill the Lamp, and the Lamp pays for real wishes, one at a time. Make your wish — it’s free.">
@@ -24,18 +24,20 @@
 
 <link rel="icon" type="image/png" href="img/favicon-lamp.png">
 <link rel="apple-touch-icon" href="img/favicon-lamp.png">
-<link rel="preload" as="image" href="img/lamp-gold.webp" fetchpriority="high">
+<link rel="preload" as="image" href="img/lamp-foil.webp" fetchpriority="high">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Baloo+2:wght@600;700;800&family=Baloo+Bhaijaan+2:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Baloo+2:wght@600;700;800&family=Baloo+Bhaijaan+2:wght@600;700;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="assets/onewish/theme.js"></script>
 <link rel="stylesheet" href="assets/onewish/style.css">
+<link rel="stylesheet" href="assets/onewish/elegant.css">
 </head>
 <body>
 
 <header class="top">
   <a class="brand" href="./" aria-label="$GENIE">
-    <img src="img/lamp-gold.webp" alt="" width="900" height="542">
+    <img src="img/lamp-foil.webp" data-lamp alt="" width="900" height="542">
     <span dir="ltr">$GENIE</span>
   </a>
   <div class="top-right">
@@ -68,8 +70,8 @@
     <div class="lamp" id="lamp" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"
          aria-label="Lamp progress" data-i18n-aria="lamp_aria">
       <div class="lamp-art">
-        <img class="lamp-empty" src="img/lamp-gold.webp" alt="" width="900" height="542">
-        <img class="lamp-gold" src="img/lamp-gold.webp" alt="" width="900" height="542" fetchpriority="high">
+        <img class="lamp-empty" src="img/lamp-foil.webp" data-lamp alt="" width="900" height="542">
+        <img class="lamp-gold" src="img/lamp-foil.webp" data-lamp alt="" width="900" height="542" fetchpriority="high">
       </div>
     </div>
     <p class="lamp-caption" id="lampCaption"></p>
@@ -154,7 +156,7 @@
     <div id="done" class="done" hidden>
       <!-- the card already shows the number, so this heading is only for screen readers -->
       <h2 id="doneNum" tabindex="-1"></h2>
-      <canvas id="cardCanvas" class="card-canvas" width="1200" height="630" role="img"></canvas>
+      <canvas id="cardCanvas" class="card-canvas" width="1200" height="1200" role="img"></canvas>
       <div class="share">
         <button type="button" class="btn btn-gold" id="shareNative" hidden><span data-i18n="share_native">Share</span></button>
         <a class="btn btn-ink" id="shareX" href="#" target="_blank" rel="noopener noreferrer">

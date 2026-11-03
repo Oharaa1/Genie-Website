@@ -80,8 +80,7 @@ window.WishI18n = {
     foot_remove: 'Want your wish removed? Message us on X or Telegram from the same @.',
     foot_disclaimer: 'Not financial advice. $GENIE is a memecoin. It does not promise any profit. The Genie chooses which wishes to pay for.',
 
-    card_title: 'WISH #{n}',
-    card_cta: 'Make yours →',
+    card_title: 'No. {n}',
 
     // the Wish Wall (wishes.html)
     wall_doc_title: 'The Wish Wall — $GENIE',
@@ -175,8 +174,7 @@ window.WishI18n = {
     foot_remove: 'تريد حذف أمنيتك؟ راسلنا على X أو تلغرام من نفس الحساب.',
     foot_disclaimer: 'ليست نصيحة مالية. ⁦$GENIE⁩ عملة ميم، ولا تَعِد بأي ربح. الجنّي يختار الأمنيات التي يدفع ثمنها.',
 
-    card_title: 'الأمنية رقم {n}', // "#n" would flip to "n#" next to Arabic letters
-    card_cta: 'سجّل أمنيتك ←',
+    card_title: 'رقم {n}', // "#n" would flip to "n#" next to Arabic letters
 
     wall_doc_title: 'حائط الأمنيات — الجني',
     wall_title: 'حائط الأمنيات',
