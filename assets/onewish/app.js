@@ -79,7 +79,7 @@
   // (the wish itself is the first card of the Wall, part 3). Before the Genie picks one: a full, glowing Lamp.
   function renderScene(animate) {
     const c = stats && stats.current;
-    const scene = $('#scene'), lamp = $('#lamp'), cap = $('#lampCaption');
+    const scene = $('#scene'), lamp = $('#lamp'), cap = $('#lampCaption'), why = $('#lampWhy');
     let fill;
     if (c) {
       const p = L.lampProgress(c.raised, c.cost);
@@ -91,12 +91,16 @@
         const name = '⁨' + c.name + '⁩'; // isolated, so a Latin name in an Arabic line can't drag the punctuation around
         cap.textContent = t(c.granted ? 'lamp_came_true' : 'lamp_filling', { name });
       }
+      // the Genie's own reason for picking this wish, when it has given one
+      why.textContent = c.reason ? t('lamp_why', { why: c.reason }) : '';
+      why.hidden = !c.reason;
       fill = done ? 108 : p.pct; // past 100 so the soft top edge of the gold clears the finial
       lamp.classList.toggle('glow', done);
       lamp.setAttribute('aria-valuenow', String(p.pct));
       lamp.setAttribute('aria-valuetext', t('lamp_of', { raised: L.formatUSD(c.raised), cost: L.formatUSD(c.cost) }));
     } else {
-      cap.textContent = '';
+      cap.textContent = t('lamp_waiting');
+      why.hidden = true;
       fill = 108;
       lamp.classList.add('glow');
       lamp.setAttribute('aria-valuenow', '0');

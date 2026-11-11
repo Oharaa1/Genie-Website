@@ -18,8 +18,18 @@
   const saved = isLocal ? read() : null;
   let theme = THEMES.includes(fromUrl) ? fromUrl : THEMES.includes(saved) ? saved : THEMES[0];
 
+  // the page loads only the elegant fonts; the classic look brings its own
+  function classicFonts() {
+    if (theme !== 'classic' || document.getElementById('classicFonts')) return;
+    const l = document.createElement('link');
+    l.id = 'classicFonts'; l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=Lilita+One&family=Baloo+2:wght@600;700;800&family=Baloo+Bhaijaan+2:wght@600;700;800&display=swap';
+    document.head.appendChild(l);
+  }
+
   function apply() {
     document.documentElement.dataset.theme = theme;
+    classicFonts();
     const bar = document.querySelector('meta[name="theme-color"]');
     if (bar) bar.content = BARS[theme];
     document.querySelectorAll('img[data-lamp]').forEach((img) => {

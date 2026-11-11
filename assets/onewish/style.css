@@ -109,6 +109,7 @@ html[lang="ar"] h1{line-height:1.35;}
 .lamp-caption{margin-top:var(--s1);font-size:.88rem;font-weight:700;color:var(--muted);text-wrap:balance;}
 .lamp-caption.came-true{color:var(--green);font-weight:800;}
 .lamp-caption:empty{display:none;}
+.lamp-why{margin-top:4px;font-style:italic;max-width:34em;margin-inline:auto;}
 
 /* ---------- 2 · the wish: the main element of the page ---------- */
 .panel{

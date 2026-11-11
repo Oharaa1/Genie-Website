@@ -1,3 +1,26 @@
 .vercel
 .claude/
 img/old-backup/
+
+# video pipeline output (rendered locally, not deployed)
+video/*.mp4
+video/*.wav
+video/frames/
+video/node_modules/
+
+# rendered film masters (large; keep out of git/Vercel)
+video/every-scroll-is-a-rub/*.mp4
+video/every-scroll-is-a-rub/*.wav
+
+# rendered videos (too big for git / Vercel)
+video/**/*.mp4
+video/**/*.wav
+
+# old pages and pictures kept on this PC only, never public again
+/book.html
+/img/Genie.jpg
+/img/shocked.*
+/img/genie.webp
+/img/p1.*
+/img/p2.*
+/img/p3.*

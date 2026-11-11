@@ -80,6 +80,7 @@
     current: demo === 'empty' ? null : {
       id: 7, name: 'Ahmed', cost: 2400, raised: 1512, granted: false, tx_url: null,
       wish: 'Pay for my mother’s eye surgery so she can see her grandchildren again.',
+      reason: 'One surgery gives a whole family back their mother’s eyes.',
     },
   };
 
