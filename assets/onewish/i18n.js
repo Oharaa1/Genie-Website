@@ -24,7 +24,7 @@ window.WishI18n = {
     chars: '{n}/280',
     f_cost: 'How much does it cost?',
     f_name: 'Your first name',
-    f_contact: 'How can the Genie reach you?',
+    f_contact: 'Your @ on X or Telegram, so we know the wish is yours.',
     ph_handle: 'username',
     public_note: 'Your wish, first name and @ will be public. You can delete it, but not change it.',
     btn_submit: 'Make my wish',
@@ -56,7 +56,7 @@ window.WishI18n = {
     share_save: 'Save image',
     share_text: 'I made wish #{n} to $GENIE 🧞✨ Make yours, it’s free:',
     card_alt: 'Share card for wish #{n}',
-    scam: 'The Genie never messages you first and never asks for money or your wallet.',
+    scam: 'We never DM you. If your wish is picked, you’ll see it here first. Then reply to our post from the same @ with your wallet address. We never ask for money, fees or your seed phrase.',
     done_private: 'Your wish is private — only the Genie sees it.',
 
     // your wish, your choice: delete it (a deleted wish comes back into the form, to fix and send again)
@@ -91,6 +91,8 @@ window.WishI18n = {
     wall_tab_loved: 'Most loved',
     wall_tab_true: 'Came true',
     wall_reading: 'The Genie is reading your wishes.',
+    // the @ on the Wall are public, so this sits right above them
+    wall_safe: 'Got a message saying you won? It’s fake. Winners are shown only on this site, and they never pay anything.',
     wall_filling: 'The Lamp is filling · {raised} of {cost}',
     wall_came_true: 'Came true ✓ · {amount} sent',
     wall_heart: 'I hope it comes true',
@@ -120,7 +122,7 @@ window.WishI18n = {
     chars: '{n}/280',
     f_cost: 'كم تكلّف؟',
     f_name: 'اسمك الأول',
-    f_contact: 'كيف يتواصل معك الجنّي؟',
+    f_contact: 'حسابك على X أو تلغرام، حتى نعرف أن الأمنية لك.',
     ph_handle: 'اسم المستخدم',
     public_note: 'أمنيتك واسمك الأول وحسابك ستظهر للجميع. يمكنك حذفها، لكن لا يمكنك تعديلها.',
     btn_submit: 'سجّل أمنيتي',
@@ -152,7 +154,7 @@ window.WishI18n = {
     share_save: 'احفظ الصورة',
     share_text: 'سجّلت الأمنية رقم {n} عند ⁦$GENIE⁩ 🧞✨ سجّل أمنيتك، مجاناً:',
     card_alt: 'بطاقة مشاركة للأمنية رقم {n}',
-    scam: 'الجنّي لا يراسلك أولاً، ولا يطلب منك مالاً أو ربط محفظتك أبداً.',
+    scam: 'لا نراسلك على الخاص أبداً. إذا اختيرت أمنيتك سترى ذلك هنا أولاً، ثم ردّ على منشورنا من نفس الحساب بعنوان محفظتك. لا نطلب منك أبداً مالاً أو رسوماً أو عبارة الاسترداد السرية (seed phrase).',
     done_private: 'أمنيتك خاصة — لا يراها إلا الجنّي.',
 
     mine_delete: 'احذف أمنيتي',
@@ -184,6 +186,7 @@ window.WishI18n = {
     wall_tab_loved: 'الأكثر حباً',
     wall_tab_true: 'تحققت',
     wall_reading: 'الجنّي يقرأ أمنياتكم.',
+    wall_safe: 'وصلتك رسالة تقول إنك ربحت؟ إنها مزيفة. الفائزون يظهرون على هذا الموقع فقط، ولا يدفعون أي شيء أبداً.',
     wall_filling: 'المصباح يمتلئ · {raised} من {cost}',
     wall_came_true: 'تحققت ✓ · أُرسل {amount}',
     wall_heart: 'أتمنى تتحقق',
