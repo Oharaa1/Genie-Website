@@ -180,7 +180,7 @@
     return 'https://x.com/intent/tweet?text=' + enc(text) + '&url=' + enc(url);
   }
   function telegramShareUrl(text, url) {
-    return 'https://t.me/share/url?url=' + enc(url) + '&text=' + enc(text);
+    return 'https://t.me/share/url?url=' + enc(url) + (text ? '&text=' + enc(text) : '');
   }
 
   return {

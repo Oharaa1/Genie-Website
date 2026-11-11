@@ -42,8 +42,9 @@
   }
   Cards.setup({ t });
 
+  // Each wish's own link: X and Telegram show that wish's card (api/w.js).
   // Arabic wishers share an Arabic link, so their friends land on the Arabic page.
-  const siteUrl = () => (isLocal ? 'https://genie-coin.com/' : location.origin + '/') + (lang === 'ar' ? '?lang=ar' : '');
+  const wishUrl = (n) => (isLocal ? 'https://genie-coin.com' : location.origin) + '/w/' + n + (lang === 'ar' ? '/ar' : '');
   const siteHost = () => (isLocal ? 'genie-coin.com' : location.host);
   const fmtInt = (n) => new Intl.NumberFormat('en-US').format(n);
 
@@ -317,12 +318,6 @@
   });
 
   // ── after the wish: share card ────────────────────────────────────────
-  function canShareFiles() {
-    try {
-      return !!(navigator.canShare && navigator.canShare({ files: [new File(['x'], 'x.png', { type: 'image/png' })] }));
-    } catch (e) { return false; }
-  }
-
   async function renderDone(scroll) {
     form.hidden = true;
     $('#askHead').hidden = true; // the question is answered; the card below says "Wish #n"
@@ -330,10 +325,8 @@
     done.hidden = false;
     const n = myWish.num;
     $('#doneNum').textContent = t('done_num', { n });
-    const text = t('share_text', { n });
-    $('#shareX').href = L.xShareUrl(text, siteUrl());
-    $('#shareTg').href = L.telegramShareUrl(text, siteUrl());
-    $('#shareNative').hidden = !canShareFiles();
+    $('#shareX').href = L.xShareUrl(t('share_text', { n }), wishUrl(n));
+    $('#shareTg').href = L.telegramShareUrl('', wishUrl(n)); // only the link: the card says the rest
     $('#donePrivate').hidden = myWish.pub !== false; // only wishes made before every wish was public
     $('#delBtn').hidden = !myWish.key || !$('#delConfirm').hidden;
     const canvas = $('#cardCanvas');
@@ -364,15 +357,6 @@
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 4000);
-  });
-
-  $('#shareNative').addEventListener('click', async () => {
-    try {
-      await navigator.share({
-        files: [await cardFile()],
-        text: t('share_text', { n: myWish.num }) + ' ' + siteUrl(),
-      });
-    } catch (e) { /* closed the share sheet */ }
   });
 
   // ── their wish, their choice: delete it while it waits ────────────────

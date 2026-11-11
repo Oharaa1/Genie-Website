@@ -1,5 +1,6 @@
 // Draws the 1200×1200 share card onto a canvas: the wish first, then the name, "No. n", the Lamp and the site.
 // With d.title it draws the 1200×630 link-preview image instead (tools/og-card.html).
+// With d.wide it draws one wish as a 1200×630 picture for X (api/card.js runs this file on the server).
 (function () {
   'use strict';
   const L = window.WishLogic;
@@ -8,8 +9,9 @@
   const FOIL = ['#7F5D14', '#B98F34', '#7A5912', '#BE9639', '#765510']; // the only gold on the card
   const WISH_W = 972, NAME_W = 900, MARGIN = 92;
 
-  const arabic = (z) => '600 ' + z + 'px "Noto Naskh Arabic", serif';
-  const roman = (z) => '400 ' + z + 'px "Libre Baskerville", "Noto Naskh Arabic", serif';
+  const TAIL = window.WishCardFontTail || ''; // the server adds its emoji font here
+  const arabic = (z) => '600 ' + z + 'px "Noto Naskh Arabic"' + TAIL + ', serif';
+  const roman = (z) => '400 ' + z + 'px "Libre Baskerville", "Noto Naskh Arabic"' + TAIL + ', serif';
   const italic = (z) => 'italic ' + roman(z);
   const fontFor = (text, arabicScale) => (z) => (L.textDir(text) === 'rtl' ? arabic(Math.round(z * arabicScale)) : roman(z));
 
@@ -175,12 +177,33 @@
     // the name grows with the wish, but the wish stays the largest thing
     const nameSize = Math.round(Math.min(fit.size * 0.9, Math.max(60, Math.min(76, fit.size * 0.6))));
     const arabicScale = Math.min(1.35, (fit.size * 0.85) / nameSize);
-    const gap = nameSize + 46 + (fit.dir === 'rtl' ? fit.size * 0.35 : 0); // Arabic letters reach far below the line
+    const gap = nameSize + 46 + (hasArabic(wish) ? fit.size * 0.35 : 0); // Arabic letters reach far below the line
     const top = areaTop + (areaBottom - areaTop - gap - fit.height) * 0.46;
     ctx.fillStyle = INK;
     drawWish(ctx, fit, top);
     drawLine(ctx, name, fontFor(name, arabicScale), nameSize, W / 2, top + fit.height + gap - 10, 'center', NAME_W);
     drawFoot(ctx, d.t.card_title.replace('{n}', d.num), host, d.lang === 'ar', H - 100, 40, 204);
+  }
+
+  const hasArabic = (s) => /[؀-ۿ]/.test(s);
+
+  // The same card laid out wide: the wish and the name, then "No. n", the Lamp and the site on one line.
+  function drawWide(ctx, d, host) {
+    const wish = L.cleanText(d.wish), name = L.cleanText(d.name);
+    const footY = PREVIEW_H - 40, top0 = 30, bottom0 = footY - 78;
+    const fit = fitWish(ctx, wish, bottom0 - top0 - 64);
+    const nameSize = Math.round(Math.max(32, Math.min(44, fit.size * 0.5)));
+    const gap = nameSize + 20 + (hasArabic(wish) ? fit.size * 0.3 : 0);
+    const top = top0 + (bottom0 - top0 - gap - fit.height) * 0.5;
+    ctx.fillStyle = INK;
+    drawWish(ctx, fit, top);
+    drawLine(ctx, name, fontFor(name, 1.2), nameSize, W / 2, top + fit.height + gap - 6, 'center', NAME_W);
+    const rtl = d.lang === 'ar', side = 76;
+    drawLamp(ctx, W / 2, footY + 6, 118);
+    ctx.fillStyle = INK;
+    const label = d.t.card_title.replace('{n}', d.num);
+    drawLine(ctx, rtl ? host : label, roman, 28, W / 2 - side, footY, 'right', 340);
+    drawLine(ctx, rtl ? label : host, roman, 28, W / 2 + side, footY, 'left', 340);
   }
 
   function drawPreview(ctx, d, host) {
@@ -198,9 +221,9 @@
   // d = { num, name, wish, lang, host, t: strings for d.lang }
   // Optional d.title / d.byline (with d.wish as one sentence) make it the link-preview image.
   async function draw(canvas, d) {
-    const preview = !!d.title;
+    const preview = !!d.title || !!d.wide;
     const host = String(d.host || '').replace(/^www\./i, '');
-    const label = preview ? '' : d.t.card_title.replace('{n}', d.num);
+    const label = d.title ? '' : d.t.card_title.replace('{n}', d.num);
     const text = [d.title, d.byline, d.name, d.wish, label, host, '“”«»'].filter(Boolean).join(' ');
     try {
       await Promise.all([roman(40), italic(40), arabic(40)].map((f) => document.fonts.load(f, text)));
@@ -212,7 +235,9 @@
     const ctx = canvas.getContext('2d');
     ctx.textBaseline = 'alphabetic';
     drawPaper(ctx, canvas.height);
-    if (preview) drawPreview(ctx, d, host); else drawCard(ctx, d, host);
+    if (d.wide) drawWide(ctx, d, host);
+    else if (preview) drawPreview(ctx, d, host);
+    else drawCard(ctx, d, host);
     return canvas;
   }
 

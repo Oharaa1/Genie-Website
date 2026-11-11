@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    { "source": "/w/:id(\\d{1,9})", "destination": "/api/w?id=:id" },
+    { "source": "/w/:id(\\d{1,9})/ar", "destination": "/api/w?id=:id&lang=ar" }
+  ],
+  "functions": {
+    "api/w.js": {
+      "includeFiles": "{api/_lib/fonts/coverage.json,assets/onewish/config.js}",
+      "maxDuration": 10
+    },
+    "api/card.js": {
+      "includeFiles": "{api/_lib/fonts/**,assets/onewish/config.js,assets/onewish/logic.js,assets/onewish/i18n.js,assets/onewish/card.js}",
+      "maxDuration": 10
+    }
+  }
+}

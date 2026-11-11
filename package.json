@@ -1,0 +1,9 @@
+{
+  "name": "genie-website",
+  "private": true,
+  "description": "Static site. The only code that runs on the server is api/: each wish's own link preview.",
+  "engines": { "node": "22.x" },
+  "dependencies": {
+    "@napi-rs/canvas": "1.0.13"
+  }
+}

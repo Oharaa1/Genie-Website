@@ -50,7 +50,6 @@ window.WishI18n = {
     err_gone: 'We can’t find your wish anymore. You can make a new one.',
 
     done_num: 'Wish #{n}',
-    share_native: 'Share',
     share_x: 'Post on X',
     share_tg: 'Send on Telegram',
     share_save: 'Save image',
@@ -148,7 +147,6 @@ window.WishI18n = {
     err_gone: 'لم نعد نجد أمنيتك. يمكنك تسجيل أمنية جديدة.',
 
     done_num: 'الأمنية رقم {n}',
-    share_native: 'مشاركة',
     share_x: 'انشر على X',
     share_tg: 'أرسل على تلغرام',
     share_save: 'احفظ الصورة',
