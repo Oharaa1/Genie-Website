@@ -16,8 +16,6 @@ window.WishI18n = {
     lamp_of: '{raised} of {cost}',
     lamp_tx: 'See the transfer',
     lamp_aria: 'Lamp progress',
-    // before launch there is no picked wish yet, so the Lamp says what it is waiting for
-    lamp_waiting: 'The Lamp fills after launch. Then the Genie picks the first wish — and says why.',
     lamp_why: 'Why this wish: {why}',
 
     // 2 · the wish
@@ -80,7 +78,6 @@ window.WishI18n = {
     coin_status: 'The real contract address will be posted here and in our Telegram first. Anyone selling $GENIE before that is a scammer.',
     coin_tg: 'Get launch news on Telegram',
 
-    foot_remove: 'Want your wish removed? Message us on X or Telegram from the same @.',
     foot_disclaimer: 'Not financial advice. $GENIE is a memecoin. It does not promise any profit. The Genie, an AI agent, chooses which wishes to pay for.',
 
     card_title: 'No. {n}',
@@ -116,7 +113,6 @@ window.WishI18n = {
     lamp_of: '{raised} من {cost}',
     lamp_tx: 'شاهد التحويل',
     lamp_aria: 'امتلاء المصباح',
-    lamp_waiting: 'المصباح يمتلئ بعد الإطلاق. بعدها يختار الجنّي أول أمنية… ويشرح لماذا.',
     lamp_why: 'لماذا هذه الأمنية: {why}',
 
     ask: 'ما أمنيتك الواحدة؟',
@@ -176,7 +172,6 @@ window.WishI18n = {
     coin_status: 'سيُنشر عنوان العقد الحقيقي هنا وفي تلغرام أولاً. أي شخص يبيع ⁦$GENIE⁩ قبل ذلك فهو محتال.',
     coin_tg: 'تابع أخبار الإطلاق على تلغرام',
 
-    foot_remove: 'تريد حذف أمنيتك؟ راسلنا على X أو تلغرام من نفس الحساب.',
     foot_disclaimer: 'ليست نصيحة مالية. ⁦$GENIE⁩ عملة ميم، ولا تَعِد بأي ربح. الجنّي، وكيل الذكاء الاصطناعي، يختار الأمنيات التي يدفع ثمنها.',
 
     card_title: 'رقم {n}', // "#n" would flip to "n#" next to Arabic letters

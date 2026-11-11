@@ -81,7 +81,7 @@ html[data-theme="elegant"] .coin-steps p,html[data-theme="elegant"] .coin-status
 html[data-theme="elegant"][lang="ar"] :is(.coin-steps p,.coin-status p){line-height:1.7;}
 
 /* ---------- footer: small text stays easy to read on the ink ---------- */
-html[data-theme="elegant"] .disclaimer,html[data-theme="elegant"] .foot-help{opacity:.85;font-size:.9rem;}
+html[data-theme="elegant"] .disclaimer{opacity:.85;font-size:.9rem;}
 html[data-theme="elegant"] .copy{opacity:.7;font-size:.85rem;}
 html[data-theme="elegant"] .wall-head .scam{font-size:.94rem;}
 

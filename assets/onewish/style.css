@@ -235,7 +235,6 @@ html[lang="ar"] .coin-status strong{font-weight:800;}
 .foot .scam{margin-top:0;}
 .disclaimer{font-size:.84rem;opacity:.75;max-width:62ch;}
 .copy{font-size:.8rem;opacity:.5;}
-.foot-help{font-size:.88rem;opacity:.8;max-width:62ch;}
 
 /* ---------- the "it will be public" note, and deleting your wish ---------- */
 .public-note{display:flex;gap:8px;align-items:flex-start;margin:0 0 14px;font-size:.95rem;font-weight:600;color:var(--muted);line-height:1.4;}

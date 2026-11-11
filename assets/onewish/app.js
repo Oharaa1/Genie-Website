@@ -99,7 +99,7 @@
       lamp.setAttribute('aria-valuenow', String(p.pct));
       lamp.setAttribute('aria-valuetext', t('lamp_of', { raised: L.formatUSD(c.raised), cost: L.formatUSD(c.cost) }));
     } else {
-      cap.textContent = t('lamp_waiting');
+      cap.textContent = '';
       why.hidden = true;
       fill = 108;
       lamp.classList.add('glow');
