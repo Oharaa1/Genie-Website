@@ -32,8 +32,6 @@
   }
 
   const ICON = {
-    x: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
-    telegram: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>',
     heart: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.6-4.6-9.5-9.4C1.2 7.8 3.3 4.5 6.7 4.5c2 0 3.5 1.1 4.4 2.5l.9 1.3.9-1.3c.9-1.4 2.4-2.5 4.4-2.5 3.4 0 5.5 3.3 4.2 6.6-1.9 4.8-9.5 9.4-9.5 9.4z"/></svg>',
   };
 
@@ -94,8 +92,7 @@
     const by = el('span', 'wby');
     const name = el('b');
     name.append(el('bdi', null, w.name));
-    const meta = el('span', 'whandle');
-    meta.innerHTML = ICON[w.platform] || '';
+    const meta = el('span', 'whandle'); // no X/Telegram icon: the form no longer asks which app, so it may be a guess
     const h = el('bdi', null, '@' + w.handle);
     h.dir = 'ltr';
     const time = el('time', null, ago(w.created_at));

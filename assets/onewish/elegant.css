@@ -31,8 +31,8 @@ html[data-theme="elegant"][lang="ar"] body{line-height:1.7;}
 html[data-theme="elegant"][lang="ar"] .btn{letter-spacing:0;} /* spacing pulls joined Arabic letters apart */
 
 /* reading text is regular weight, so titles stay stronger than the words under them. Naskh gets a little more, for comfort */
-html[data-theme="elegant"] :is(.part-sub,.lamp-caption,.made-line,.done-text,.scam,.public-note,.coin-steps p,.coin-status p,.wtext,.wof,.whandle,.wheart,.wall-msg,.toast,.link-btn.quiet,.wtrue a){font-weight:400;}
-html[data-theme="elegant"][lang="ar"] :is(.part-sub,.lamp-caption,.made-line,.done-text,.scam,.public-note,.coin-steps p,.coin-status p,.wtext,.wof,.whandle,.wheart,.wall-msg,.toast,.link-btn.quiet,.wtrue a,textarea,input[type="text"]){font-weight:500;}
+html[data-theme="elegant"] :is(.part-sub,.lamp-caption,.made-line,.done-text,.coin-steps p,.coin-status p,.wtext,.wof,.whandle,.wheart,.wall-msg,.toast,.link-btn.quiet,.wtrue a){font-weight:400;}
+html[data-theme="elegant"][lang="ar"] :is(.part-sub,.lamp-caption,.made-line,.done-text,.coin-steps p,.coin-status p,.wtext,.wof,.whandle,.wheart,.wall-msg,.toast,.link-btn.quiet,.wtrue a,textarea,input[type="text"]){font-weight:500;}
 html[data-theme="elegant"] .lamp-caption.came-true,html[data-theme="elegant"][lang="ar"] .lamp-caption.came-true{font-weight:700;}
 
 /* ---------- headings: the card's italic. Arabic has no italic, so it stands upright and bold ---------- */
@@ -62,8 +62,6 @@ html[data-theme="elegant"] .affix input[type="text"]:focus{box-shadow:none;}
 html[data-theme="elegant"] #fWish{font-size:1.14rem;line-height:1.55;}
 html[data-theme="elegant"][lang="ar"] #fWish{font-size:1.2rem;line-height:1.7;}
 html[data-theme="elegant"]:not([lang="ar"]) #fWish:dir(rtl){font-size:1.34rem;font-weight:500;line-height:1.7;} /* an Arabic wish on the English page */
-html[data-theme="elegant"] .seg-opt span{background:var(--sheet);border-radius:8px;}
-html[data-theme="elegant"] .seg-opt input:checked + span{background:#ECE6D6;}
 
 /* ---------- buttons ---------- */
 html[data-theme="elegant"] .btn,html[data-theme="elegant"] .share .btn{border-radius:8px;}
@@ -83,7 +81,6 @@ html[data-theme="elegant"][lang="ar"] :is(.coin-steps p,.coin-status p){line-hei
 /* ---------- footer: small text stays easy to read on the ink ---------- */
 html[data-theme="elegant"] .disclaimer{opacity:.85;font-size:.9rem;}
 html[data-theme="elegant"] .copy{opacity:.7;font-size:.85rem;}
-html[data-theme="elegant"] .wall-head .scam{font-size:.94rem;}
 
 /* ---------- the Wish Wall: each wish is a small copy of the share card ----------
    The same paper, ink and type. The words in the middle with hanging quotes, the name under them,

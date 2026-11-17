@@ -173,7 +173,12 @@
   const form = $('#wishForm');
   const FIELDS = ['wish', 'cost', 'name', 'handle']; // page order, so focus lands on the first error seen
   const input = { name: $('#fName'), wish: $('#fWish'), cost: $('#fCost'), handle: $('#fHandle') };
-  const platform = () => (form.querySelector('input[name=platform]:checked') || {}).value || 'x';
+  // One @ box, no app buttons: a pasted profile link says the app; otherwise the name's own rules guess it.
+  let linked = null; // { p, handle } from the last pasted link, while the box still holds that name
+  const platform = () => {
+    const h = L.normalizeHandle('', input.handle.value);
+    return linked && linked.handle === h ? linked.p : L.guessPlatform(h);
+  };
   const more = $('#more');
 
   function openMore() {
@@ -195,7 +200,7 @@
     el.dataset.code = key || '';
     el.textContent = key ? t(key) : '';
   }
-  const errKey = (code) => 'err_' + (code === 'handle_invalid' ? 'handle_invalid_' + platform() : code);
+  const errKey = (code) => 'err_' + code;
 
   function updateCount() {
     const n = [...input.wish.value].length;
@@ -220,12 +225,12 @@
     $('#handleOk').hidden = !L.validHandle(p, L.normalizeHandle(p, input.handle.value));
   }
 
-  // the @ box: a pasted profile link picks X or Telegram by itself, and only the username stays
+  // the @ box: a pasted profile link remembers X or Telegram, and only the username stays
   input.handle.addEventListener('input', () => {
     const v = input.handle.value;
     const p = L.linkPlatform(v);
-    if (p) form.querySelector('input[name=platform][value="' + p + '"]').checked = true;
-    if (p || /^\s*@/.test(v)) input.handle.value = L.normalizeHandle(platform(), v);
+    if (p || /^\s*@/.test(v)) input.handle.value = L.normalizeHandle(p, v);
+    if (p) linked = { p, handle: input.handle.value };
     showHandleOk();
   });
 
@@ -255,12 +260,6 @@
       store.set('genie.draft', input.wish.value); // a half-written wish waits for them if they leave
     }
   }));
-  $$('input[name=platform]').forEach((r) => r.addEventListener('change', () => {
-    if ($('#err-handle').dataset.code) setFieldErr('handle', '');
-    showHandleOk();
-    input.handle.focus();
-  }));
-
   let busy = false;
   function setBusy(on) {
     busy = on;
@@ -379,6 +378,7 @@
     store.del('genie.wish');
     hideConfirm();
     form.reset();
+    linked = null;
     FIELDS.forEach((f) => setFieldErr(f, ''));
     setFormErr('');
     if (refill && old) {
@@ -386,9 +386,8 @@
       input.name.value = old.name || '';
       if (old.cost) input.cost.value = L.formatCostInput(String(old.cost), 0).value;
       if (old.handle) input.handle.value = old.handle;
-      if (old.platform === 'x' || old.platform === 'telegram') {
-        form.querySelector('input[name=platform][value="' + old.platform + '"]').checked = true;
-      }
+      // sent again, it keeps the app it had (a Telegram name stays Telegram)
+      if (old.handle && (old.platform === 'x' || old.platform === 'telegram')) linked = { p: old.platform, handle: old.handle };
       openMore();
     }
     updateCount();

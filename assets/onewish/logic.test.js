@@ -60,6 +60,13 @@ test('validHandle follows each platform rules', () => {
   assert.ok(!L.validHandle('facebook', 'Sara_99'));
 });
 
+test('guessPlatform: X when the name fits X, Telegram only when it must be', () => {
+  assert.equal(L.guessPlatform('Sara_99'), 'x');
+  assert.equal(L.guessPlatform('sara_wish'), 'x');                  // fits both: X
+  assert.equal(L.guessPlatform('a_much_longer_telegram_name'), 'telegram'); // too long for X
+  assert.equal(L.guessPlatform('bad-dash'), 'x');                   // fits neither: X, and the X error shows
+});
+
 test('validateWish returns clean values when everything is fine', () => {
   const r = L.validateWish({
     name: '  Sara  ', wish: '  Pay for my   mother\'s surgery  ',

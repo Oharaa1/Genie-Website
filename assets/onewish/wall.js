@@ -98,8 +98,8 @@
       flashId = shared.id;
       setTimeout(() => { flashId = null; }, 3500);
       renderTop();
-      // stop at the scam warning, so it is on screen together with the shared wish and its @
-      $('#wallScam').scrollIntoView({ block: 'start' });
+      // a shared link opens on its wish
+      $('#shared').scrollIntoView({ block: 'start' });
     } catch (e) { /* the wall still loads */ }
   }
 

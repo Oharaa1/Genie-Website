@@ -76,6 +76,11 @@
     return !!re && re.test(handle);
   }
 
+  // No X/Telegram buttons any more: a name that fits X's rules counts as X; only a longer one (16-32) must be Telegram.
+  function guessPlatform(handle) {
+    return validHandle('telegram', handle) && !validHandle('x', handle) ? 'telegram' : 'x';
+  }
+
   // Returns { ok, value, errors } — errors maps field → code (see i18n err_*).
   function validateWish(input) {
     const name = cleanText(input.name);
@@ -184,7 +189,7 @@
   }
 
   return {
-    LIMITS, cleanText, parseCost, formatCostInput, linkPlatform, normalizeHandle, validHandle, validateWish,
+    LIMITS, cleanText, parseCost, formatCostInput, linkPlatform, normalizeHandle, validHandle, guessPlatform, validateWish,
     lampProgress, formatUSD, serverErrorCode, textDir, wrapText, pickLang,
     xShareUrl, telegramShareUrl,
   };
