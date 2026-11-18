@@ -220,6 +220,7 @@ html[lang="ar"] .coin-status strong{font-weight:800;}
   background:var(--ink);color:#fff;text-align:center;padding:var(--s4) var(--s2);
   display:grid;gap:var(--s1);justify-items:center;
 }
+.foot-safe{max-width:52ch;line-height:1.55;}
 .disclaimer{font-size:.84rem;opacity:.75;max-width:62ch;}
 .copy{font-size:.8rem;opacity:.5;}
 

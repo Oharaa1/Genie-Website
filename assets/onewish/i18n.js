@@ -74,7 +74,8 @@ window.WishI18n = {
     coin_status: 'The real contract address will be posted here and in our Telegram first. Anyone selling $GENIE before that is a scammer.',
     coin_tg: 'Get launch news on Telegram',
 
-    foot_disclaimer: 'Not financial advice. $GENIE is a memecoin. It does not promise any profit. The Genie, an AI agent, chooses which wishes to pay for.',
+    foot_safe: 'The Genie asks for nothing in return. It will never ask for your private key or seed phrase, and it will never ask you to connect your wallet. It only needs your wallet address. Then it sends the money to you.',
+    foot_disclaimer: 'Not financial advice. $GENIE is a memecoin.',
 
     card_title: 'No. {n}',
 
@@ -165,7 +166,8 @@ window.WishI18n = {
     coin_status: 'سيُنشر عنوان العقد الحقيقي هنا وفي تلغرام أولاً. أي شخص يبيع ⁦$GENIE⁩ قبل ذلك فهو محتال.',
     coin_tg: 'تابع أخبار الإطلاق على تلغرام',
 
-    foot_disclaimer: 'ليست نصيحة مالية. ⁦$GENIE⁩ عملة ميم، ولا تَعِد بأي ربح. الجنّي، وكيل الذكاء الاصطناعي، يختار الأمنيات التي يدفع ثمنها.',
+    foot_safe: 'الجنّي لا يطلب منك أي شيء مقابل أمنيتك. لن يطلب أبدًا المفتاح الخاص لمحفظتك أو كلماتها السرية، ولن يطلب منك ربط محفظتك. يحتاج فقط عنوان محفظتك، ثم يرسل لك المال.',
+    foot_disclaimer: 'ليست نصيحة مالية. ⁦$GENIE⁩ عملة ميم.',
 
     card_title: 'رقم {n}', // "#n" would flip to "n#" next to Arabic letters
 
