@@ -17,9 +17,11 @@
 
 
   // wishes this browser already ❤'d (the server also allows one per wish per connection).
+  // Kept as "number@time made": a deleted wish's number goes to the next wish, which must not look ❤'d.
   // Demo hearts stay in memory, so they never mark a real wish with the same number.
   const heartKey = API.source() ? 'genie.hearts' : null;
-  const hearted = new Set(((heartKey && store.get(heartKey)) || []).filter((n) => Number.isInteger(n)));
+  const hearted = new Set(((heartKey && store.get(heartKey)) || []).filter((k) => typeof k === 'string'));
+  const heartOf = (w) => w.id + '@' + w.created_at;
   const counts = new Map(); // id → ❤ count after this visitor's tap, so a re-render keeps it
 
   // "3 hours ago" in the page language, with Western digits like the rest of the site
@@ -113,8 +115,9 @@
       const b = el('button', 'wheart');
       b.type = 'button';
       b.dataset.heart = w.id;
+      b.dataset.heartKey = heartOf(w);
       b.dataset.n = n;
-      b.setAttribute('aria-pressed', hearted.has(w.id) ? 'true' : 'false');
+      b.setAttribute('aria-pressed', hearted.has(heartOf(w)) ? 'true' : 'false');
       b.setAttribute('aria-label', t('wall_heart'));
       b.title = t('wall_heart');
       b.innerHTML = ICON.heart;
@@ -150,8 +153,9 @@
     const heart = e.target.closest('[data-heart]');
     if (heart) {
       const id = Number(heart.dataset.heart);
-      if (hearted.has(id)) return; // one ❤ per wish
-      hearted.add(id);
+      const key = heart.dataset.heartKey;
+      if (hearted.has(key)) return; // one ❤ per wish
+      hearted.add(key);
       if (heartKey) store.set(heartKey, [...hearted].slice(-1000));
       const was = Number(heart.dataset.n) || 0;
       setHeartCount(id, was + 1); // show it at once; the server's number replaces it

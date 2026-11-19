@@ -4,7 +4,6 @@
   const L = window.WishLogic, I18N = window.WishI18n, API = window.WishAPI, Card = window.WishCard;
   const Cards = window.WishWallCards;
   const WALL_PREVIEW = 3; // a taste; the rest are on wishes.html
-  const WALL_MIN = 3;     // fewer wishes than this read as an empty room, so the Wall waits
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => [...document.querySelectorAll(s)];
   const isLocal = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:';
@@ -151,12 +150,12 @@
   }
 
   // ── 3 · the Wish Wall: the wish the Lamp is filling for, then the latest ones ──
-  // Shown only once there is something to see; if it fails to load it just stays hidden.
+  // Shown from the very first wish; if it fails to load it just stays hidden.
   function renderWall() {
     const ok = !!(wall && !wall.error);
     const cur = ok ? wall.current : null;
     const all = (ok && wall.items) || [];
-    $('#wall').hidden = !(cur || all.length >= WALL_MIN);
+    $('#wall').hidden = !(cur || all.length);
     const f = $('#featured');
     f.replaceChildren();
     f.hidden = !cur;
@@ -308,7 +307,7 @@
       store.del('genie.draft');
       if (stats) { stats.made += 1; renderMade(); }
       await renderDone(true);
-      loadWall(); // their wish shows on the Wall below straight away (once the Wall has WALL_MIN wishes)
+      loadWall(); // their wish shows on the Wall below straight away
     } catch (err) {
       const code = L.serverErrorCode(err);
       if (code === 'already_wished') { setFieldErr('handle', 'err_already_wished'); input.handle.focus(); }
@@ -374,7 +373,8 @@
 
   // Back to the form: after a delete, or when their wish no longer exists on the server.
   // refill: a wish they deleted comes back into the form, so fixing a typo is "delete, fix, send again".
-  function forgetWish(refill) {
+  // scroll: false when the page forgets it on its own while opening, so it still opens at the top.
+  function forgetWish(refill, scroll = true) {
     const old = myWish;
     myWish = null;
     store.del('genie.wish');
@@ -398,7 +398,21 @@
     form.hidden = false;
     fitWish(); // after the form shows: a hidden box has no height to measure
     $('#askHead').hidden = false;
-    $('#askHead').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    if (scroll) $('#askHead').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  // A saved wish the server no longer has (deleted by the Genie, or the test wishes cleared) is forgotten,
+  // so the form is ready again. Offline or a server error: keep it.
+  async function checkMyWish() {
+    if (!myWish || !API.configured()) return;
+    const mine = myWish;
+    let r;
+    try { r = await API.wall({ id: mine.num }); } catch (e) { return; }
+    const w = r && r.items && r.items[0];
+    // its number can belong to a newer wish now, so the words must match too (spaces aside: the server tidies them)
+    const bare = (s) => String(s || '').replace(/[\s\u0000-\u001f\u007f-\u009f​‪-‮⁦-⁩]/g, '');
+    if (w && (!mine.wish || bare(w.wish) === bare(mine.wish))) return;
+    if (myWish === mine) forgetWish(false, false);
   }
 
   function mineFail(err) {
@@ -442,7 +456,7 @@
   if (!myWish && typeof draft === 'string' && draft.trim()) { input.wish.value = draft; openMore(); }
   applyLang();
   fitWish();
-  if (myWish) renderDone(false);
+  if (myWish) { renderDone(false); checkMyWish(); }
   loadStats();
   loadWall();
 })();
