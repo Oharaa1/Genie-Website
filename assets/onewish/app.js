@@ -13,6 +13,8 @@
   if (forceMotion) document.documentElement.classList.add('motion-ok');
   const reduceMotion = !forceMotion && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const startedAt = performance.now();
+  // coming back opens at the top (the hook and the Lamp), not where they left off; their wish card waits in its place below
+  try { history.scrollRestoration = 'manual'; } catch (e) { /* old browsers: they keep the old spot */ }
 
   // localStorage can throw (private mode, blocked storage) — the page works without it.
   const store = {
