@@ -35,6 +35,9 @@ module.exports = async (req, res) => {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="canonical" href="${esc(site + '/w/' + id + (lang === 'ar' ? '/ar' : ''))}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${esc(site + '/w/' + id + (lang === 'ar' ? '/ar' : ''))}">

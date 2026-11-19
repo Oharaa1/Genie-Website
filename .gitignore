@@ -24,6 +24,8 @@ video/**/*.wav
 /img/p1.*
 /img/p2.*
 /img/p3.*
+/img/logo.jpg
+/img/og-card.png
 
 # server packages (Vercel installs them itself)
 node_modules/
