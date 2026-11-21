@@ -2,6 +2,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const L = require('./logic.js');
+const Lang = require('./lang.js');
 
 test('parseCost accepts common ways people type money', () => {
   assert.equal(L.parseCost('2400'), 2400);
@@ -144,17 +145,32 @@ test('wrapText fits lines and adds an ellipsis when cut', () => {
 });
 
 test('pickLang prefers saved choice, then browser language', () => {
-  assert.equal(L.pickLang(['ar-IQ', 'en'], null), 'ar');
-  assert.equal(L.pickLang(['en-US'], null), 'en');
-  assert.equal(L.pickLang(['en-US'], 'ar'), 'ar');
-  assert.equal(L.pickLang(['ar'], 'en'), 'en');
-  assert.equal(L.pickLang([], 'xx'), 'en');
+  assert.equal(Lang.pickLang(['ar-IQ', 'en'], null), 'ar');
+  assert.equal(Lang.pickLang(['en-US'], null), 'en');
+  assert.equal(Lang.pickLang(['en-US'], 'ar'), 'ar');
+  assert.equal(Lang.pickLang(['ar'], 'en'), 'en');
+  assert.equal(Lang.pickLang([], 'xx'), 'en');
+});
+
+test('pickLang finds Arabic anywhere in the browser list', () => {
+  assert.equal(Lang.pickLang(['en-US', 'ar-SA'], null), 'ar');
+  assert.equal(Lang.pickLang(['fr-FR', 'ar'], null), 'ar');
+  assert.equal(Lang.pickLang(['en-US', 'arn'], null), 'en'); // Mapudungun, not Arabic
+});
+
+test('pickLang reads the clock when the phone is set to English or French', () => {
+  assert.equal(Lang.pickLang(['en-US'], null, null, 'Asia/Baghdad'), 'ar');  // an iPhone in Iraq
+  assert.equal(Lang.pickLang(['fr-FR'], null, null, 'Africa/Casablanca'), 'ar');
+  assert.equal(Lang.pickLang(['en-US'], null, null, 'Europe/London'), 'en');
+  assert.equal(Lang.pickLang(['en-US'], null, null, undefined), 'en');
+  assert.equal(Lang.pickLang(['en-US'], 'en', null, 'Asia/Riyadh'), 'en');  // their own choice wins
 });
 
 test('pickLang lets a ?lang= link win over everything', () => {
-  assert.equal(L.pickLang(['en-US'], 'en', 'ar'), 'ar');
-  assert.equal(L.pickLang(['ar'], 'ar', 'en'), 'en');
-  assert.equal(L.pickLang(['ar'], null, 'fr'), 'ar');
+  assert.equal(Lang.pickLang(['en-US'], 'en', 'ar'), 'ar');
+  assert.equal(Lang.pickLang(['ar'], 'ar', 'en'), 'en');
+  assert.equal(Lang.pickLang(['ar'], null, 'fr'), 'ar');
+  assert.equal(Lang.pickLang(['ar'], null, 'en', 'Asia/Dubai'), 'en');
 });
 
 test('share links carry text and url, encoded', () => {

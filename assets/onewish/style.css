@@ -61,7 +61,12 @@ html[lang="ar"] label,html[lang="ar"] legend,html[lang="ar"] .tab,html[lang="ar"
   background:none;color:var(--ink);cursor:pointer;transition:background-color .15s ease;
 }
 .lang-btn:hover,.socials a:hover{background:rgba(20,20,20,.06);}
+/* the globe: the same key that switches Arabic and English on phone keyboards */
 .lang-btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;}
+/* lang.js hides the English words of an Arabic visit until app.js swaps them in, so English never flashes.
+   If the scripts fail, the words show anyway after 3 seconds. */
+html.i18n-wait [data-i18n]{visibility:hidden;animation:i18n-show 0s 3s forwards;}
+@keyframes i18n-show{to{visibility:visible;}}
 .lang-btn:focus-visible,.socials a:focus-visible,.btn:focus-visible,.tx-link:focus-visible{outline:3px solid var(--blue-deep);outline-offset:3px;}
 .socials{display:flex;gap:2px;}
 .socials svg{width:19px;height:19px;}

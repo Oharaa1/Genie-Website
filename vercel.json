@@ -1,4 +1,8 @@
 {
+  "redirects": [
+    { "source": "/ar", "destination": "/?lang=ar", "permanent": false },
+    { "source": "/ar/", "destination": "/?lang=ar", "permanent": false }
+  ],
   "rewrites": [
     { "source": "/w/:id(\\d{1,9})", "destination": "/api/w?id=:id" },
     { "source": "/w/:id(\\d{1,9})/ar", "destination": "/api/w?id=:id&lang=ar" }

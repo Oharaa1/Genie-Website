@@ -1,7 +1,7 @@
 // Wires the Wish Wall page: tabs, paging and the wish a shared link points at. The cards come from wallcards.js.
 (function () {
   'use strict';
-  const L = window.WishLogic, I18N = window.WishI18n, API = window.WishAPI, Cards = window.WishWallCards;
+  const I18N = window.WishI18n, API = window.WishAPI, Cards = window.WishWallCards;
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => [...document.querySelectorAll(s)];
 
@@ -11,8 +11,7 @@
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* ignore */ } },
   };
 
-  let lang = L.pickLang(navigator.languages || [navigator.language], store.get('genie.lang'),
-    new URLSearchParams(location.search).get('lang'));
+  let lang = window.WishLang.lang; // lang.js picked it in <head>, before the page painted
   let sort = 'new';
   let page = null;        // the last answer from the server: { made, granted, current, more }
   let items = [];         // every card loaded so far, in order
@@ -111,6 +110,7 @@
     $$('[data-i18n]').forEach((e) => { e.textContent = t(e.dataset.i18n); });
     $$('[data-i18n-aria]').forEach((e) => e.setAttribute('aria-label', t(e.dataset.i18nAria)));
     $('#langBtn').title = t('lang_aria');
+    document.documentElement.classList.remove('i18n-wait');
     if (page) renderAll();
   }
 

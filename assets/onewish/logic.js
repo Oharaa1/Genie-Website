@@ -172,14 +172,6 @@
     return kept;
   }
 
-  // A ?lang= link wins, then the visitor's own toggle, then the browser language.
-  function pickLang(browserLangs, saved, fromUrl) {
-    if (fromUrl === 'ar' || fromUrl === 'en') return fromUrl;
-    if (saved === 'ar' || saved === 'en') return saved;
-    const first = String((browserLangs && browserLangs[0]) || '').toLowerCase();
-    return first.startsWith('ar') ? 'ar' : 'en';
-  }
-
   const enc = encodeURIComponent;
   function xShareUrl(text, url) {
     return 'https://x.com/intent/tweet?text=' + enc(text) + '&url=' + enc(url);
@@ -190,7 +182,7 @@
 
   return {
     LIMITS, cleanText, parseCost, formatCostInput, linkPlatform, normalizeHandle, validHandle, guessPlatform, validateWish,
-    lampProgress, formatUSD, serverErrorCode, textDir, wrapText, pickLang,
+    lampProgress, formatUSD, serverErrorCode, textDir, wrapText,
     xShareUrl, telegramShareUrl,
   };
 });

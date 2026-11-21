@@ -22,8 +22,7 @@
     del(k) { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } },
   };
 
-  let lang = L.pickLang(navigator.languages || [navigator.language], store.get('genie.lang'),
-    new URLSearchParams(location.search).get('lang'));
+  let lang = window.WishLang.lang; // lang.js picked it in <head>, before the page painted
   let stats = null;                    // { made, granted, current } from wish_stats()
   let statsLoaded = false;             // the scene waits for the server, so it never flashes the wrong caption
   let wall = null;                     // { current, items } from wish_wall(): the latest public wishes
@@ -59,6 +58,7 @@
     $$('[data-i18n-aria]').forEach((el) => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
     $$('[data-code]').forEach((el) => { el.textContent = el.dataset.code ? t(el.dataset.code) : ''; });
     $('#langBtn').title = t('lang_aria'); // the globe has no words, so hovering tells what it does
+    document.documentElement.classList.remove('i18n-wait');
     updateCount();
     renderMade();
     if (statsLoaded) renderScene(false);
